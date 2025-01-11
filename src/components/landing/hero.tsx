@@ -1,0 +1,40 @@
+import { Button } from "@/components/landing/ui/button"
+import Image from "next/image"
+import Link from "next/link"
+
+export function Hero() {
+  return (
+    <section className="w-full bg-gradient-to-b from-orange-50 to-white py-12 md:py-24 lg:py-32">
+      <div className="container mx-auto grid items-center gap-6 px-4 md:grid-cols-2 md:gap-12">
+        <div className="flex flex-col gap-6 text-center md:text-left mx-auto md:mx-0 max-w-md md:max-w-none">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+            Be more aware <span className="text-orange-500">(जाग्र)</span> about your thoughts
+          </h1>
+          <p className="text-xl text-muted-foreground md:text-2xl">
+            Bringing mental health experts to your palm
+          </p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
+            <Link href="/coming-soon" className="w-full sm:w-auto">
+              <Button className="w-full bg-orange-500 text-white hover:bg-orange-600 sm:w-auto text-lg py-6 px-8">Start Writing</Button>
+            </Link>
+            <Link href="/coming-soon" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto text-lg py-6 px-8 hover:bg-orange-100">Explore Blogs</Button>
+            </Link>
+          </div>
+        </div>
+        <div className="flex justify-center md:order-last mx-auto">
+          <div className="relative h-[300px] w-[300px] md:h-[500px] md:w-[500px]">
+            <Image
+              src="/images/hero.png"
+              alt="Mental Health Illustration"
+              fill
+              className="object-contain drop-shadow-xl"
+              priority
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
