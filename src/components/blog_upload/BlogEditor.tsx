@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS, { OutputData, API } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import Paragraph from "@editorjs/paragraph";
-import SimpleImage from "@editorjs/simple-image";
-import { ArrowLeft, Camera } from 'lucide-react';
+import SimpleImage from "@editorjs/image";
+import { ArrowLeft, Camera } from "lucide-react";
 import Preview from "./Preview";
 
 interface BlogContent {
@@ -21,11 +21,18 @@ const BlogEditor: React.FC = () => {
   const [wordCount, setWordCount] = useState<number>(0);
   const [charCount, setCharCount] = useState<number>(0);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [blogContent, setBlogContent] = useState<BlogContent>({ title: "", content: { blocks: [] } });
+  const [blogContent, setBlogContent] = useState<BlogContent>({
+    title: "",
+    content: { blocks: [] },
+  });
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!isPreviewMode && editorRef.current && (!editor || editor.isDestroyed)) {
+    if (
+      !isPreviewMode &&
+      editorRef.current &&
+      (!editor )
+    ) {
       const editorInstance = new EditorJS({
         holder: editorRef.current,
         tools: {
@@ -36,7 +43,7 @@ const BlogEditor: React.FC = () => {
         },
         data: blogContent.content,
         placeholder: "Start writing your blog post here...",
-        onChange: (api: API, event: CustomEvent) => {
+        onChange: (api: API) => {
           updateWordAndCharCount(api);
         },
         onReady: () => {
@@ -47,7 +54,7 @@ const BlogEditor: React.FC = () => {
     }
 
     return () => {
-      if (editor && !editor.isDestroyed) {
+      if (editor ) {
         editor.destroy();
         setEditor(null);
       }
@@ -70,14 +77,14 @@ const BlogEditor: React.FC = () => {
 
     setWordCount(words);
     setCharCount(chars);
-    setBlogContent(prev => ({ ...prev, content }));
+    setBlogContent((prev) => ({ ...prev, content }));
   };
 
   const handleSave = async () => {
     if (editor) {
       try {
         const content = await editor.save();
-        setBlogContent(prev => ({ ...prev, content }));
+        setBlogContent((prev) => ({ ...prev, content }));
         console.log("Saved content:", content);
         setLastSaved("just now");
       } catch (error) {
@@ -101,7 +108,7 @@ const BlogEditor: React.FC = () => {
     if (!isPreviewMode && editor) {
       try {
         const content = await editor.save();
-        setBlogContent(prev => ({ ...prev, content }));
+        setBlogContent((prev) => ({ ...prev, content }));
       } catch (error) {
         console.error("Error saving content:", error);
       }
@@ -122,18 +129,22 @@ const BlogEditor: React.FC = () => {
               placeholder="Enter blog title..."
               className="border-none text-lg font-medium focus:outline-none"
               value={blogContent.title}
-              onChange={(e) => setBlogContent(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(e) =>
+                setBlogContent((prev) => ({ ...prev, title: e.target.value }))
+              }
             />
           </div>
           <div className="flex items-center space-x-3">
-            <span className="text-sm text-gray-500">Last saved {lastSaved}</span>
+            <span className="text-sm text-gray-500">
+              Last saved {lastSaved}
+            </span>
             <button
               className="rounded border px-4 py-2 text-sm"
               onClick={handleSave}
             >
               Save Draft
             </button>
-            <button 
+            <button
               className="rounded bg-orange-500 px-4 py-2 text-sm text-white hover:bg-orange-600"
               onClick={togglePreviewMode}
             >
@@ -152,7 +163,9 @@ const BlogEditor: React.FC = () => {
               <div id="editorjs" ref={editorRef} className="min-h-[400px]" />
               <div className="mt-4 text-sm text-gray-500">
                 Words: {wordCount} Characters: {charCount}
-                <span className="float-right text-green-500">Changes saved</span>
+                <span className="float-right text-green-500">
+                  Changes saved
+                </span>
               </div>
             </div>
           )}
@@ -223,4 +236,3 @@ const BlogEditor: React.FC = () => {
 };
 
 export default BlogEditor;
-
