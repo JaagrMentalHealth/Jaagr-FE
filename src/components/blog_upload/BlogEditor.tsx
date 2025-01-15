@@ -5,7 +5,7 @@ import EditorJS, { OutputData, API } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import Paragraph from "@editorjs/paragraph";
-import SimpleImage from "@editorjs/simple-image";
+import SimpleImage from "@editorjs/image";
 import { ArrowLeft, Camera } from 'lucide-react';
 import Preview from "./Preview";
 
@@ -25,7 +25,7 @@ const BlogEditor: React.FC = () => {
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!isPreviewMode && editorRef.current && (!editor || editor.isDestroyed)) {
+    if (!isPreviewMode && editorRef.current && !editor) {
       const editorInstance = new EditorJS({
         holder: editorRef.current,
         tools: {
@@ -45,15 +45,16 @@ const BlogEditor: React.FC = () => {
         autofocus: true,
       });
     }
-
+  
     return () => {
-      if (editor && !editor.isDestroyed) {
-        editor.destroy();
-        setEditor(null);
+      if (editor) {
+        editor.destroy(); // Just destroy the editor
+        setEditor(null); // Safely update state after destruction
       }
     };
-  }, [isPreviewMode]);
-
+  }, [isPreviewMode, editor]);
+  
+  
   const updateWordAndCharCount = async (api: API) => {
     const content = await api.saver.save();
     let words = 0;
