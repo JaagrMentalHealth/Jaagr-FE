@@ -52,15 +52,16 @@ const BlogEditor: React.FC = () => {
         autofocus: true,
       });
     }
-
+  
     return () => {
       if (editor ) {
         editor.destroy();
         setEditor(null);
       }
     };
-  }, [isPreviewMode]);
-
+  }, [isPreviewMode, editor]);
+  
+  
   const updateWordAndCharCount = async (api: API) => {
     const content = await api.saver.save();
     let words = 0;
