@@ -1,5 +1,6 @@
 import React from 'react';
 import { OutputData } from '@editorjs/editorjs';
+import { JSX } from 'react';
 
 interface PreviewProps {
   content: {
