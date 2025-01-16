@@ -21,6 +21,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form Submitted with:", { email, password });
     setIsLoading(true);
 
     try {
@@ -30,17 +31,11 @@ export default function LoginPage() {
       });
 
       if (response.data.status === "success") {
-        
         localStorage.setItem("token", response.data.token);
-
-        
         setToast({ message: "Login Successful. Welcome back!", type: "success" });
-
-        // Redirect to home page or dashboard
         setTimeout(() => router.push("/dashboard"), 2000);
       }
     } catch (error: any) {
-     
       const errorMessage = error.response?.data?.message || "An error occurred during login";
       setToast({ message: errorMessage, type: "error" });
     } finally {
@@ -66,7 +61,10 @@ export default function LoginPage() {
                   type="email"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    console.log("Email entered:", e.target.value); // Log the email value
+                    setEmail(e.target.value);
+                  }}
                   placeholder="Enter your email"
                   className="rounded-md border-gray-300 focus:ring-orange-500"
                   disabled={isLoading}
@@ -79,7 +77,10 @@ export default function LoginPage() {
                   type="password"
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    console.log("Password entered:", e.target.value); // Log the password value
+                    setPassword(e.target.value);
+                  }}
                   placeholder="Enter your password"
                   className="rounded-md border-gray-300 focus:ring-orange-500"
                   disabled={isLoading}
