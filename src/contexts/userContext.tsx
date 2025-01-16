@@ -35,7 +35,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchUser = useCallback(async () => {
+  const fetchUser: any = useCallback(async () => {
     const token = Cookies.get('token');
     
     if (!token) {
