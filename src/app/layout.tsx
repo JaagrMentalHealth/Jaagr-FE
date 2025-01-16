@@ -1,6 +1,8 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Toaster } from "react-hot-toast";
+import { UserProvider } from "@/contexts/userContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,7 +12,7 @@ const inter = Inter({
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;  
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -21,7 +23,10 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        {children}
+        <UserProvider>
+          {children}
+          <Toaster />
+        </UserProvider>
       </body>
     </html>
   );
