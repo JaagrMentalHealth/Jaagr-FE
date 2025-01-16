@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseAxiosInstance = axios.create({
+export const baseAxiosInstance = axios.create({
   baseURL: "https://jaagr-miy0.onrender.com/api/users",
 });
 
