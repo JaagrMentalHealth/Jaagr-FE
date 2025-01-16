@@ -1,6 +1,7 @@
 'use client'
-
+import {login} from '@/api/authAPI'
 import { useState } from 'react'
+
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -8,15 +9,45 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import Link from "next/link"
+import { useUser } from "@/contexts/userContext";
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading,setIsLoading]=useState(false)
+  const {setUser}=useUser();
+  const router=useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically handle the login logic
-    console.log('Login submitted', { email, password })
+    setIsLoading(true);
+    const loginData={email,password}
+    
+    try {
+      const res: any = await login(loginData);
+      
+      if (res.status === 'success' && res.token) {
+       
+        Cookies.set('token', res.token, { expires: 7 });
+        
+        // console.log(res.data.user)
+        // setUser(res.data.user);
+        toast.success('Login successful!');
+        router.push('/');
+      } else {
+        throw new Error('Login failed');
+      }
+    } catch (error) {
+      console.log("Signup failed:", error);
+      toast.error('Signup failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+    // console.log('Login submitted', { email, password })
   }
 
   return (

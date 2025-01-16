@@ -1,6 +1,6 @@
 "use client";
 import { signup } from "@/api/authAPI";
-import { useEffect, useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
@@ -21,61 +21,108 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { countries } from 'countries-list';
+import { Textarea } from "@/components/ui/textarea";
+import { useUser } from "@/contexts/userContext";
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
-const countries = [
-  "India",
-  "United States",
-  "United Kingdom",
-  "Canada",
-  "Australia",
-  "Germany",
-  "France",
-  "Japan",
-  "Brazil",
-  "Mexico",
-  // Add more countries as needed
-];
+type Gender = 'male' | 'female' | 'other';
+
+interface SignupData {
+  userName: string;
+  email: string;
+  password: string;
+  dateOfBirth: string;
+  gender: Gender;
+  fullName: string;
+  bio: string;
+  country: string;
+}
+
+interface UserResponse {
+  status: string;
+  token: string;
+  data: {
+    user: {
+      userName: string;
+      email: string;
+      password: string;
+      dateOfBirth: string;
+      gender: Gender;
+      fullName: string;
+      bio: string;
+      country: string;
+      blogs: any[];
+      likedBlogs: any[];
+      savedBlogs: any[];
+      history: any[];
+      _id: string;
+      profilePhoto: string;
+      createdAt: string;
+      updatedAt: string;
+      __v: number;
+    }
+  }
+}
 
 export default function SignUpPage() {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [country, setCountry] = useState("");
-  const [password, setPassword] = useState("");
-  const [gender, setGender] = useState("");
-  const [dob, setDOB] = useState("");
-  const [bio, setBio] = useState("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [gender, setGender] = useState<Gender | ''>("");
+  const [dob, setDOB] = useState<string>("");
+  const [bio, setBio] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit =async (e: React.FormEvent) => {
+  const { setUser } = useUser();
+  const router = useRouter();
+
+  const countryList = Object.entries(countries).map(([code, country]) => ({
+    code,
+    name: country.name
+  })).sort((a, b) => a.name.localeCompare(b.name));
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
-    const user = name.split(" ");
-    const username = user[0] + user[1];
+    const username = name.split(" ").join("").toLowerCase();
 
-    console.log(username);
-    const data = {
+    const data: SignupData = {
       userName: username,
       email,
-      country,
       password,
       dateOfBirth: dob,
-      gender,
+      gender: gender as Gender,
       fullName: name,
       bio,
-    };
-    const res =await signup(data);
-    console.log(res);
-
-    console.log("Sign up submitted", {
-      name,
-      age,
-      email,
-      phone,
       country,
-      password,
-    });
+    };
+    
+    try {
+      const res: any = await signup(data);
+      console.log(res)
+      if (res.status === 'success' && res.token) {
+        Cookies.set('token', res.token, { expires: 7 });
+        
+        console.log(res.data.user)
+        setUser(res.data.user);
+        toast.success('Signup successful!');
+        router.push('/');
+      } else {
+        throw new Error('Signup failed');
+      }
+    } catch (error) {
+      console.log("Signup failed:", error);
+      toast.error('Signup failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -92,27 +139,14 @@ export default function SignUpPage() {
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Full Name</Label>
                 <Input
                   id="name"
                   type="text"
                   required
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                   placeholder="John Doe"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="age">Age</Label>
-                <Input
-                  id="age"
-                  type="number"
-                  required
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                  min="13"
-                  max="120"
-                  placeholder="25"
                 />
               </div>
               <div className="space-y-2">
@@ -122,35 +156,57 @@ export default function SignUpPage() {
                   type="email"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                   placeholder="john.doe@example.com"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="dob">Date of Birth</Label>
                 <Input
-                  id="phone"
-                  type="tel"
+                  id="dob"
+                  type="date"
                   required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+1 (555) 123-4567"
+                  value={dob}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setDOB(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="gender">Gender</Label>
+                <Select value={gender} onValueChange={(value: Gender) => setGender(value)} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="country">Country</Label>
-                <Select value={country} onValueChange={setCountry} required>
+                <Select value={country} onValueChange={(value: string) => setCountry(value)} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select your country" />
                   </SelectTrigger>
                   <SelectContent>
-                    {countries.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
+                    {countryList.map((country) => (
+                      <SelectItem key={country.code} value={country.code}>
+                        {country.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  id="bio"
+                  value={bio}
+                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setBio(e.target.value)}
+                  placeholder="Tell us a bit about yourself..."
+                  rows={3}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -159,14 +215,21 @@ export default function SignUpPage() {
                   type="password"
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                   minLength={8}
                 />
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
-              <Button type="submit" className="w-full">
-                Sign Up
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing up...
+                  </>
+                ) : (
+                  'Sign Up'
+                )}
               </Button>
               <p className="text-sm text-center">
                 Already have an account?{" "}
