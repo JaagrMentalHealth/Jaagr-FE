@@ -230,7 +230,7 @@ export default function ProfilePage() {
                 <TabsContent value="blogs" className="mt-6">
                   <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
                   <div className="grid gap-6 md:grid-cols-2">
-                    {user.blogs.map((blog, index) => (
+                    {user.blogs.map((blog:any, index:any) => (
                       <BlogCard key={index} {...blog} />
                     ))}
                   </div>
@@ -244,7 +244,7 @@ export default function ProfilePage() {
                 <TabsContent value="saved" className="mt-6">
                   <h3 className="text-xl font-semibold mb-4">Saved Blogs</h3>
                   <div className="grid gap-6 md:grid-cols-2">
-                    {user.savedBlogs.map((blog, index) => (
+                    {user.savedBlogs.map((blog:any, index:any) => (
                       <BlogCard key={index} {...blog} />
                     ))}
                   </div>
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                     Reading History
                   </h3>
                   <div className="grid gap-6 md:grid-cols-2">
-                    {user.history.map((blog, index) => (
+                    {user.history.map((blog:any, index:any) => (
                       <BlogCard key={index} {...blog} />
                     ))}
                   </div>
