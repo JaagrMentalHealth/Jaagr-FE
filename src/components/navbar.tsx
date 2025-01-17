@@ -63,7 +63,7 @@ export function Navbar() {
             <Button asChild variant="ghost" className="hover:text-primary">
               <Link href="/login">Login</Link>
             </Button>
-            <Button asChild className="bg-primary text-white hover:bg-primary/90">
+            <Button asChild className="bg-primary hover:bg-primary/90">
               <Link href="/signup">Sign Up</Link>
             </Button>
           </div>
