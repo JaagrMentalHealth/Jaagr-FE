@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-
 export function Toast({ message, type, onClose }: { message: string; type: "success" | "error"; onClose: () => void }) {
   return createPortal(
     <div

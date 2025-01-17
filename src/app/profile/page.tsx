@@ -21,23 +21,24 @@ import {
 } from "@/components/profile/tabs";
 import { Separator } from "@/components/profile/separator";
 import { BlogCard } from "@/components/blog-card";
-import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Pencil,
-  Save,
-  Calendar,
-  Lock,
-} from "lucide-react";
-import { useUser } from "@/contexts/userContext"; // Adjust the import path as needed
+import { User, Mail, Phone, MapPin, Pencil, Save, Calendar, Lock } from 'lucide-react';
+import { useUser } from "@/contexts/userContext";
 import toast from "react-hot-toast";
+
+interface UserProfile {
+  fullName: string;
+  email: string;
+  userName: string;
+  bio: string;
+  dateOfBirth: string;
+  country: string;
+  gender: string;
+}
 
 export default function ProfilePage() {
   const { user, setUser, isLoading } = useUser();
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<UserProfile>({
     fullName: "",
     email: "",
     userName: "",
@@ -46,8 +47,8 @@ export default function ProfilePage() {
     country: "",
     gender: "",
   });
+  const [pendingUpdates, setPendingUpdates] = useState<Partial<UserProfile>>({});
 
-  // Update local state when user data is loaded
   useEffect(() => {
     if (user) {
       setProfile({
@@ -55,7 +56,7 @@ export default function ProfilePage() {
         email: user.email || "",
         userName: user.userName || "",
         bio: user.bio || "",
-        dateOfBirth: user.dateOfBirth?.split("T")[0] || "", // Format date for input
+        dateOfBirth: user.dateOfBirth?.split("T")[0] || "",
         country: user.country || "",
         gender: user.gender || "",
       });
@@ -66,29 +67,32 @@ export default function ProfilePage() {
     setIsEditing(true);
   };
 
-  const handleSave = async () => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setProfile((prevProfile) => ({ ...prevProfile, [name]: value }));
+    setPendingUpdates((prevUpdates) => ({ ...prevUpdates, [name]: value }));
+  };
+
+  const handleSave = () => {
     try {
-      // Here you would make an API call to update the user profile
-      // For now, we'll just update the context
       if (user) {
         const updatedUser = {
           ...user,
-          ...profile,
+          ...pendingUpdates,
         };
         setUser(updatedUser);
         setIsEditing(false);
+        setPendingUpdates({});
         toast.success("Profile updated successfully");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile");
+      // Revert the changes in local state
+      setProfile((prevProfile) => ({ ...prevProfile, ...user }));
     }
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
   if (isLoading) {
@@ -117,13 +121,21 @@ export default function ProfilePage() {
               <CardTitle className="text-2xl font-bold text-orange-800">
                 Your Profile
               </CardTitle>
-              {!isEditing && (
+              {!isEditing ? (
                 <Button
                   onClick={handleEdit}
                   variant="ghost"
                   className="text-orange-800"
                 >
                   <Pencil className="mr-2 h-4 w-4" /> Edit Profile
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleSave}
+                  variant="ghost"
+                  className="text-orange-800"
+                >
+                  <Save className="mr-2 h-4 w-4" /> Save Changes
                 </Button>
               )}
             </CardHeader>
@@ -167,8 +179,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Mail className="text-orange-500" />
-                        <span>{profile.email}</span>{" "}
-                        {/* Email should not be editable */}
+                        <span>{profile.email}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <MapPin className="text-orange-500" />
@@ -216,14 +227,6 @@ export default function ProfilePage() {
                           <p className="text-sm text-gray-600">{profile.bio}</p>
                         )}
                       </div>
-                      {isEditing && (
-                        <Button
-                          onClick={handleSave}
-                          className="w-full bg-orange-500 hover:bg-orange-600 text-white"
-                        >
-                          <Save className="mr-2 h-4 w-4" /> Save Changes
-                        </Button>
-                      )}
                     </div>
                   </div>
                 </TabsContent>
@@ -278,3 +281,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
