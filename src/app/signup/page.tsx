@@ -24,14 +24,14 @@ import {
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { countries } from 'countries-list';
+import { countries } from "countries-list";
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/contexts/userContext";
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import toast from 'react-hot-toast';
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
-type Gender = 'male' | 'female' | 'other';
+type Gender = "male" | "female" | "other";
 
 interface SignupData {
   userName: string;
@@ -44,49 +44,28 @@ interface SignupData {
   country: string;
 }
 
-interface UserResponse {
-  status: string;
-  token: string;
-  data: {
-    user: {
-      userName: string;
-      email: string;
-      password: string;
-      dateOfBirth: string;
-      gender: Gender;
-      fullName: string;
-      bio: string;
-      country: string;
-      blogs: any[];
-      likedBlogs: any[];
-      savedBlogs: any[];
-      history: any[];
-      _id: string;
-      profilePhoto: string;
-      createdAt: string;
-      updatedAt: string;
-      __v: number;
-    }
-  }
-}
-
 export default function SignUpPage() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [gender, setGender] = useState<Gender | ''>("");
+  const [gender, setGender] = useState<Gender | "">("");
   const [dob, setDOB] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const { setUser } = useUser();
   const router = useRouter();
 
-  const countryList = Object.entries(countries).map(([code, country]) => ({
-    code,
-    name: country.name
-  })).sort((a, b) => a.name.localeCompare(b.name));
+  // Sort countries with "India" at the top
+  const countryList = [
+    { code: "IN", name: "India" },
+    ...Object.entries(countries)
+      .map(([code, country]) => ({ code, name: country.name }))
+      .filter((c) => c.name !== "India")
+      .sort((a, b) => a.name.localeCompare(b.name)),
+  ];
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -104,23 +83,19 @@ export default function SignUpPage() {
       bio,
       country,
     };
-    
+
     try {
       const res: any = await signup(data);
-      console.log(res)
-      if (res.status === 'success' && res.token) {
-        Cookies.set('token', res.token, { expires: 7 });
-        
-        console.log(res.data.user)
+      if (res.status === "success" && res.token) {
+        Cookies.set("token", res.token, { expires: 7 });
         setUser(res.data.user);
-        toast.success('Signup successful!');
-        router.push('/');
+        toast.success("Signup successful!");
+        router.push("/");
       } else {
-        throw new Error('Signup failed');
+        throw new Error("Signup failed");
       }
     } catch (error) {
-      console.log("Signup failed:", error);
-      toast.error('Signup failed. Please try again.');
+      toast.error("Signup failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -130,7 +105,12 @@ export default function SignUpPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-orange-50 to-white flex items-center justify-center py-12">
-        <Card className="w-full max-w-md">
+        {/* Card with blur effect when dropdown is open */}
+        <Card
+          className={`w-full max-w-md transition-all duration-200 ${
+            isDropdownOpen ? "blur-sm" : ""
+          }`}
+        >
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
             <CardDescription>
@@ -146,7 +126,9 @@ export default function SignUpPage() {
                   type="text"
                   required
                   value={name}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setName(e.target.value)
+                  }
                   placeholder="John Doe"
                 />
               </div>
@@ -157,7 +139,9 @@ export default function SignUpPage() {
                   type="email"
                   required
                   value={email}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setEmail(e.target.value)
+                  }
                   placeholder="john.doe@example.com"
                 />
               </div>
@@ -168,12 +152,19 @@ export default function SignUpPage() {
                   type="date"
                   required
                   value={dob}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setDOB(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setDOB(e.target.value)
+                  }
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="gender">Gender</Label>
-                <Select value={gender} onValueChange={(value: Gender) => setGender(value)} required>
+                <Select
+                  value={gender}
+                  onValueChange={(value: Gender) => setGender(value)}
+                  onOpenChange={setIsDropdownOpen}
+                  required
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select your gender" />
                   </SelectTrigger>
@@ -186,14 +177,19 @@ export default function SignUpPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="country">Country</Label>
-                <Select value={country} onValueChange={(value: string) => setCountry(value)} required>
+                <Select
+                  value={country}
+                  onValueChange={(value: string) => setCountry(value)}
+                  onOpenChange={setIsDropdownOpen}
+                  required
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select your country" />
                   </SelectTrigger>
                   <SelectContent>
-                    {countryList.map((country) => (
-                      <SelectItem key={country.code} value={country.code}>
-                        {country.name}
+                    {countryList.map((c) => (
+                      <SelectItem key={c.code} value={c.code}>
+                        {c.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -204,7 +200,9 @@ export default function SignUpPage() {
                 <Textarea
                   id="bio"
                   value={bio}
-                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setBio(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                    setBio(e.target.value)
+                  }
                   placeholder="Tell us a bit about yourself..."
                   rows={3}
                 />
@@ -216,7 +214,9 @@ export default function SignUpPage() {
                   type="password"
                   required
                   value={password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setPassword(e.target.value)
+                  }
                   minLength={8}
                 />
               </div>
@@ -229,7 +229,7 @@ export default function SignUpPage() {
                     Signing up...
                   </>
                 ) : (
-                  'Sign Up'
+                  "Sign Up"
                 )}
               </Button>
               <p className="text-sm text-center">
