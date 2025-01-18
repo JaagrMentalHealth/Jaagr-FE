@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS, { OutputData, API } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
@@ -8,10 +6,14 @@ import Paragraph from "@editorjs/paragraph";
 import SimpleImage from "@editorjs/image";
 import { ArrowLeft, Camera } from "lucide-react";
 import Preview from "./Preview";
+import axios from "axios"; 
 
 interface BlogContent {
   title: string;
   content: OutputData;
+  tags: string[];
+  coverPhoto: string | null;
+  draft: boolean;
 }
 
 const BlogEditor: React.FC = () => {
@@ -24,15 +26,14 @@ const BlogEditor: React.FC = () => {
   const [blogContent, setBlogContent] = useState<BlogContent>({
     title: "",
     content: { blocks: [] },
+    tags: [],
+    coverPhoto: null,
+    draft: true,
   });
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
 
   useEffect(() => {
-    if (
-      !isPreviewMode &&
-      editorRef.current &&
-      (!editor )
-    ) {
+    if (!isPreviewMode && editorRef.current && !editor) {
       const editorInstance = new EditorJS({
         holder: editorRef.current,
         tools: {
@@ -52,16 +53,15 @@ const BlogEditor: React.FC = () => {
         autofocus: true,
       });
     }
-  
+
     return () => {
-      if (editor ) {
+      if (editor) {
         editor.destroy();
         setEditor(null);
       }
     };
   }, [isPreviewMode, editor]);
-  
-  
+
   const updateWordAndCharCount = async (api: API) => {
     const content = await api.saver.save();
     let words = 0;
@@ -85,9 +85,27 @@ const BlogEditor: React.FC = () => {
     if (editor) {
       try {
         const content = await editor.save();
-        setBlogContent((prev) => ({ ...prev, content }));
-        console.log("Saved content:", content);
+        const blogData = {
+          heading: blogContent.title,
+          tags: blogContent.tags,
+          coverPhoto: uploadedImage,
+          content: JSON.stringify(content),
+          draft: blogContent.draft,
+        };
+
+        const response = await axios.post(
+          "https://jaagr-miy0.onrender.com/api/blogs",
+          blogData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("Blog saved successfully:", response.data);
         setLastSaved("just now");
+        setBlogContent((prev) => ({ ...prev, content }));
       } catch (error) {
         console.error("Error saving content:", error);
       }
@@ -206,6 +224,15 @@ const BlogEditor: React.FC = () => {
               type="text"
               placeholder="Add a tag..."
               className="w-full rounded-md border p-2"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && e.currentTarget.value) {
+                  setBlogContent((prev) => ({
+                    ...prev,
+                    tags: [...prev.tags, e.currentTarget.value],
+                  }));
+                  e.currentTarget.value = "";
+                }
+              }}
             />
           </div>
 
