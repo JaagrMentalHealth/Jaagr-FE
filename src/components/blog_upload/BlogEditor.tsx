@@ -6,7 +6,23 @@ import Paragraph from "@editorjs/paragraph";
 import SimpleImage from "@editorjs/image";
 import { ArrowLeft, Camera } from "lucide-react";
 import Preview from "./Preview";
-import axios from "axios"; 
+import { initializeApp } from "firebase/app";
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
+import axios from "axios";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCFwvJqaoNIpSZfiARrdkcMe9Z4pHRcmsw",
+  authDomain: "myblogproject-b66dd.firebaseapp.com",
+  projectId: "myblogproject-b66dd",
+  storageBucket: "myblogproject-b66dd.firebasestorage.app",
+  messagingSenderId: "160655501593",
+  appId: "1:160655501593:web:de5edf2f0b1e5977a9bd88",
+  measurementId: "G-DECK7P3V66"
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 
 interface BlogContent {
   title: string;
@@ -23,6 +39,7 @@ const BlogEditor: React.FC = () => {
   const [wordCount, setWordCount] = useState<number>(0);
   const [charCount, setCharCount] = useState<number>(0);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadMessage, setUploadMessage] = useState<string | null>(null);
   const [blogContent, setBlogContent] = useState<BlogContent>({
     title: "",
     content: { blocks: [] },
@@ -116,12 +133,32 @@ const BlogEditor: React.FC = () => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setUploadedImage(reader.result as string);
+      reader.onloadend = async () => {
+        const base64String = reader.result as string;
+
+        try {
+          const storageRef = ref(storage, `images/${file.name}`);
+          await uploadString(storageRef, base64String, "data_url");
+          const downloadURL = await getDownloadURL(storageRef);
+
+          setUploadedImage(downloadURL);
+          setBlogContent((prev) => ({ ...prev, coverPhoto: downloadURL }));
+
+          console.log("Image uploaded successfully:", downloadURL);
+
+          
+          setUploadMessage("Image uploaded successfully!");
+          setTimeout(() => setUploadMessage(null), 3000); 
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          setUploadMessage("Failed to upload the image. Please try again.");
+          setTimeout(() => setUploadMessage(null), 3000); 
+        }
       };
       reader.readAsDataURL(file);
     }
-  };
+};
+
 
   const togglePreviewMode = async () => {
     if (!isPreviewMode && editor) {
@@ -216,9 +253,14 @@ const BlogEditor: React.FC = () => {
           <div className="rounded-lg border bg-white p-4">
             <h3 className="mb-3 font-medium">Tags</h3>
             <div className="mb-3 flex flex-wrap gap-2">
-              <span className="rounded-full bg-gray-100 px-3 py-1 text-sm">
-                Depression
-              </span>
+              {blogContent.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="rounded-full bg-gray-100 px-3 py-1 text-sm"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
             <input
               type="text"
