@@ -26,7 +26,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { fetchUser } = useUser();
+  const { fetchUser,user } = useUser();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,9 +39,10 @@ export default function LoginPage() {
       console.log("HI")
       if (res.status === "success" && res.token) {
         Cookies.set("token", res.token, { expires: 7 });
-        const user = await fetchUser();
+        const User = await fetchUser();
+        console.log(user)
         console.log("hi")
-        console.log(user);
+        // console.log(user);
         toast.success("Login successful!");
         router.push("/");
       } else {

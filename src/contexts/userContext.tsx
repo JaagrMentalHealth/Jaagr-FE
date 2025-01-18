@@ -1,94 +1,102 @@
-'use client';
+"use client";
 
-import React, { createContext, useState, useContext, ReactNode, useCallback } from 'react';
-import Cookies from 'js-cookie';
-import toast from 'react-hot-toast';
-import { baseAxiosInstance } from '@/api/authAPI';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useCallback,
+} from "react";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import { baseAxiosInstance } from "@/api/authAPI";
 
 interface User {
+  _id: string;
   userName: string;
   email: string;
   dateOfBirth: string;
-  gender: 'male' | 'female' | 'other';
+  country: string;  // This was missing in original interface
+  gender: "male" | "female" | "other";
   fullName: string;
   bio: string;
-  blogs: any[]; // Consider creating a Blog interface if you have the structure
+  blogs: any[];
   likedBlogs: any[];
   savedBlogs: any[];
   history: any[];
-  _id: string;
   profilePhoto: string;
   createdAt: string;
   updatedAt: string;
+  __v: number;  // This was missing in original interface
 }
 
 interface UserContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: any | null;
+  setUser: (user: any | null) => void;
   fetchUser: () => Promise<void>;
   isLoading: boolean;
 }
 
+// Initialize with proper type
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const UserProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [user, setUser] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchUser: any = useCallback(async () => {
-    const token = Cookies.get('token');
-    
+  const fetchUser = useCallback(async () => {
+    const token = Cookies.get("token");
+
     if (!token) {
-      console.log('No token found');
+      console.log("No token found");
       return;
     }
 
     try {
       setIsLoading(true);
-      const response = await baseAxiosInstance.get('/getUser', {
+      const response = await baseAxiosInstance.get("/getUser", {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response)
 
-      if (response.status!=200) {
-        throw new Error('Failed to fetch user data');
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch user data");
       }
 
       const data = await response.data;
-      if (data.status === 'success') {
-        setUser(data.user);
+      if (data.status === "success") {
+        console.log("Setting user:", data.data.user);
+        setUser(data.data.user);
       } else {
-        throw new Error(data.message || 'Failed to fetch user data');
+        throw new Error(data.message || "Failed to fetch user data");
       }
     } catch (error) {
-      console.error('Error fetching user:', error);
-      toast.error('Failed to load user data');
-      // Optionally clear the token if it's invalid
-      // Cookies.remove('token');
+      console.error("Error fetching user:", error);
+      toast.error("Failed to load user data");
     } finally {
       setIsLoading(false);
-      return user;
+      console.log(user)
     }
   }, []);
 
-  // Optionally fetch user data when the provider mounts
-  // React.useEffect(() => {
-  //   fetchUser();
-  // }, [fetchUser]);
+  // Create the context value object
+  const value: UserContextType = {
+    user,
+    setUser,
+    fetchUser,
+    isLoading,
+  };
 
-  return (
-    <UserContext.Provider value={{ user, setUser, fetchUser, isLoading }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider');
+    throw new Error("useUser must be used within a UserProvider");
   }
   return context;
 };
