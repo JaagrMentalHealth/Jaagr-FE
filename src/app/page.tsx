@@ -5,7 +5,6 @@ import { useUser } from "@/contexts/userContext";
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
 import { BlogCard } from "@/components/blog-card";
-import { TestimonialCard } from "@/components/landing/testimonial-card";
 import { Footer } from "@/components/footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
