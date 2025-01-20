@@ -47,24 +47,6 @@ export default function Home() {
     }
   ];
 
-  const testimonials = [
-    {
-      quote: "Jaagr has transformed the way I share my mental health journey. The community is incredibly supportive and engaging.",
-      author: "Emily Chen",
-      role: "Mental Health Advocate",
-    },
-    {
-      quote: "As a therapist, I find Jaagr to be an invaluable resource for my clients. It provides a safe space for expression and growth.",
-      author: "Dr. Michael Brown",
-      role: "Clinical Psychologist",
-    },
-    {
-      quote: "Jaagr has helped me understand my thoughts and emotions better. It's like having a supportive friend in your pocket.",
-      author: "Sarah Thompson",
-      role: "Jaagr User",
-    },
-  ];
-
   const researchHighlights = [
     {
       title: "The Impact of Online Communities on Mental Health",
