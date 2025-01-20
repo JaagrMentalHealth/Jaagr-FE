@@ -125,21 +125,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className="bg-orange-50 py-16 md:py-24">
-          <div className="container mx-auto px-4">
-            <SectionHeader 
-              title="What Our Users Say" 
-              subtitle="Hear from our community members"
-            />
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((testimonial, index) => (
-                <TestimonialCard key={index} {...testimonial} />
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Support Our Cause Section */}
         <section className="bg-accent py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
