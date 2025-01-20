@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { FaXTwitter,FaInstagram,FaLinkedinIn } from "react-icons/fa6";
 
 export function Footer() {
   return (
@@ -32,7 +33,9 @@ export function Footer() {
     <div className="text-center sm:text-left">
       <h3 className="mb-4 text-lg font-semibold">Follow Us</h3>
       <div className="flex justify-center gap-4 sm:justify-start">
-        {/* Add social media icons here */}
+        <FaXTwitter/>
+        <FaInstagram/>
+        <FaLinkedinIn/>
       </div>
     </div>
   </div>

@@ -21,7 +21,16 @@ import {
 } from "@/components/profile/tabs";
 import { Separator } from "@/components/profile/separator";
 import { BlogCard } from "@/components/blog-card";
-import { User, Mail, Phone, MapPin, Pencil, Save, Calendar, Lock } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Pencil,
+  Save,
+  Calendar,
+  Lock,
+} from "lucide-react";
 import { useUser } from "@/contexts/userContext";
 import toast from "react-hot-toast";
 
@@ -34,6 +43,9 @@ interface UserProfile {
   country: string;
   gender: string;
 }
+// import { useUser } from "@/contexts/userContext";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { user, setUser, isLoading } = useUser();
@@ -47,7 +59,9 @@ export default function ProfilePage() {
     country: "",
     gender: "",
   });
-  const [pendingUpdates, setPendingUpdates] = useState<Partial<UserProfile>>({});
+  const [pendingUpdates, setPendingUpdates] = useState<Partial<UserProfile>>(
+    {}
+  );
 
   useEffect(() => {
     if (user) {
@@ -74,6 +88,20 @@ export default function ProfilePage() {
     setProfile((prevProfile) => ({ ...prevProfile, [name]: value }));
     setPendingUpdates((prevUpdates) => ({ ...prevUpdates, [name]: value }));
   };
+  const router=useRouter();
+  
+  const logOut=()=>{
+    try{
+      setUser(null);
+      Cookies.remove('token');
+      router.push('/')
+      toast.success('Logged Out Successfully')
+    }  
+    catch(error){
+      toast.error('Could not log out')
+    }
+      
+  }
 
   const handleSave = () => {
     try {
@@ -233,7 +261,7 @@ export default function ProfilePage() {
                 <TabsContent value="blogs" className="mt-6">
                   <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
                   <div className="grid gap-6 md:grid-cols-2">
-                    {user.blogs.map((blog:any, index:any) => (
+                    {user.blogs.map((blog: any, index: any) => (
                       <BlogCard key={index} {...blog} />
                     ))}
                   </div>
@@ -247,7 +275,7 @@ export default function ProfilePage() {
                 <TabsContent value="saved" className="mt-6">
                   <h3 className="text-xl font-semibold mb-4">Saved Blogs</h3>
                   <div className="grid gap-6 md:grid-cols-2">
-                    {user.savedBlogs.map((blog:any, index:any) => (
+                    {user.savedBlogs.map((blog: any, index: any) => (
                       <BlogCard key={index} {...blog} />
                     ))}
                   </div>
@@ -262,7 +290,7 @@ export default function ProfilePage() {
                     Reading History
                   </h3>
                   <div className="grid gap-6 md:grid-cols-2">
-                    {user.history.map((blog:any, index:any) => (
+                    {user.history.map((blog: any, index: any) => (
                       <BlogCard key={index} {...blog} />
                     ))}
                   </div>
@@ -271,8 +299,13 @@ export default function ProfilePage() {
                       No reading history yet.
                     </p>
                   )}
-                </TabsContent>
+                </TabsContent>  
               </Tabs>
+              <div className="flex justify-end">
+                <button onClick={logOut} className="px-6 py-2 bg-orange-50 text-[#262b33] font-semibold rounded-lg shadow-md hover:bg-orange-60 border-orange-500 border-2 transition-all">
+                  Log Out
+                </button>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -281,4 +314,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
