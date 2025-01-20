@@ -1,7 +1,7 @@
 "use client";
 
-import { Navbar } from "@/components/landing/navbar";
-import { Footer } from "@/components/landing/footer";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { JSX, useEffect, useState } from "react";
 import { getBlog } from "@/api/blogAPI";
 import Output from "editorjs-react-renderer";
@@ -47,8 +47,8 @@ const renderers = {
   },
 };
 
-export default function BlogPost({params}:any) {
-  const Params:any=React.use(params)
+export default function BlogPost({ params }: any) {
+  const Params: any = React.use(params);
   const [post, setPost] = useState<BlogPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

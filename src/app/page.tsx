@@ -7,15 +7,16 @@ import { Hero } from "@/components/landing/hero";
 import { BlogCard } from "@/components/blog-card";
 import { Footer } from "@/components/footer";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/landing/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SectionHeader } from "@/components/landing/section-header";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+// import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { fetchUser,user } = useUser();
-  
+  const { fetchUser, user } = useUser();
+  const router=useRouter()
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
@@ -46,8 +47,8 @@ export default function Home() {
         "Meditation has gained significant attention as a powerful tool for enhancing mental well-being. Discover how this ancient practice can help reduce stress, anxiety, and depression.",
       author: "Alex Johnson",
       date: "March 25, 2025",
-      image: "/images/blog3.png"
-    }
+      image: "/images/blog3.png",
+    },
   ];
 
   const researchHighlights = [
@@ -65,10 +66,11 @@ export default function Home() {
     },
     {
       title: "Peer Support in Mental Health Recovery",
-      description: "Exploring the role of community engagement in mental health improvement and recovery.",
-      link: "#"
-    }
-  ]
+      description:
+        "Exploring the role of community engagement in mental health improvement and recovery.",
+      link: "#",
+    },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -88,12 +90,18 @@ export default function Home() {
               life purpose
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-            <Link href="/contact" className="w-full sm:w-auto">
-              <Button className="w-full bg-primary text-white hover:bg-primary/90 sm:w-auto text-lg py-4 px-6">Need Help?</Button>
-            </Link>
-            <Link href="/mental-health-exercises" className="w-full sm:w-auto">
-              <Button variant="outline" className="w-full sm:w-auto text-lg py-4 px-6 hover:bg-accent">Learn more</Button>
-            </Link>
+              <Button className="bg-primary text-white hover:bg-primary/90">
+                Need Help?
+              </Button>
+              <Button
+                onClick={()=>{
+                  router.push('/about')
+                }}
+                variant="outline"
+                className="hover:bg-accent-foreground/10"
+              >
+                Learn more
+              </Button>
             </div>
           </div>
         </section>
@@ -125,7 +133,9 @@ export default function Home() {
               subtitle="Join us in our mission to promote mental health awareness and prevention"
             />
             <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Our prevention mission is is about looking for the root causes of todays problems. Our work looks to address these issues through research, community work and influencing policy.
+              Our prevention mission is is about looking for the root causes of
+              today's problems. Our work looks to address these issues through
+              research, community work and influencing policy.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
               <Button
@@ -239,5 +249,5 @@ export default function Home() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }

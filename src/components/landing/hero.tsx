@@ -11,11 +11,12 @@ export function Hero() {
   const router = useRouter();
 
   const handleStartWriting = () => {
-    if (user) {
-      router.push("/upload");
-    } else {
-      router.push("/login?redirect=/upload");
-    }
+    // if (user) {
+    //   router.push("/upload");
+    // } else {
+    //   router.push("/login?redirect=/upload");
+    // }
+    router.push("/self-assessment");
   };
 
   return (
@@ -29,21 +30,17 @@ export function Hero() {
           <p className="text-xl text-muted-foreground md:text-2xl">
             Bringing mental health experts to your palm
           </p>
-          <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
+          <div className="flex flex-col gap-4 sm:justify-center md:justify-start">
             <Button
               onClick={handleStartWriting}
-              className="w-full bg-orange-500 text-white hover:bg-orange-600 sm:w-auto text-lg py-6 px-8"
+              className="w-full sm:w-fit sm:px-16 bg-orange-500 text-white hover:bg-orange-600  text-lg py-6 px-8"
             >
-              Start Writing
+              Take Assessment Yourself
             </Button>
-            <Link href="/blogs" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto text-lg py-6 px-8 hover:bg-orange-100"
-              >
-                Explore Blogs
-              </Button>
-            </Link>
+            <div className="flex text-xl text-secondary-foreground md:text-2xl">
+              Want to read something?
+              <Link href={"/blogs"} className="font-bold">Read Here</Link>
+            </div>
           </div>
         </div>
         <div className="flex justify-center md:order-last mx-auto">
