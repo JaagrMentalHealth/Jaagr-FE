@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS, { OutputData, API } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
@@ -8,7 +10,8 @@ import { ArrowLeft, Camera } from "lucide-react";
 import Preview from "./Preview";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import axios from "axios";
-import {blogUpload} from '@/api/blogAPI'
+import { blogUpload } from "@/api/blogAPI";
+import { useRouter } from "next/navigation";
 
 // AWS S3 configuration
 const s3Client = new S3Client({
@@ -35,6 +38,7 @@ const BlogEditor: React.FC = () => {
   const [charCount, setCharCount] = useState<number>(0);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadMessage, setUploadMessage] = useState<string | null>(null);
+  const [currentTag, setCurrentTag] = useState<string>("");
   const [blogContent, setBlogContent] = useState<BlogContent>({
     title: "",
     content: { blocks: [] },
@@ -43,6 +47,8 @@ const BlogEditor: React.FC = () => {
     draft: true,
   });
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!isPreviewMode && editorRef.current && !editor) {
@@ -93,60 +99,76 @@ const BlogEditor: React.FC = () => {
     setBlogContent((prev) => ({ ...prev, content }));
   };
 
-  const handleSave = async () => {
+  const handleSave = async (publishMode: boolean = false) => {
     if (editor) {
       try {
         const content = await editor.save();
-        console.log(content)
+        console.log(content);
         const blogData = {
           heading: blogContent.title,
           tags: blogContent.tags,
           coverPhoto: uploadedImage,
           content: JSON.stringify(content),
-          draft: blogContent.draft,
+          draft: publishMode ? false : blogContent.draft,
         };
 
-        console.log(blogData)
+        console.log(blogData);
 
-        const response = await blogUpload(blogData)
-        console.log(response)
+        const response = await blogUpload(blogData);
+        const slug = response.data.blog.slug;
+        router.push(`/blog/${slug}`);
 
         console.log("Blog saved successfully:", response.data);
         setLastSaved("just now");
-        setBlogContent((prev) => ({ ...prev, content }));
+        setBlogContent((prev) => ({
+          ...prev,
+          content,
+          draft: publishMode ? false : prev.draft,
+        }));
+
+        if (publishMode) {
+          setUploadMessage("Blog published successfully!");
+        } else {
+          setUploadMessage("Draft saved successfully!");
+        }
+        setTimeout(() => setUploadMessage(null), 3000);
       } catch (error) {
         console.error("Error saving content:", error);
+        setUploadMessage("Failed to save. Please try again.");
+        setTimeout(() => setUploadMessage(null), 3000);
       }
     }
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       try {
         // Create a unique file name
         const fileName = `${Date.now()}-${file.name}`;
-        
+
         // Convert file to buffer
         const buffer = await file.arrayBuffer();
-        
+
         // Upload to S3
         const command = new PutObjectCommand({
           Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
           Key: `blog-images/${fileName}`,
-          Body: buffer,
+          Body: new Uint8Array(buffer),
           ContentType: file.type,
-          ACL: 'public-read',
+          ACL: "public-read",
         });
 
         await s3Client.send(command);
-        
+
         // Generate the URL for the uploaded image
         const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/blog-images/${fileName}`;
-        
+
         setUploadedImage(imageUrl);
         setBlogContent((prev) => ({ ...prev, coverPhoto: imageUrl }));
-        
+
         setUploadMessage("Image uploaded successfully!");
         setTimeout(() => setUploadMessage(null), 3000);
       } catch (error) {
@@ -167,6 +189,18 @@ const BlogEditor: React.FC = () => {
       }
     }
     setIsPreviewMode(!isPreviewMode);
+  };
+
+  const handleAddTag = () => {
+    if (currentTag.trim()) {
+      setBlogContent((prev) => ({
+        ...prev,
+        tags: [...prev.tags, currentTag.trim()],
+      }));
+      setCurrentTag("");
+      setUploadMessage("Tag added successfully!");
+      setTimeout(() => setUploadMessage(null), 3000);
+    }
   };
 
   return (
@@ -192,10 +226,16 @@ const BlogEditor: React.FC = () => {
               Last saved {lastSaved}
             </span>
             <button
-              className="rounded border px-4 py-2 text-sm"
-              onClick={handleSave}
+              className="rounded border px-4 py-2 text-sm hover:bg-gray-50"
+              onClick={() => handleSave(false)}
             >
               Save Draft
+            </button>
+            <button
+              className="rounded border bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
+              onClick={() => handleSave(true)}
+            >
+              Publish
             </button>
             <button
               className="rounded bg-orange-500 px-4 py-2 text-sm text-white hover:bg-orange-600"
@@ -260,20 +300,26 @@ const BlogEditor: React.FC = () => {
                 </span>
               ))}
             </div>
-            <input
-              type="text"
-              placeholder="Add a tag..."
-              className="w-full rounded-md border p-2"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && e.currentTarget.value) {
-                  setBlogContent((prev) => ({
-                    ...prev,
-                    tags: [...prev.tags, e.currentTarget.value],
-                  }));
-                  e.currentTarget.value = "";
-                }
-              }}
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Add a tag..."
+                className="w-full rounded-md border p-2"
+                value={currentTag}
+                onChange={(e) => setCurrentTag(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleAddTag();
+                  }
+                }}
+              />
+              <button
+                onClick={handleAddTag}
+                className="rounded bg-orange-500 px-4 py-2 text-sm text-white hover:bg-orange-600"
+              >
+                Add
+              </button>
+            </div>
           </div>
 
           <div className="rounded-lg border bg-white p-4">

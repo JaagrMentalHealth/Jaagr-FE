@@ -50,6 +50,7 @@
     "clsx": "^2.1.1",
     "countries-list": "^3.1.1",
     "date-fns": "^4.1.0",
+    "editorjs-react-renderer": "^3.5.1",
     "jaagr-fe": "file:",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.469.0",
