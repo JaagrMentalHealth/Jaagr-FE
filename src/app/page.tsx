@@ -14,12 +14,6 @@ import { SectionHeader } from "@/components/landing/section-header";
 import Link from "next/link";
 
 export default function Home() {
-  const { fetchUser } = useUser();
-
-  useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
-
   const featuredBlogs = [
     {
       slug: "10-ways-to-overcome-anxiety",
@@ -45,25 +39,7 @@ export default function Home() {
       date: "March 25, 2025",
       image: "/images/blog3.png"
     }
-  ];
-
-  const testimonials = [
-    {
-      quote: "Jaagr has transformed the way I share my mental health journey. The community is incredibly supportive and engaging.",
-      author: "Emily Chen",
-      role: "Mental Health Advocate",
-    },
-    {
-      quote: "As a therapist, I find Jaagr to be an invaluable resource for my clients. It provides a safe space for expression and growth.",
-      author: "Dr. Michael Brown",
-      role: "Clinical Psychologist",
-    },
-    {
-      quote: "Jaagr has helped me understand my thoughts and emotions better. It's like having a supportive friend in your pocket.",
-      author: "Sarah Thompson",
-      role: "Jaagr User",
-    },
-  ];
+  ]
 
   const researchHighlights = [
     {
@@ -81,7 +57,7 @@ export default function Home() {
       description: "Exploring the role of community engagement in mental health improvement and recovery.",
       link: "#"
     }
-  ];
+  ]
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -100,8 +76,12 @@ export default function Home() {
               At Jaagr, we believe in building habits and models that serve your life purpose
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-              <Button className="bg-primary text-white hover:bg-primary/90">Need Help?</Button>
-              <Button variant="outline" className="hover:bg-accent-foreground/10">Learn more</Button>
+            <Link href="/contact" className="w-full sm:w-auto">
+              <Button className="w-full bg-primary text-white hover:bg-primary/90 sm:w-auto text-lg py-4 px-6">Need Help?</Button>
+            </Link>
+            <Link href="/mental-health-exercises" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto text-lg py-4 px-6 hover:bg-accent">Learn more</Button>
+            </Link>
             </div>
           </div>
         </section>
@@ -133,7 +113,7 @@ export default function Home() {
               subtitle="Join us in our mission to promote mental health awareness and prevention"
             />
             <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Our prevention mission is about looking for the root causes of today's problems. Our work looks to address these issues through research, community work and influencing policy.
+              Our prevention mission is is about looking for the root causes of todays problems. Our work looks to address these issues through research, community work and influencing policy.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
               <Button asChild className="bg-primary text-white hover:bg-primary/90">
@@ -223,6 +203,6 @@ export default function Home() {
       </main>
       <Footer />
     </div>
-  );
+  )
 }
 
