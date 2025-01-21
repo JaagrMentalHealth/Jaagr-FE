@@ -17,7 +17,7 @@ export function BlogCard({ title, excerpt, author, date, image, slug }: BlogCard
       <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
         <div className="aspect-[16/9] relative overflow-hidden">
           <Image
-            src={image}
+            src={`${image}`}
             alt={title}
             fill
             className="object-cover transition-transform duration-300 hover:scale-105"

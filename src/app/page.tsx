@@ -1,51 +1,67 @@
-import { Navbar } from "@/components/navbar"
-import { Hero } from "@/components/landing/hero"
-import { BlogCard } from "@/components/blog-card"
-import { Footer } from "@/components/footer"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { SectionHeader } from "@/components/landing/section-header"
-import Link from "next/link"
+"use client";
+
+import { useEffect } from "react";
+import { useUser } from "@/contexts/userContext";
+import { Navbar } from "@/components/navbar";
+import { Hero } from "@/components/landing/hero";
+import { BlogCard } from "@/components/blog-card";
+import { Footer } from "@/components/footer";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionHeader } from "@/components/landing/section-header";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
+  const { fetchUser,user } = useUser();
+  
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
   const featuredBlogs = [
     {
       slug: "10-ways-to-overcome-anxiety",
       title: "10 Ways to Overcome Anxiety With Proven Techniques",
-      excerpt: "Anxiety is a common mental health condition that affects millions of people worldwide. While medication can be helpful, there are many natural techniques that can help manage anxiety effectively.",
+      excerpt:
+        "Anxiety is a common mental health condition that affects millions of people worldwide. While medication can be helpful, there are many natural techniques that can help manage anxiety effectively.",
       author: "John Doe",
       date: "March 15, 2025",
-      image: "/images/blog1.png"
+      image: "/images/blog1.png",
     },
     {
       slug: "understanding-anxiety-signs",
       title: "Understanding Anxiety: Signs and Symptoms to Watch For",
-      excerpt: "Anxiety is a natural response to stress, but when it becomes excessive and persistent, it can interfere with daily life. Learn to recognize the signs and symptoms of anxiety disorders.",
+      excerpt:
+        "Anxiety is a natural response to stress, but when it becomes excessive and persistent, it can interfere with daily life. Learn to recognize the signs and symptoms of anxiety disorders.",
       author: "Jane Smith",
       date: "March 20, 2025",
-      image: "/images/blog2.png"
+      image: "/images/blog2.png",
     },
     {
       slug: "role-of-meditation",
       title: "The Role of Meditation in Improving Mental Health",
-      excerpt: "Meditation has gained significant attention as a powerful tool for enhancing mental well-being. Discover how this ancient practice can help reduce stress, anxiety, and depression.",
+      excerpt:
+        "Meditation has gained significant attention as a powerful tool for enhancing mental well-being. Discover how this ancient practice can help reduce stress, anxiety, and depression.",
       author: "Alex Johnson",
       date: "March 25, 2025",
       image: "/images/blog3.png"
     }
-  ]
+  ];
 
   const researchHighlights = [
     {
       title: "The Impact of Online Communities on Mental Health",
-      description: "A study on how platforms like Jaagr contribute to mental well-being and support networks.",
-      link: "#"
+      description:
+        "A study on how platforms like Jaagr contribute to mental well-being and support networks.",
+      link: "#",
     },
     {
       title: "Effectiveness of Digital Mental Health Interventions",
-      description: "Research findings on the efficacy of online mental health resources and tools.",
-      link: "#"
+      description:
+        "Research findings on the efficacy of online mental health resources and tools.",
+      link: "#",
     },
     {
       title: "Peer Support in Mental Health Recovery",
@@ -59,27 +75,32 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
-        
+
         {/* Mission Statement Section */}
         <section className="bg-accent py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
-            <SectionHeader 
-              title="Our Mission" 
+            <SectionHeader
+              title="Our Mission"
               subtitle="Creating a supportive community for mental well-being"
             />
             <p className="text-xl mb-8 max-w-3xl mx-auto">
-              At Jaagr, we believe in building habits and models that serve your life purpose
+              At Jaagr, we believe in building habits and models that serve your
+              life purpose
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-              <Button className="bg-primary text-white hover:bg-primary/90">Need Help?</Button>
-              <Button variant="outline" className="hover:bg-accent-foreground/10">Learn more</Button>
+            <Link href="/contact" className="w-full sm:w-auto">
+              <Button className="w-full bg-primary text-white hover:bg-primary/90 sm:w-auto text-lg py-4 px-6">Need Help?</Button>
+            </Link>
+            <Link href="/mental-health-exercises" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto text-lg py-4 px-6 hover:bg-accent">Learn more</Button>
+            </Link>
             </div>
           </div>
         </section>
 
         <section className="container mx-auto px-4 py-16 md:py-24">
-          <SectionHeader 
-            title="Featured Insights" 
+          <SectionHeader
+            title="Featured Insights"
             subtitle="Explore our curated collection of mental health articles"
           />
           <div className="mb-12">
@@ -99,18 +120,25 @@ export default function Home() {
         {/* Support Our Cause Section */}
         <section className="bg-accent py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
-            <SectionHeader 
-              title="Support Our Cause" 
+            <SectionHeader
+              title="Support Our Cause"
               subtitle="Join us in our mission to promote mental health awareness and prevention"
             />
             <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Our prevention mission is is about looking for the root causes of today's problems. Our work looks to address these issues through research, community work and influencing policy.
+              Our prevention mission is is about looking for the root causes of todays problems. Our work looks to address these issues through research, community work and influencing policy.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-              <Button asChild className="bg-primary text-white hover:bg-primary/90">
+              <Button
+                asChild
+                className="bg-primary text-white hover:bg-primary/90"
+              >
                 <Link href="/contribute">Contribute</Link>
               </Button>
-              <Button asChild variant="outline" className="hover:bg-accent-foreground/10">
+              <Button
+                asChild
+                variant="outline"
+                className="hover:bg-accent-foreground/10"
+              >
                 <Link href="/shop">Shop</Link>
               </Button>
             </div>
@@ -120,8 +148,8 @@ export default function Home() {
         {/* Professionals Section */}
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
-            <SectionHeader 
-              title="For Professionals" 
+            <SectionHeader
+              title="For Professionals"
               subtitle="Join our network of mental health experts and contribute to our community"
             />
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -130,7 +158,10 @@ export default function Home() {
                   <CardTitle>Join Our Network</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="mb-4">Connect with other mental health professionals and contribute to our community-driven approach.</p>
+                  <p className="mb-4">
+                    Connect with other mental health professionals and
+                    contribute to our community-driven approach.
+                  </p>
                   <Button asChild>
                     <Link href="/professionals/join">Join Now</Link>
                   </Button>
@@ -141,7 +172,10 @@ export default function Home() {
                   <CardTitle>Research Opportunities</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="mb-4">Explore opportunities to conduct and participate in cutting-edge mental health research.</p>
+                  <p className="mb-4">
+                    Explore opportunities to conduct and participate in
+                    cutting-edge mental health research.
+                  </p>
                   <Button asChild>
                     <Link href="/professionals/research">Learn More</Link>
                   </Button>
@@ -152,9 +186,14 @@ export default function Home() {
                   <CardTitle>Resources for Professionals</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="mb-4">Access a wealth of resources, including latest research, best practices, and professional development materials.</p>
+                  <p className="mb-4">
+                    Access a wealth of resources, including latest research,
+                    best practices, and professional development materials.
+                  </p>
                   <Button asChild>
-                    <Link href="/professionals/resources">Access Resources</Link>
+                    <Link href="/professionals/resources">
+                      Access Resources
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -165,19 +204,25 @@ export default function Home() {
         {/* Research Section */}
         <section className="bg-accent py-16 md:py-24">
           <div className="container mx-auto px-4">
-            <SectionHeader 
-              title="Research" 
+            <SectionHeader
+              title="Research"
               subtitle="Explore our latest findings and ongoing studies in mental health"
             />
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {researchHighlights.map((research, index) => (
-                <Card key={index} className="transition-all duration-300 hover:shadow-lg">
+                <Card
+                  key={index}
+                  className="transition-all duration-300 hover:shadow-lg"
+                >
                   <CardHeader>
                     <CardTitle>{research.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="mb-4">{research.description}</p>
-                    <Link href={research.link} className="text-primary hover:underline">
+                    <Link
+                      href={research.link}
+                      className="text-primary hover:underline"
+                    >
                       Read more
                     </Link>
                   </CardContent>

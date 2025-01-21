@@ -1,28 +1,31 @@
-'use client'
+"use client";
 
-import { useState, useCallback } from "react"
-import Link from "next/link"
-import { usePathname } from 'next/navigation'
-import { Button } from "@/components/ui/button"
-import { Menu, X } from 'lucide-react'
+import { useState, useCallback } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import { useUser } from "@/contexts/userContext";
 
 const leftNavItems = [
-  { href: '/self-assessment', label: 'Self Assessment' },
-  { href: '/blogs', label: 'Articles' },
-]
+  { href: "/self-assessment", label: "Self Assessment" },
+  { href: "/blogs", label: "Articles" },
+];
 
 const rightNavItems = [
-  { href: '/mission', label: 'Our Mission' },
-  { href: '/contact', label: 'Get in Touch' },
-]
+  { href: "/mission", label: "Our Mission" },
+  { href: "/contact", label: "Get in Touch" },
+];
 
 export function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const pathname = usePathname()
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const { user } = useUser();
 
   const toggleMenu = useCallback(() => {
-    setIsMenuOpen((prev) => !prev)
-  }, [])
+    setIsMenuOpen((prev) => !prev);
+  }, []);
 
   return (
     <header className="w-full border-b bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
@@ -37,7 +40,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === item.href ? 'text-primary' : ''
+                  pathname === item.href ? "text-primary" : ""
                 }`}
               >
                 {item.label}
@@ -52,7 +55,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === item.href ? 'text-primary' : ''
+                  pathname === item.href ? "text-primary" : ""
                 }`}
               >
                 {item.label}
@@ -60,12 +63,34 @@ export function Navbar() {
             ))}
           </nav>
           <div className="hidden md:flex space-x-2">
-            <Button asChild variant="ghost" className="hover:text-primary">
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild className="bg-primary hover:bg-primary/90">
-              <Link href="/signup">Sign Up</Link>
-            </Button>
+            {user?.userName && user !== null ? (
+              <Link href="/profile">
+                <Image
+                  alt={user.userName}
+                  src={
+                    user.profilePhoto === "default-male.png"
+                      ? "/default.jpg"
+                      : user.profilePhoto
+                  }
+                  width={30}
+                  height={30}
+                  className="rounded-full"
+                />
+              </Link>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost" className="hover:text-orange-500">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button className="bg-orange-500 text-white hover:bg-orange-600">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
           <button
             className="md:hidden"
@@ -85,22 +110,47 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === item.href ? 'text-primary' : ''
+                  pathname === item.href ? "text-primary" : ""
                 }`}
                 onClick={toggleMenu}
               >
                 {item.label}
               </Link>
             ))}
-            <Button asChild variant="ghost" className="w-full hover:text-primary">
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild className="w-full bg-primary text-white hover:bg-primary/90">
-              <Link href="/signup">Sign Up</Link>
-            </Button>
+            {user?.userName && user !== null ? (
+              <Link href="/profile" onClick={toggleMenu}>
+                <Image
+                  alt={user.userName}
+                  src={
+                    user.profilePhoto === "default-male.png"
+                      ? "/default.jpg"
+                      : user.profilePhoto
+                  }
+                  width={30}
+                  height={30}
+                  className="rounded-full"
+                />
+              </Link>
+            ) : (
+              <>
+                <Link href="/login" className="w-full" onClick={toggleMenu}>
+                  <Button
+                    variant="ghost"
+                    className="w-full hover:text-orange-500"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup" className="w-full" onClick={toggleMenu}>
+                  <Button className="w-full bg-orange-500 text-white hover:bg-orange-600">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       )}
     </header>
-  )
+  );
 }
