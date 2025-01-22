@@ -9,7 +9,7 @@ import Preview from "./Preview";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { blogUpload } from "@/api/blogAPI";
 import { useRouter } from "next/navigation";
-
+import toast from "react-hot-toast";
 // AWS S3 configuration
 const s3Client = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_REGION!,
@@ -80,8 +80,29 @@ const BlogEditor: React.FC = () => {
 
   const router = useRouter();
 
+  const handleRemoveTag = (index: any) => {
+    setBlogContent((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((_, i) => i !== index),
+    }));
+  };
+  const validateAndCleanEditorData = (data: OutputData): OutputData => {
+    if (!data || !Array.isArray(data.blocks)) {
+      return { blocks: [] }
+    }
+
+    const cleanedBlocks = data.blocks.filter((block) => {
+      if (block.type === "paragraph" && (!block.data || !block.data.text)) {
+        return false // Remove invalid paragraph blocks
+      }
+      return true
+    })
+
+    return { ...data, blocks: cleanedBlocks }
+  }
+
   useEffect(() => {
-    if (!isPreviewMode && editorRef.current && !editor) {
+    if (editorRef.current && !editor) {
       const editorInstance = new EditorJS({
         holder: editorRef.current,
         tools: {
@@ -158,7 +179,9 @@ const BlogEditor: React.FC = () => {
         setEditor(null);
       }
     };
-  }, [isPreviewMode, editor]);
+  }, [editor]);
+
+  //Preview Mode CardContent
 
   const updateWordAndCharCount = async (api: API) => {
     const content = await api.saver.save();
@@ -195,25 +218,37 @@ const BlogEditor: React.FC = () => {
         console.log(blogData);
 
         const response = await blogUpload(blogData);
-        const slug = response.data.blog.slug;
-        router.push(`/blog/${slug}`);
+        console.log(response);
+        if (
+          response.status == 200 ||
+          response.status == 201 ||
+          response.status == "success"
+        ) {
+          console.log(response.data.data.blog);
+          const slug = response.data.data.blog.slug;
+          router.push(`/blog/${slug}`);
 
-        console.log("Blog saved successfully:", response.data);
-        setLastSaved("just now");
-        setBlogContent((prev) => ({
-          ...prev,
-          content,
-          draft: publishMode ? false : prev.draft,
-        }));
+          console.log("Blog saved successfully:", response.data);
+          setLastSaved("just now");
+          setBlogContent((prev) => ({
+            ...prev,
+            content,
+            draft: publishMode ? false : prev.draft,
+          }));
 
-        if (publishMode) {
-          setUploadMessage("Blog published successfully!");
+          if (publishMode) {
+            setUploadMessage("Blog published successfully!");
+          } else {
+            setUploadMessage("Draft saved successfully!");
+          }
+          setTimeout(() => setUploadMessage(null), 3000);
         } else {
-          setUploadMessage("Draft saved successfully!");
+          console.log(response);
+          toast.error(response);
         }
-        setTimeout(() => setUploadMessage(null), 3000);
       } catch (error) {
-        console.error("Error saving content:", error);
+        // toast.error(error)
+        console.log(error);
         setUploadMessage("Failed to save. Please try again.");
         setTimeout(() => setUploadMessage(null), 3000);
       }
@@ -255,14 +290,16 @@ const BlogEditor: React.FC = () => {
   };
 
   const togglePreviewMode = async () => {
-    if (!isPreviewMode && editor) {
+    if (editor) {
       try {
         const content = await editor.save();
+        console.log(content)
         setBlogContent((prev) => ({ ...prev, content }));
       } catch (error) {
         console.error("Error saving content:", error);
       }
     }
+    // Instead of destroying the editor, just hide/show it
     setIsPreviewMode(!isPreviewMode);
   };
 
@@ -288,7 +325,6 @@ const BlogEditor: React.FC = () => {
             </button>
 
             <textarea
-
               rows={1}
               placeholder="Enter blog title..."
               className="border-none text-lg font-medium focus:outline-none w-[70%] resize-none appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -326,19 +362,19 @@ const BlogEditor: React.FC = () => {
 
       <main className="mx-auto grid max-w-6xl gap-6 p-6 lg:grid-cols-[1fr,300px]">
         <div className="space-y-6">
-          {isPreviewMode ? (
-            <Preview content={blogContent} />
-          ) : (
-            <div className="rounded-lg border bg-white p-6">
-              <div id="editorjs" ref={editorRef} className="min-h-[400px]" />
-              <div className="mt-4 text-sm text-gray-500">
-                Words: {wordCount} Characters: {charCount}
-                <span className="float-right text-green-500">
-                  Changes saved
-                </span>
-              </div>
+          <div
+            className={`${
+              isPreviewMode ? "hidden" : "block"
+            } rounded-lg border bg-white p-6`}
+          >
+            <div id="editorjs" ref={editorRef} className="min-h-[400px]" />
+            <div className="mt-4 text-sm text-gray-500">
+              Words: {wordCount} Characters: {charCount}
+              <span className="float-right text-green-500">Changes saved</span>
             </div>
-          )}
+          </div>
+
+          {isPreviewMode && <Preview content={blogContent} />}
           {uploadedImage && (
             <div className="rounded-lg border bg-white p-4">
               <h3 className="font-medium">Uploaded Image Preview</h3>
@@ -369,12 +405,18 @@ const BlogEditor: React.FC = () => {
             <h3 className="mb-3 font-medium">Tags</h3>
             <div className="mb-3 flex flex-wrap gap-2">
               {blogContent.tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="rounded-full bg-gray-100 px-3 py-1 text-sm"
-                >
-                  {tag}
-                </span>
+                <div key={index} className="relative inline-flex items-center">
+                  <span className="rounded-full bg-gray-100 px-3 py-1 text-sm relative pr-6">
+                    {tag}
+                    <button
+                      onClick={() => handleRemoveTag(index)}
+                      className="absolute top-0 right-0 -mt-1 -mr-1 rounded-full bg-orange-200 text-white text-xs px-1.5 py-0.5 hover:bg-red-300"
+                      aria-label="Remove tag"
+                    >
+                      ×
+                    </button>
+                  </span>
+                </div>
               ))}
             </div>
             <div className="flex gap-2">

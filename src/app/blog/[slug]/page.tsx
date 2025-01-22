@@ -7,6 +7,11 @@ import { getBlog } from "@/api/blogAPI";
 import Output from "editorjs-react-renderer";
 import React from "react";
 // import Image from "next/image"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/profile/avatar";
 
 interface Author {
   _id: string;
@@ -111,13 +116,18 @@ export default function BlogPost({ params }: any) {
             <div className="mb-8 flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <div className="h-10 w-10 rounded-full bg-muted overflow-hidden">
-                  {post.author.profilePhoto && (
-                    <img
-                      src={post.author.profilePhoto || "/placeholder.svg"}
+                  <Avatar className="w-16 h-16 mx-auto">
+                    <AvatarImage
+                      src={post.author.profilePhoto}
                       alt={post.author.fullName}
-                      className="w-full h-full object-cover"
                     />
-                  )}
+                    <AvatarFallback className="sm:w-10 sm:h-10 sm:border-none">
+                      {post.author.fullName
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
                 <div>
                   <p className="font-medium">{post.author.fullName}</p>

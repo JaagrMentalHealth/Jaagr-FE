@@ -19,13 +19,10 @@ export async function blogUpload(blogData) {
         "Content-Type": "application/json",
       },
     });
-    if (res.status == 201) {
-      return res.data;
-    } else {
-      return res;
-    }
+
+    return res;
   } catch (error) {
-    return error;
+    return error.response.data.message;
   }
 }
 
@@ -57,18 +54,18 @@ export async function getBlog(slug) {
   }
 }
 
-export async function deleteBlog(slug){
-    try{
-        const token = Cookies.get("token");
-        const res=await baseBlogInstance.delete(`blogs/${slug}`,{
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-          return res.data;
-    }
-    catch(err){
-        return err.response.data.message;
-    }
+export async function deleteBlog(slug) {
+  try {
+    const token = Cookies.get("token");
+    const res = await baseBlogInstance.delete(`blogs/${slug}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    // console.log(res.data)
+    return res;
+  } catch (err) {
+    return err.response.data.message;
+  }
 }

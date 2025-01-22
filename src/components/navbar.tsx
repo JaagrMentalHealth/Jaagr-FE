@@ -7,6 +7,11 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useUser } from "@/contexts/userContext";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/profile/avatar";
 
 const leftNavItems = [
   { href: "/self-assessment", label: "Self Assessment" },
@@ -65,17 +70,18 @@ export function Navbar() {
           <div className="hidden md:flex space-x-2">
             {user?.userName && user !== null ? (
               <Link href="/profile">
-                <Image
-                  alt={user.userName}
-                  src={
-                    user.profilePhoto === "default-male.png"
-                      ? "/default.jpg"
-                      : user.profilePhoto
-                  }
-                  width={30}
-                  height={30}
-                  className="rounded-full"
-                />
+                 <Avatar className="w-16 h-16 mx-auto">
+                        <AvatarImage
+                          src={user.profilePhoto}
+                          alt={user.fullName}
+                        />
+                        <AvatarFallback className="sm:w-[3.75rem] sm:h-[3.75rem] sm:border-none">
+                          {user.fullName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
               </Link>
             ) : (
               <>
