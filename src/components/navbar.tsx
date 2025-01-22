@@ -14,7 +14,7 @@ const leftNavItems = [
 ];
 
 const rightNavItems = [
-  { href: "/mission", label: "Our Mission" },
+  { href: "/about", label: "Our Mission" },
   { href: "/contact", label: "Get in Touch" },
 ];
 
