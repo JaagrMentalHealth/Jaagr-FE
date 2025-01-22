@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS, { OutputData, API } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
@@ -9,7 +7,6 @@ import SimpleImage from "@editorjs/image";
 import { ArrowLeft, Camera } from "lucide-react";
 import Preview from "./Preview";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import axios from "axios";
 import { blogUpload } from "@/api/blogAPI";
 import { useRouter } from "next/navigation";
 
@@ -21,6 +18,39 @@ const s3Client = new S3Client({
     secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
   },
 });
+
+// Image upload handler function
+const handleEditorImageUpload = async (file: File) => {
+  try {
+    const fileName = `${Date.now()}-${file.name}`;
+    const buffer = await file.arrayBuffer();
+
+    const command = new PutObjectCommand({
+      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
+      Key: `blog-images/${fileName}`,
+      Body: new Uint8Array(buffer),
+      ContentType: file.type,
+      ACL: "public-read",
+    });
+
+    await s3Client.send(command);
+
+    const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/blog-images/${fileName}`;
+
+    return {
+      success: 1,
+      file: {
+        url: imageUrl,
+      },
+    };
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    return {
+      success: 0,
+      error: "Image upload failed",
+    };
+  }
+};
 
 interface BlogContent {
   title: string;
@@ -58,7 +88,57 @@ const BlogEditor: React.FC = () => {
           header: Header,
           list: List,
           paragraph: Paragraph,
-          image: SimpleImage,
+          image: {
+            class: SimpleImage,
+            inlineToolbar: true,
+            config: {
+              placeholder: "Paste image URL",
+              types: "image/*",
+              uploader: {
+                uploadByFile: async (file: File) => {
+                  try {
+                    const fileName = `${Date.now()}-${file.name}`;
+                    const buffer = await file.arrayBuffer();
+
+                    const command = new PutObjectCommand({
+                      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
+                      Key: `blog-images/${fileName}`,
+                      Body: new Uint8Array(buffer),
+                      ContentType: file.type,
+                      ACL: "public-read",
+                    });
+
+                    await s3Client.send(command);
+
+                    const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/blog-images/${fileName}`;
+
+                    return {
+                      success: 1,
+                      file: {
+                        url: imageUrl,
+                      },
+                    };
+                  } catch (error) {
+                    console.error("Error uploading image:", error);
+                    return {
+                      success: 0,
+                      file: {
+                        url: null,
+                      },
+                    };
+                  }
+                },
+                uploadByUrl: async (url: string) => {
+                  return {
+                    success: 1,
+                    file: {
+                      url: url,
+                    },
+                  };
+                },
+              },
+            },
+          },
         },
         data: blogContent.content,
         placeholder: "Start writing your blog post here...",
@@ -146,13 +226,9 @@ const BlogEditor: React.FC = () => {
     const file = event.target.files?.[0];
     if (file) {
       try {
-        // Create a unique file name
         const fileName = `${Date.now()}-${file.name}`;
-
-        // Convert file to buffer
         const buffer = await file.arrayBuffer();
 
-        // Upload to S3
         const command = new PutObjectCommand({
           Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
           Key: `blog-images/${fileName}`,
@@ -163,7 +239,6 @@ const BlogEditor: React.FC = () => {
 
         await s3Client.send(command);
 
-        // Generate the URL for the uploaded image
         const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/blog-images/${fileName}`;
 
         setUploadedImage(imageUrl);
@@ -207,14 +282,16 @@ const BlogEditor: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <header className="border-b bg-white px-4 py-2">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 w-11/12">
             <button className="text-gray-600 hover:text-gray-900">
               <ArrowLeft className="h-5 w-5" />
             </button>
-            <input
-              type="text"
+
+            <textarea
+
+              rows={1}
               placeholder="Enter blog title..."
-              className="border-none text-lg font-medium focus:outline-none"
+              className="border-none text-lg font-medium focus:outline-none w-[70%] resize-none appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               value={blogContent.title}
               onChange={(e) =>
                 setBlogContent((prev) => ({ ...prev, title: e.target.value }))

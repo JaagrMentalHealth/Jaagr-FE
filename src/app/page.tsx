@@ -16,7 +16,7 @@ import Link from "next/link";
 
 export default function Home() {
   const { fetchUser, user } = useUser();
-  const router=useRouter()
+  const router = useRouter();
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
@@ -90,12 +90,17 @@ export default function Home() {
               life purpose
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-              <Button className="bg-primary text-white hover:bg-primary/90">
+              <Button
+                onClick={() => {
+                  router.push("/contact");
+                }}
+                className="bg-primary text-white hover:bg-primary/90"
+              >
                 Need Help?
               </Button>
               <Button
-                onClick={()=>{
-                  router.push('/about')
+                onClick={() => {
+                  router.push("/mental-health-exercise");
                 }}
                 variant="outline"
                 className="hover:bg-accent-foreground/10"

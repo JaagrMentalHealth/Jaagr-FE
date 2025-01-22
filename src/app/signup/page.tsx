@@ -1,5 +1,6 @@
 "use client";
-import { signup } from "@/api/authAPI";
+
+import { signup, verifyUsername } from "@/api/authAPI";
 import { useState, FormEvent, ChangeEvent } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -22,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { countries } from "countries-list";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,18 +48,22 @@ interface SignupData {
 export default function SignUpPage() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [gender, setGender] = useState<Gender | "">("");
   const [dob, setDOB] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-
+  const [usernameStatus, setUsernameStatus] = useState<
+    "idle" | "valid" | "invalid"
+  >("idle");
+  const [isVerifying, setIsVerifying] = useState(false);
   const { setUser } = useUser();
   const router = useRouter();
 
-  // Sort countries with "India" at the top
   const countryList = [
     { code: "IN", name: "India" },
     ...Object.entries(countries)
@@ -66,12 +71,24 @@ export default function SignUpPage() {
       .filter((c) => c.name !== "India")
       .sort((a, b) => a.name.localeCompare(b.name)),
   ];
+  const checkUsername = async () => {
+    setIsVerifying(true);
+    try {
+      const response: any = await verifyUsername(username);
+      // console.log(response);
+      const data: any = response.data;
+      setUsernameStatus(data.exists ? "invalid" : "valid");
+      console.log(usernameStatus);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
-    const username = name.split(" ").join("").toLowerCase();
 
     const data: SignupData = {
       userName: username,
@@ -84,18 +101,21 @@ export default function SignUpPage() {
       country,
     };
 
+    const res: any = await signup(data);
+
     try {
-      const res: any = await signup(data);
       if (res.status === "success" && res.token) {
         Cookies.set("token", res.token, { expires: 7 });
         setUser(res.data.user);
         toast.success("Signup successful!");
         router.push("/");
       } else {
-        throw new Error("Signup failed");
+        console.log(res)
+        toast.error(`Signup failed: ${res}`);
       }
     } catch (error) {
-      toast.error("Signup failed. Please try again.");
+      console.log(error)
+      // toast.error(`Signup failed: ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +125,6 @@ export default function SignUpPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-orange-50 to-white flex items-center justify-center py-12">
-        {/* Card with blur effect when dropdown is open */}
         <Card
           className={`w-full max-w-md transition-all duration-200 ${
             isDropdownOpen ? "blur-sm" : ""
@@ -144,6 +163,54 @@ export default function SignUpPage() {
                   }
                   placeholder="john.doe@example.com"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    id="username"
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      setUsername(e.target.value);
+                      setUsernameStatus("idle");
+                    }}
+                    placeholder="johndoe"
+                    className={`flex-1 ${
+                      usernameStatus === "valid"
+                        ? "border-green-500"
+                        : usernameStatus === "invalid"
+                        ? "border-red-500"
+                        : ""
+                    }`}
+                  />
+                  <Button
+                    type="button"
+                    onClick={checkUsername}
+                    disabled={!username || isVerifying}
+                    size="sm"
+                  >
+                    {isVerifying ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Verify"
+                    )}
+                  </Button>
+                </div>
+                {usernameStatus !== "idle" && (
+                  <p
+                    className={`text-sm ${
+                      usernameStatus === "valid"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {usernameStatus === "valid"
+                      ? "Username can be used"
+                      : "Username taken"}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="dob">Date of Birth</Label>
@@ -196,29 +263,30 @@ export default function SignUpPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
-                <Textarea
-                  id="bio"
-                  value={bio}
-                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                    setBio(e.target.value)
-                  }
-                  placeholder="Tell us a bit about yourself..."
-                  rows={3}
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setPassword(e.target.value)
-                  }
-                  minLength={8}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setPassword(e.target.value)
+                    }
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
