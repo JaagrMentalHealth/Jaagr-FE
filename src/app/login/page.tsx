@@ -24,6 +24,7 @@ import { Loader2 } from "lucide-react";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState({ email: "", password: "" });
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { fetchUser, user } = useUser();
@@ -31,8 +32,18 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
 
+  const validate = () => {
+    const newErrors = {
+      email: email ? "" : "Email is required.",
+      password: password ? "" : "Password is required.",
+    };
+    setErrors(newErrors);
+    return !Object.values(newErrors).some((error) => error);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;    
     setIsLoading(true);
     const loginData = { email, password };
     try {
@@ -61,19 +72,26 @@ function LoginForm() {
           Welcome back! Please log in to your account.
         </CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              type="email"
+              type="email"  
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => validate()}
+              className={errors.email ? "border-red-500" : ""}
             />
+            <div className="h-5">
+              {errors.email && (
+                <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+              )}
+            </div>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
@@ -81,7 +99,14 @@ function LoginForm() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onBlur={() => validate()}
+              className={errors.password ? "border-red-500" : ""}
             />
+            <div className="h-5">
+              {errors.password && (
+                <p className="text-sm text-red-500 mt-1">{errors.password}</p>
+              )}
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
