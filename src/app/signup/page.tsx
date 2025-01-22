@@ -1,4 +1,5 @@
 "use client";
+
 import { signup } from "@/api/authAPI";
 import { useState, FormEvent, ChangeEvent } from "react";
 import { Navbar } from "@/components/navbar";
@@ -6,23 +7,9 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { countries } from "countries-list";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,7 +34,9 @@ interface SignupData {
 export default function SignUpPage() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [gender, setGender] = useState<Gender | "">("");
   const [dob, setDOB] = useState<string>("");
   const [bio, setBio] = useState<string>("");
@@ -58,7 +47,6 @@ export default function SignUpPage() {
   const { setUser } = useUser();
   const router = useRouter();
 
-  // Sort countries with "India" at the top
   const countryList = [
     { code: "IN", name: "India" },
     ...Object.entries(countries)
@@ -70,8 +58,6 @@ export default function SignUpPage() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
-    const username = name.split(" ").join("").toLowerCase();
 
     const data: SignupData = {
       userName: username,
@@ -105,12 +91,7 @@ export default function SignUpPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-orange-50 to-white flex items-center justify-center py-12">
-        {/* Card with blur effect when dropdown is open */}
-        <Card
-          className={`w-full max-w-md transition-all duration-200 ${
-            isDropdownOpen ? "blur-sm" : ""
-          }`}
-        >
+        <Card className={`w-full max-w-md transition-all duration-200 ${isDropdownOpen ? "blur-sm" : ""}`}>
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
             <CardDescription>
@@ -126,9 +107,7 @@ export default function SignUpPage() {
                   type="text"
                   required
                   value={name}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setName(e.target.value)
-                  }
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                   placeholder="John Doe"
                 />
               </div>
@@ -139,10 +118,19 @@ export default function SignUpPage() {
                   type="email"
                   required
                   value={email}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setEmail(e.target.value)
-                  }
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                   placeholder="john.doe@example.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                  placeholder="johndoe"
                 />
               </div>
               <div className="space-y-2">
@@ -152,9 +140,7 @@ export default function SignUpPage() {
                   type="date"
                   required
                   value={dob}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setDOB(e.target.value)
-                  }
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setDOB(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
@@ -196,29 +182,24 @@ export default function SignUpPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
-                <Textarea
-                  id="bio"
-                  value={bio}
-                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                    setBio(e.target.value)
-                  }
-                  placeholder="Tell us a bit about yourself..."
-                  rows={3}
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setPassword(e.target.value)
-                  }
-                  minLength={8}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
