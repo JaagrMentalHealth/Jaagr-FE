@@ -1,14 +1,28 @@
 "use client";
 
-import { signup } from "@/api/authAPI";
+import { signup, verifyUsername } from "@/api/authAPI";
 import { useState, FormEvent, ChangeEvent } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { countries } from "countries-list";
@@ -43,7 +57,10 @@ export default function SignUpPage() {
   const [country, setCountry] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-
+  const [usernameStatus, setUsernameStatus] = useState<
+    "idle" | "valid" | "invalid"
+  >("idle");
+  const [isVerifying, setIsVerifying] = useState(false);
   const { setUser } = useUser();
   const router = useRouter();
 
@@ -54,6 +71,20 @@ export default function SignUpPage() {
       .filter((c) => c.name !== "India")
       .sort((a, b) => a.name.localeCompare(b.name)),
   ];
+  const checkUsername = async () => {
+    setIsVerifying(true);
+    try {
+      const response: any = await verifyUsername(username);
+      // console.log(response);
+      const data: any = response.data;
+      setUsernameStatus(data.exists ? "invalid" : "valid");
+      console.log(usernameStatus);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,18 +101,21 @@ export default function SignUpPage() {
       country,
     };
 
+    const res: any = await signup(data);
+
     try {
-      const res: any = await signup(data);
       if (res.status === "success" && res.token) {
         Cookies.set("token", res.token, { expires: 7 });
         setUser(res.data.user);
         toast.success("Signup successful!");
         router.push("/");
       } else {
-        throw new Error("Signup failed");
+        console.log(res)
+        toast.error(`Signup failed: ${res}`);
       }
     } catch (error) {
-      toast.error("Signup failed. Please try again.");
+      console.log(error)
+      // toast.error(`Signup failed: ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +125,11 @@ export default function SignUpPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-orange-50 to-white flex items-center justify-center py-12">
-        <Card className={`w-full max-w-md transition-all duration-200 ${isDropdownOpen ? "blur-sm" : ""}`}>
+        <Card
+          className={`w-full max-w-md transition-all duration-200 ${
+            isDropdownOpen ? "blur-sm" : ""
+          }`}
+        >
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
             <CardDescription>
@@ -107,7 +145,9 @@ export default function SignUpPage() {
                   type="text"
                   required
                   value={name}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setName(e.target.value)
+                  }
                   placeholder="John Doe"
                 />
               </div>
@@ -118,20 +158,59 @@ export default function SignUpPage() {
                   type="email"
                   required
                   value={email}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setEmail(e.target.value)
+                  }
                   placeholder="john.doe@example.com"
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  required
-                  value={username}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                  placeholder="johndoe"
-                />
+                <div className="flex gap-2 items-center">
+                  <Input
+                    id="username"
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      setUsername(e.target.value);
+                      setUsernameStatus("idle");
+                    }}
+                    placeholder="johndoe"
+                    className={`flex-1 ${
+                      usernameStatus === "valid"
+                        ? "border-green-500"
+                        : usernameStatus === "invalid"
+                        ? "border-red-500"
+                        : ""
+                    }`}
+                  />
+                  <Button
+                    type="button"
+                    onClick={checkUsername}
+                    disabled={!username || isVerifying}
+                    size="sm"
+                  >
+                    {isVerifying ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Verify"
+                    )}
+                  </Button>
+                </div>
+                {usernameStatus !== "idle" && (
+                  <p
+                    className={`text-sm ${
+                      usernameStatus === "valid"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {usernameStatus === "valid"
+                      ? "Username can be used"
+                      : "Username taken"}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="dob">Date of Birth</Label>
@@ -140,7 +219,9 @@ export default function SignUpPage() {
                   type="date"
                   required
                   value={dob}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setDOB(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setDOB(e.target.value)
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -189,7 +270,9 @@ export default function SignUpPage() {
                     type={showPassword ? "text" : "password"}
                     required
                     value={password}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setPassword(e.target.value)
+                    }
                     minLength={8}
                   />
                   <button
@@ -197,7 +280,11 @@ export default function SignUpPage() {
                     className="absolute inset-y-0 right-3 flex items-center text-gray-500"
                     onClick={() => setShowPassword((prev) => !prev)}
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>

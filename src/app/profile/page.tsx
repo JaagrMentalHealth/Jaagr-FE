@@ -48,7 +48,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
-  const { user, setUser, isLoading } = useUser();
+  const { user, setUser, isLoading,fetchUser } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({
     fullName: "",
@@ -76,6 +76,9 @@ export default function ProfilePage() {
       });
     }
   }, [user]);
+  useEffect(()=>{
+    fetchUser();
+  },[])
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -262,7 +265,7 @@ export default function ProfilePage() {
                   <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
                   <div className="grid gap-6 md:grid-cols-2">
                     {user.blogs.map((blog: any, index: any) => (
-                      <BlogCard key={index} {...blog} />
+                      <BlogCard key={index} user={user.fullName} {...blog}  />
                     ))}
                   </div>
                   {user.blogs.length === 0 && (

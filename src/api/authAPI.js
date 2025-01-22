@@ -14,7 +14,8 @@ export const signup = async (data) => {
       return res;
     }
   } catch (err) {
-    return err;
+    // console.log(err.response.data.message)
+    return err.response.data.message;
   }
 };
 
@@ -26,6 +27,15 @@ export const login = async (data) => {
     } else {
       return res;
     }
+  } catch (err) {
+    return err;
+  }
+};
+
+export const verifyUsername = async (data) => {
+  try {
+    const res = await baseAxiosInstance.get(`/verifyUsername/${data}`);
+    return res;
   } catch (err) {
     return err;
   }

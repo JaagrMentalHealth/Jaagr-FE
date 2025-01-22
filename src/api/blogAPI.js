@@ -56,3 +56,19 @@ export async function getBlog(slug) {
     return error;
   }
 }
+
+export async function deleteBlog(slug){
+    try{
+        const token = Cookies.get("token");
+        const res=await baseBlogInstance.delete(`blogs/${slug}`,{
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+          return res.data;
+    }
+    catch(err){
+        return err.response.data.message;
+    }
+}
