@@ -48,7 +48,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
-  const { user, setUser, isLoading,fetchUser } = useUser();
+  const { user, setUser, isLoading, fetchUser } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({
     fullName: "",
@@ -76,9 +76,9 @@ export default function ProfilePage() {
       });
     }
   }, [user]);
-  useEffect(()=>{
+  useEffect(() => {
     fetchUser();
-  },[])
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -91,20 +91,18 @@ export default function ProfilePage() {
     setProfile((prevProfile) => ({ ...prevProfile, [name]: value }));
     setPendingUpdates((prevUpdates) => ({ ...prevUpdates, [name]: value }));
   };
-  const router=useRouter();
-  
-  const logOut=()=>{
-    try{
+  const router = useRouter();
+
+  const logOut = () => {
+    try {
       setUser(null);
-      Cookies.remove('token');
-      router.push('/')
-      toast.success('Logged Out Successfully')
-    }  
-    catch(error){
-      toast.error('Could not log out')
+      Cookies.remove("token");
+      router.push("/");
+      toast.success("Logged Out Successfully");
+    } catch (error) {
+      toast.error("Could not log out");
     }
-      
-  }
+  };
 
   const handleSave = () => {
     try {
@@ -265,7 +263,7 @@ export default function ProfilePage() {
                   <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
                   <div className="grid gap-6 md:grid-cols-2">
                     {user.blogs.map((blog: any, index: any) => (
-                      <BlogCard key={index} user={user.fullName} {...blog}  />
+                      <BlogCard key={index} user={user.fullName} {...blog} />
                     ))}
                   </div>
                   {user.blogs.length === 0 && (
@@ -273,7 +271,14 @@ export default function ProfilePage() {
                       You haven&apos;t written any blogs yet.
                     </p>
                   )}
-                  <Button className="mt-6">Write a New Blog</Button>
+                  <Button
+                    onClick={() => {
+                      router.push("/upload");
+                    }}
+                    className="mt-6"
+                  >
+                    Write a New Blog
+                  </Button>
                 </TabsContent>
                 <TabsContent value="saved" className="mt-6">
                   <h3 className="text-xl font-semibold mb-4">Saved Blogs</h3>
@@ -302,10 +307,13 @@ export default function ProfilePage() {
                       No reading history yet.
                     </p>
                   )}
-                </TabsContent>  
+                </TabsContent>
               </Tabs>
               <div className="flex justify-end">
-                <button onClick={logOut} className="px-6 py-2 bg-orange-50 text-[#262b33] font-semibold rounded-lg shadow-md hover:bg-orange-60 border-orange-500 border-2 transition-all">
+                <button
+                  onClick={logOut}
+                  className="px-6 py-2 bg-orange-50 text-[#262b33] font-semibold rounded-lg shadow-md hover:bg-orange-60 border-orange-500 border-2 transition-all"
+                >
                   Log Out
                 </button>
               </div>
