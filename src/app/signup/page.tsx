@@ -1,6 +1,5 @@
 "use client";
 
-import { signup, verifyUsername } from "@/api/authAPI";
 import { useState, FormEvent, ChangeEvent } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -16,20 +15,9 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { countries } from "countries-list";
-import { Textarea } from "@/components/ui/textarea";
-import { useUser } from "@/contexts/userContext";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 
 type Gender = "male" | "female" | "other";
@@ -41,8 +29,6 @@ interface SignupData {
   dateOfBirth: string;
   gender: Gender;
   fullName: string;
-  bio: string;
-  country: string;
 }
 
 export default function SignUpPage() {
@@ -53,41 +39,32 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [gender, setGender] = useState<Gender | "">("");
   const [dob, setDOB] = useState<string>("");
-  const [bio, setBio] = useState<string>("");
-  const [country, setCountry] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [usernameStatus, setUsernameStatus] = useState<
-    "idle" | "valid" | "invalid"
-  >("idle");
-  const [isVerifying, setIsVerifying] = useState(false);
-  const { setUser } = useUser();
-  const router = useRouter();
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const countryList = [
-    { code: "IN", name: "India" },
-    ...Object.entries(countries)
-      .map(([code, country]) => ({ code, name: country.name }))
-      .filter((c) => c.name !== "India")
-      .sort((a, b) => a.name.localeCompare(b.name)),
-  ];
-  const checkUsername = async () => {
-    setIsVerifying(true);
-    try {
-      const response: any = await verifyUsername(username);
-      // console.log(response);
-      const data: any = response.data;
-      setUsernameStatus(data.exists ? "invalid" : "valid");
-      console.log(usernameStatus);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsVerifying(false);
-    }
+  const validateFields = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!name) newErrors.name = "Full Name is required.";
+    if (!email) newErrors.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "Invalid email format.";
+    if (!username) newErrors.username = "Username is required.";
+    if (!password) newErrors.password = "Password is required.";
+    else if (password.length < 8)
+      newErrors.password = "Password must be at least 8 characters.";
+    if (!dob) newErrors.dob = "Date of Birth is required.";
+    if (!gender) newErrors.gender = "Gender is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!validateFields()) return;
+
     setIsLoading(true);
 
     const data: SignupData = {
@@ -97,25 +74,15 @@ export default function SignUpPage() {
       dateOfBirth: dob,
       gender: gender as Gender,
       fullName: name,
-      bio,
-      country,
     };
 
-    const res: any = await signup(data);
-
     try {
-      if (res.status === "success" && res.token) {
-        Cookies.set("token", res.token, { expires: 7 });
-        setUser(res.data.user);
-        toast.success("Signup successful!");
-        router.push("/");
-      } else {
-        console.log(res)
-        toast.error(`Signup failed: ${res}`);
-      }
+      // Replace this with your actual signup API call
+      console.log("Sign-up data:", data);
+      toast.success("Signup successful!");
     } catch (error) {
-      console.log(error)
-      // toast.error(`Signup failed: ${error}`);
+      console.error(error);
+      toast.error("Signup failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -125,11 +92,7 @@ export default function SignUpPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-orange-50 to-white flex items-center justify-center py-12">
-        <Card
-          className={`w-full max-w-md transition-all duration-200 ${
-            isDropdownOpen ? "blur-sm" : ""
-          }`}
-        >
+        <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
             <CardDescription>
@@ -143,73 +106,44 @@ export default function SignUpPage() {
                 <Input
                   id="name"
                   type="text"
-                  required
                   value={name}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setName(e.target.value)
                   }
                   placeholder="John Doe"
                 />
+                {errors.name && (
+                  <p className="text-sm text-red-600">{errors.name}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  required
                   value={email}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setEmail(e.target.value)
                   }
                   placeholder="john.doe@example.com"
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-600">{errors.email}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
-                <div className="flex gap-2 items-center">
-                  <Input
-                    id="username"
-                    type="text"
-                    required
-                    value={username}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setUsername(e.target.value);
-                      setUsernameStatus("idle");
-                    }}
-                    placeholder="johndoe"
-                    className={`flex-1 ${
-                      usernameStatus === "valid"
-                        ? "border-green-500"
-                        : usernameStatus === "invalid"
-                        ? "border-red-500"
-                        : ""
-                    }`}
-                  />
-                  <Button
-                    type="button"
-                    onClick={checkUsername}
-                    disabled={!username || isVerifying}
-                    size="sm"
-                  >
-                    {isVerifying ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      "Verify"
-                    )}
-                  </Button>
-                </div>
-                {usernameStatus !== "idle" && (
-                  <p
-                    className={`text-sm ${
-                      usernameStatus === "valid"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {usernameStatus === "valid"
-                      ? "Username can be used"
-                      : "Username taken"}
-                  </p>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setUsername(e.target.value)
+                  }
+                  placeholder="johndoe"
+                />
+                {errors.username && (
+                  <p className="text-sm text-red-600">{errors.username}</p>
                 )}
               </div>
               <div className="space-y-2">
@@ -217,50 +151,33 @@ export default function SignUpPage() {
                 <Input
                   id="dob"
                   type="date"
-                  required
                   value={dob}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setDOB(e.target.value)
                   }
                 />
+                {errors.dob && (
+                  <p className="text-sm text-red-600">{errors.dob}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="gender">Gender</Label>
-                <Select
+                <select
+                  id="gender"
                   value={gender}
-                  onValueChange={(value: Gender) => setGender(value)}
-                  onOpenChange={setIsDropdownOpen}
-                  required
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    setGender(e.target.value as Gender)
+                  }
+                  className="w-full p-2 border rounded"
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="country">Country</Label>
-                <Select
-                  value={country}
-                  onValueChange={(value: string) => setCountry(value)}
-                  onOpenChange={setIsDropdownOpen}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your country" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {countryList.map((c) => (
-                      <SelectItem key={c.code} value={c.code}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  <option value="">Select your gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+                {errors.gender && (
+                  <p className="text-sm text-red-600">{errors.gender}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -268,12 +185,10 @@ export default function SignUpPage() {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    required
                     value={password}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setPassword(e.target.value)
                     }
-                    minLength={8}
                   />
                   <button
                     type="button"
@@ -287,6 +202,9 @@ export default function SignUpPage() {
                     )}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-sm text-red-600">{errors.password}</p>
+                )}
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
