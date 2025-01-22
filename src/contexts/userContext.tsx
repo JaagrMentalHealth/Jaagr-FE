@@ -68,7 +68,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
       const data = await response.data;
       if (data.status === "success") {
-        console.log("Setting user:", data.data.user);
+        // console.log("Setting user:", data.data.user);
         setUser(data.data.user);
       } else {
         throw new Error(data.message || "Failed to fetch user data");
@@ -78,7 +78,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       toast.error("Failed to load user data");
     } finally {
       setIsLoading(false);
-      console.log(user)
+      // console.log(user)
     }
   }, []);
 
