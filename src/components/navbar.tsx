@@ -78,7 +78,7 @@ export function Navbar() {
                         <AvatarFallback className="sm:w-[3.75rem] sm:h-[3.75rem] sm:border-none">
                           {user.fullName
                             .split(" ")
-                            .map((n) => n[0])
+                            .map((n:any) => n[0])
                             .join("")}
                         </AvatarFallback>
                       </Avatar>

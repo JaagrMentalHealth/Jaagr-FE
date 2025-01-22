@@ -6,7 +6,6 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useUser } from "@/contexts/userContext";
 
-
 interface BlogCardProps {
   heading: string;
   excerpt: string;
@@ -14,7 +13,7 @@ interface BlogCardProps {
   date: string;
   coverPhoto: string;
   slug: string;
-  user: string;
+  user?: string;
 }
 
 export function BlogCard({
@@ -26,7 +25,7 @@ export function BlogCard({
   slug,
   user,
 }: BlogCardProps) {
-  const writer = user ? user : author;
+  const writer = user || author;
   const deleteStatus = user ? true : false;
   const { fetchUser } = useUser();
   const [isHovered, setIsHovered] = useState(false);
