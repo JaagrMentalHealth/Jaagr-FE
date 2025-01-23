@@ -215,12 +215,12 @@ export default function ProfilePage() {
                         {isEditing ? (
                           <Input
                             name="country"
-                            value={profile.country}
+                            value={profile.country?profile.country: 'N/A'}
                             onChange={handleChange}
                             className="flex-grow"
                           />
                         ) : (
-                          <span>{profile.country}</span>
+                          <span>{profile.country?profile.country: 'N/A'}</span>
                         )}
                       </div>
                       <div className="flex items-center space-x-2">
@@ -228,14 +228,14 @@ export default function ProfilePage() {
                         {isEditing ? (
                           <Input
                             name="dateOfBirth"
-                            type="date"
-                            value={profile.dateOfBirth}
+                            type={profile.dateOfBirth?'date':'text'}
+                            value={profile.dateOfBirth?profile.dateOfBirth:'N/A'}
                             onChange={handleChange}
                             className="flex-grow"
                           />
                         ) : (
                           <span>
-                            {new Date(profile.dateOfBirth).toLocaleDateString()}
+                            {profile.dateOfBirth?new Date(profile.dateOfBirth).toLocaleDateString():'N/A'}
                           </span>
                         )}
                       </div>
@@ -253,7 +253,7 @@ export default function ProfilePage() {
                             rows={4}
                           />
                         ) : (
-                          <p className="text-sm text-gray-600">{profile.bio}</p>
+                          <p className="text-sm text-gray-600">{profile.bio || 'N/A'}</p>
                         )}
                       </div>
                     </div>

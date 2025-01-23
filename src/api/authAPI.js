@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const baseAxiosInstance = axios.create({
-  baseURL: "https://jaagr-miy0.onrender.com/api/users",
+  baseURL: "http://localhost:5000/api/users",
 });
 
 //Signup API call Function
@@ -46,3 +46,23 @@ export const verifyUsername = async (data) => {
 
 //   }
 // }
+
+// In authAPI.js
+export const googleLogin = async (credential) => {
+  // console.log(tokenId);
+  try {
+    const response = await baseAxiosInstance.post(
+      `/google-login`,
+      JSON.stringify({ credential }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return await response.json();
+  } catch (error) {
+    console.error("Error during Google login:", error);
+    throw error;
+  }
+};
