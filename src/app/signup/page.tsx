@@ -186,7 +186,7 @@ export default function SignUpPage() {
                     </button>
                   </div>
                 </div>
-                <div className="space-y-2">
+{/*                 <div className="space-y-2">
                   <Label htmlFor="bio">Bio</Label>
                   <Input
                     id="bio"
@@ -195,7 +195,7 @@ export default function SignUpPage() {
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setBio(e.target.value)}
                     placeholder="Tell us about yourself"
                   />
-                </div>
+                </div> */}
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
                 <Button type="submit" className="w-full" disabled={isLoading}>
