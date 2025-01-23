@@ -24,30 +24,30 @@ export default function Home() {
   const featuredBlogs = [
     {
       slug: "10-ways-to-overcome-anxiety",
-      title: "10 Ways to Overcome Anxiety With Proven Techniques",
+      heading: "10 Ways to Overcome Anxiety With Proven Techniques",
       excerpt:
         "Anxiety is a common mental health condition that affects millions of people worldwide. While medication can be helpful, there are many natural techniques that can help manage anxiety effectively.",
       author: "John Doe",
       date: "March 15, 2025",
-      image: "/images/blog1.png",
+      coverPhoto: "/images/blog1.png",
     },
     {
       slug: "understanding-anxiety-signs",
-      title: "Understanding Anxiety: Signs and Symptoms to Watch For",
+      heading: "Understanding Anxiety: Signs and Symptoms to Watch For",
       excerpt:
         "Anxiety is a natural response to stress, but when it becomes excessive and persistent, it can interfere with daily life. Learn to recognize the signs and symptoms of anxiety disorders.",
       author: "Jane Smith",
       date: "March 20, 2025",
-      image: "/images/blog2.png",
+      coverPhoto: "/images/blog2.png",
     },
     {
       slug: "role-of-meditation",
-      title: "The Role of Meditation in Improving Mental Health",
+      heading: "The Role of Meditation in Improving Mental Health",
       excerpt:
         "Meditation has gained significant attention as a powerful tool for enhancing mental well-being. Discover how this ancient practice can help reduce stress, anxiety, and depression.",
       author: "Alex Johnson",
       date: "March 25, 2025",
-      image: "/images/blog3.png",
+      coverPhoto: "/images/blog3.png",
     },
   ];
 

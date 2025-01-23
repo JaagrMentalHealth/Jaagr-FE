@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useUser } from "@/contexts/userContext";
+import { useState } from "react";
 
 interface BlogCardProps {
   heading: string;
@@ -24,19 +25,20 @@ export function BlogCard({
   slug,
   user = "N/A", // Default value for user
 }: BlogCardProps) {
+  const writer = user ? user : author;
+  const deleteStatus = user ? true : false;
   const { fetchUser } = useUser();
-
   const Delete = async () => {
     try {
       const res = await deleteBlog(slug);
-      if (res.status === "success") {
+      if (res.status == "success") {
         toast.success("Blog Deleted Successfully");
         fetchUser();
       } else {
         toast.error(res);
       }
     } catch (err) {
-      toast.error(String(err));
+      toast.error(err);
     }
   };
 
@@ -61,22 +63,25 @@ export function BlogCard({
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <div className="h-10 w-10 rounded-full bg-orange-200 flex items-center justify-center text-orange-500 font-semibold">
-                {user.charAt(0) || "N"} {/* Handle empty user */}
+                {writer.charAt(0)}
               </div>
               <div>
-                <p className="text-sm font-medium">{user}</p>
+                <p className="text-sm font-medium">{writer}</p>
                 <p className="text-xs text-muted-foreground">{date}</p>
               </div>
             </div>
-            <button
-              onClick={(e) => {
-                e.preventDefault(); // Prevent Link click propagation
-                Delete();
-              }}
-              className="px-6 py-2 z-50 bg-orange-50 text-[#262b33] font-semibold rounded-lg shadow-md hover:bg-orange-60 border-orange-500 border-2 transition-all"
-            >
-              Delete
-            </button>
+            {deleteStatus ? (
+              <>
+                <button
+                  onClick={Delete}
+                  className="px-6 py-2 z-50 bg-orange-50 text-[#262b33] font-semibold rounded-lg shadow-md hover:bg-orange-60 border-orange-500 border-2 transition-all"
+                >
+                  Delete
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </CardContent>
       </Card>
