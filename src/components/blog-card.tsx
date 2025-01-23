@@ -9,11 +9,11 @@ import { useUser } from "@/contexts/userContext";
 interface BlogCardProps {
   heading: string;
   excerpt: string;
-  author: string;
+  author: any;
   date: string;
   coverPhoto: string;
   slug: string;
-  user?: string;
+  user?: any;
 }
 
 export function BlogCard({
