@@ -6,6 +6,7 @@ import { JSX, useEffect, useState } from "react";
 import { getBlog } from "@/api/blogAPI";
 import Output from "editorjs-react-renderer";
 import React from "react";
+import { useParams } from "next/navigation";
 // import Image from "next/image"
 
 interface Author {
@@ -47,8 +48,8 @@ const renderers = {
   },
 };
 
-export default function BlogPost({ params }: any) {
-  const Params: any = React.use(params);
+export default function BlogPost() {
+  const params = useParams();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +58,7 @@ export default function BlogPost({ params }: any) {
     async function fetchBlog() {
       try {
         setIsLoading(true);
-        const res = await getBlog(Params.slug);
+        const res = await getBlog(params.slug);
         setPost(res.data.blog);
         setError(null);
       } catch (err) {
@@ -68,8 +69,10 @@ export default function BlogPost({ params }: any) {
       }
     }
 
-    fetchBlog();
-  }, [Params.slug]);
+    if (params.slug) {
+      fetchBlog();
+    }
+  }, [params.slug]);
 
   if (isLoading) {
     return (

@@ -14,7 +14,7 @@ interface BlogCardProps {
   coverPhoto: string;
   slug: string;
   user?: string; // Make user optional
-}
+} 
 
 export function BlogCard({
   heading,

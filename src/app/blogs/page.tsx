@@ -109,11 +109,11 @@ export default function BlogsPage() {
             {currentPosts.map((post) => (
               <BlogCard
                 key={post._id}
-                title={post.heading}
+                heading={post.heading}
                 excerpt={getExcerpt(post.content)}
                 author={post.author.fullName}
                 date={new Date(post.createdAt).toLocaleDateString()}
-                image={post.coverPhoto || "/placeholder.svg?height=200&width=300"}
+                coverPhoto={post.coverPhoto || "/placeholder.svg?height=200&width=300"}
                 slug={post.slug}
               />
             ))}
