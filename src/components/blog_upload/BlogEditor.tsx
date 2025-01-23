@@ -391,13 +391,10 @@ const BlogEditor: React.FC = () => {
           <div className="rounded-lg border bg-white p-4">
             <h3 className="mb-3 font-medium">Categories</h3>
             <select className="w-full rounded-md border p-2">
-              <option>AI</option>
-              <option>Computer Science</option>
-              <option>Agents</option>
-              <option>Currency</option>
-              <option>Computer</option>
-              <option>Pollution</option>
-              <option>Environment</option>
+              <option>Mental Health</option>
+              <option>Anxiety</option>
+              <option>Dipression</option>
+              <option>Meditation</option>
             </select>
           </div>
 
