@@ -395,6 +395,10 @@ const BlogEditor: React.FC = () => {
               <option>Anxiety</option>
               <option>Dipression</option>
               <option>Meditation</option>
+              <option>Mindfulness</option>
+              <option>Self-care</option>
+              <option>Wellness</option>
+              <option>Relationships</option>
             </select>
           </div>
 
