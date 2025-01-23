@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const baseAxiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api/users",
+  baseURL: "https://jaagr-miy0.onrender.com/api/users",
 });
 
 //Signup API call Function
