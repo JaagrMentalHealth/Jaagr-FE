@@ -11,6 +11,7 @@ import { blogUpload } from "@/api/blogAPI";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 // AWS S3 configuration
+
 const s3Client = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_REGION!,
   credentials: {

@@ -42,10 +42,11 @@ const renderers = {
   paragraph: ({ data }: any) => <p className="mb-4">{data.text}</p>,
   list: ({ data }: any) => {
     const ListTag = data.style === "ordered" ? "ol" : "ul";
+    console.log(data.items[0].content)
     return (
       <ListTag className="list-disc list-inside mb-4">
-        {data.items.map((item: string, index: number) => (
-          <li key={index}>{item}</li>
+        {data.items.map((item: any, index: number) => (
+          <li key={index}>{JSON.stringify(item.content)}</li>
         ))}
       </ListTag>
     );
