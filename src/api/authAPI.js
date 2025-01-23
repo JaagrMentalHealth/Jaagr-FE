@@ -60,7 +60,9 @@ export const googleLogin = async (credential) => {
         },
       }
     );
-    return await response.json();
+    // return await response.json();
+    // console.log(response);
+    return response.data;
   } catch (error) {
     console.error("Error during Google login:", error);
     throw error;

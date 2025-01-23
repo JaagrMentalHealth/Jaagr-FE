@@ -86,11 +86,12 @@ export default function SignUpPage() {
       }
 
       const res: any = await googleLogin(credentialResponse.credential)
+      console.log(res)
       if (res.status === "success" && res.token) {
         Cookies.set("token", res.token, { expires: 7 })
         setUser(res.data.user)
         toast.success("Google login successful!")
-        router.push("/dashboard")
+        router.push("/")
       } else {
         throw new Error(res.message || "Google login failed")
       }
