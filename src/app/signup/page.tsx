@@ -186,7 +186,7 @@ export default function SignUpPage() {
                     </button>
                   </div>
                 </div>
-                {/* <div className="space-y-2">
+{/*                 <div className="space-y-2">
                   <Label htmlFor="bio">Bio</Label>
                   <Input
                     id="bio"

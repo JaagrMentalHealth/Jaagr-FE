@@ -1,6 +1,5 @@
 "use client";
-
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -12,6 +11,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/profile/avatar";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const leftNavItems = [
   { href: "/self-assessment", label: "Self Assessment" },
@@ -25,22 +27,35 @@ const rightNavItems = [
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const pathname = usePathname();
-  const { user,fetchUser } = useUser();
+  const { user, setUser } = useUser();
+  const router = useRouter();
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
   }, []);
-  // useEffect(()=>{
-  //   fetchUser();
-  // },[])
+
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
+  };
+  const logOut = () => {
+    try {
+      setUser(null);
+      Cookies.remove("token");
+      router.push("/");
+      toast.success("Logged Out Successfully");
+    } catch (error) {
+      toast.error("Could not log out");
+    }
+  };
 
   return (
     <header className="w-full border-b bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center space-x-4">
-          <Link href="/" className="flex items-center">
-            <span className="text-4xl font-bold text-primary">जाग्र</span>
+          <Link href="/" className="text-4xl font-bold text-primary">
+            जाग्र
           </Link>
           <nav className="hidden md:flex space-x-4">
             {leftNavItems.map((item) => (
@@ -70,43 +85,55 @@ export function Navbar() {
               </Link>
             ))}
           </nav>
-          <div className="hidden md:flex space-x-2">
-            {user?.userName && user !== null ? (
-              <Link href="/profile">
-                 <Avatar className="w-16 h-16 mx-auto">
-                        <AvatarImage
-                          src={user.profilePhoto}
-                          alt={user.fullName}
-                        />
-                        <AvatarFallback className="sm:w-[3.75rem] sm:h-[3.75rem] sm:border-none">
-                          {user.fullName
-                            .split(" ")
-                            .map((n:any) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
+          {user?.userName ? (
+            <div className="relative">
+              <button onClick={toggleDropdown} className="flex items-center">
+                <Avatar className="w-10 h-10">
+                  <AvatarImage
+                    src={user.profilePhoto || "/default.jpg"}
+                    alt={user.fullName}
+                  />
+                  <AvatarFallback>
+                    {user.fullName
+                      .split(" ")
+                      .map((n: any) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50">
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    My Profile
+                  </Link>
+                  <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Change Password
+                  </button>
+                  <button
+                    onClick={logOut}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                  >
+                    Log Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="ghost">Login</Button>
               </Link>
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost" className="hover:text-orange-500">
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/signup">
-                  <Button className="bg-orange-500 text-white hover:bg-orange-600">
-                    Sign Up
-                  </Button>
-                </Link>
-              </>
-            )}
-          </div>
-          <button
-            className="md:hidden"
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-          >
+              <Link href="/signup">
+                <Button className="bg-orange-500 text-white hover:bg-orange-600">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
+          <button onClick={toggleMenu} className="md:hidden">
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -126,37 +153,6 @@ export function Navbar() {
                 {item.label}
               </Link>
             ))}
-            {user?.userName && user !== null ? (
-              <Link href="/profile" onClick={toggleMenu}>
-                <Image
-                  alt={user.userName}
-                  src={
-                    user.profilePhoto === "default-male.png"
-                      ? "/default.jpg"
-                      : user.profilePhoto
-                  }
-                  width={30}
-                  height={30}
-                  className="rounded-full"
-                />
-              </Link>
-            ) : (
-              <>
-                <Link href="/login" className="w-full" onClick={toggleMenu}>
-                  <Button
-                    variant="ghost"
-                    className="w-full hover:text-orange-500"
-                  >
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/signup" className="w-full" onClick={toggleMenu}>
-                  <Button className="w-full bg-orange-500 text-white hover:bg-orange-600">
-                    Sign Up
-                  </Button>
-                </Link>
-              </>
-            )}
           </nav>
         </div>
       )}
