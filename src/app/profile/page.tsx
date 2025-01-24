@@ -462,7 +462,7 @@ export default function ProfilePage() {
   //   setProfile((prevProfile) => ({ ...prevProfile, [name]: value }));
   //   setPendingUpdates((prevUpdates) => ({ ...prevUpdates, [name]: value }));
   // };
-  // const router = useRouter();
+  const router = useRouter();
 
   // const logOut = () => {
   //   try {
@@ -524,7 +524,6 @@ export default function ProfilePage() {
       return "";
     }
   };
-  
 
   return (
     <div className="flex min-h-screen flex-col">
