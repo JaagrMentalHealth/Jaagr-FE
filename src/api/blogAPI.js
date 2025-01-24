@@ -1,10 +1,10 @@
 // import {baseAxiosInstance} from './authAPI'
 import axios from "axios";
-import { constructFrom } from "date-fns";
+
 import Cookies from "js-cookie";
 
 const baseBlogInstance = axios.create({
-  baseURL: "https://jaagr-miy0.onrender.com/api/",
+  baseURL: "http://localhost:5000/api/",
 });
 
 // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -42,7 +42,13 @@ export async function getAllBlogs() {
 
 export async function getBlog(slug) {
   try {
-    const res = await baseBlogInstance.get(`blogs/${slug}`);
+    const token = Cookies.get("token");
+    const headers = token
+      ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+      : { "Content-Type": "application/json" };
+    const res = await baseBlogInstance.get(`blogs/${slug}`, {
+      headers: headers,
+    });
     if (res.status == 200) {
       return res.data;
     } else {

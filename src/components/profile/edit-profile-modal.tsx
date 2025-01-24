@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useUser } from "@/contexts/userContext";
+import { updateUser } from "@/api/authAPI";
+import { toast } from "react-hot-toast";
 import {
   Dialog,
   DialogContent,
@@ -16,26 +19,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface User {
-  fullName: string;
-  bio: string;
-  gender: string;
-  dateOfBirth: string;
-}
+import { Loader2 } from "lucide-react";
 
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: User;
 }
 
-export function EditProfileModal({
-  isOpen,
-  onClose,
-  user,
-}: EditProfileModalProps) {
-  const [formData, setFormData] = useState(user);
+export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
+  const { user, setUser, fetchUser } = useUser();
+  const [formData, setFormData] = useState({
+    fullName: user?.fullName || "",
+    bio: user?.bio || "",
+    gender: user?.gender || "",
+    dateOfBirth: user?.dateOfBirth
+      ? new Date(user.dateOfBirth).toISOString().split("T")[0]
+      : "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -47,11 +48,27 @@ export function EditProfileModal({
     setFormData({ ...formData, gender: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the updated data to your backend
-    console.log("Updated user data:", formData);
-    onClose();
+    setIsLoading(true);
+    try {
+      const response: any = await updateUser(user?._id, formData);
+      if (response.status === 200) {
+        // setUser(response.data.user);
+        // console.log(user)
+        fetchUser();
+        toast.success("Profile updated successfully");
+        onClose();
+      } else {
+        throw new Error(response.message || "Failed to update profile");
+      }
+    } catch (error: any) {
+      toast.error(
+        error.message || "An error occurred while updating the profile"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -61,31 +78,31 @@ export function EditProfileModal({
           <DialogTitle>Edit Profile</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name</Label>
+          {/* <div className="space-y-2">
+            <Label htmlFor="fullName">Full Name</Label>
             <Input
-              id="name"
-              name="name"
+              id="fullName"
+              name="fullName"
               disabled
               value={formData.fullName}
               onChange={handleChange}
+              placeholder="Enter your full name"
             />
-          </div>
-          <div>
+          </div> */}
+          <div className="space-y-2">
             <Label htmlFor="bio">Bio</Label>
             <Textarea
               id="bio"
               name="bio"
               value={formData.bio}
               onChange={handleChange}
+              placeholder="Tell us about yourself"
+              rows={3}
             />
           </div>
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
-            <Select
-              onValueChange={handleGenderChange}
-              defaultValue={formData.gender}
-            >
+            <Select onValueChange={handleGenderChange} value={formData.gender}>
               <SelectTrigger>
                 <SelectValue placeholder="Select gender" />
               </SelectTrigger>
@@ -96,7 +113,7 @@ export function EditProfileModal({
               </SelectContent>
             </Select>
           </div>
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="dateOfBirth">Date of Birth</Label>
             <Input
               id="dateOfBirth"
@@ -106,7 +123,16 @@ export function EditProfileModal({
               onChange={handleChange}
             />
           </div>
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

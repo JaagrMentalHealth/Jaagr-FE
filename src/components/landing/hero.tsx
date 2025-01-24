@@ -24,8 +24,17 @@ export function Hero() {
       <div className="container mx-auto grid items-center gap-6 px-4 md:grid-cols-2 md:gap-12">
         <div className="flex flex-col gap-6 text-center md:text-left mx-auto md:mx-0 max-w-md md:max-w-none">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            Be more aware <span className="text-orange-500">(जाग्र)</span> about
-            your thoughts
+            Be more aware{" "}
+            <span className="inline-block w-[118px] h-[45px] sm:w-[142px] sm:h-[54px] md:w-[140px] md:h-[72px] lg:w-[150] lg:h-[60px]  relative">
+              <Image
+                src="/logoHero.svg"
+                alt="Jaagr Logo"
+                fill
+                className="object-contain mt-2"
+                priority
+              />
+            </span>{" "}
+            about your thoughts
           </h1>
           <p className="text-xl text-muted-foreground md:text-2xl">
             Bringing mental health experts to your palm
@@ -39,7 +48,9 @@ export function Hero() {
             </Button>
             <div className="flex text-xl text-secondary-foreground md:text-2xl">
               Want to read something?
-              <Link href={"/blogs"} className="font-bold">Read Here</Link>
+              <Link href={"/blogs"} className="font-bold">
+                Read Here
+              </Link>
             </div>
           </div>
         </div>

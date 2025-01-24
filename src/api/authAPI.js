@@ -1,7 +1,8 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export const baseAxiosInstance = axios.create({
-  baseURL: "https://jaagr-miy0.onrender.com/api/users",
+  baseURL: "http://localhost:5000/api/users",
 });
 
 //Signup API call Function
@@ -66,5 +67,29 @@ export const googleLogin = async (credential) => {
   } catch (error) {
     console.error("Error during Google login:", error);
     throw error;
+  }
+};
+
+export const updateUser = async (id, data) => {
+  try {
+    const res = baseAxiosInstance.patch(`/${id}`, data, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    });
+
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const findById = async (id) => {
+  try {
+    const res = await baseAxiosInstance.get(`/findById/${id}`);
+    return res;
+  } catch (err) {
+    return err;
   }
 };
