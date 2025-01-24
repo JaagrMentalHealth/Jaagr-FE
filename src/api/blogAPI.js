@@ -1,10 +1,11 @@
 // import {baseAxiosInstance} from './authAPI'
 import axios from "axios";
+import {URL} from "@/api/URL"
 
 import Cookies from "js-cookie";
-
+// console.log(process.env.BACKEND_URL)
 const baseBlogInstance = axios.create({
-  baseURL: "http://localhost:5000/api/",
+  baseURL: `${URL}/api/`,
 });
 
 // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
