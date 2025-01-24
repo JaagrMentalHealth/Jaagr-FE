@@ -1,8 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-
+import { URL } from "@/api/URL";
 export const baseAxiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api/users",
+  baseURL: `${URL}/api/users`,
 });
 
 //Signup API call Function
