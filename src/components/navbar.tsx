@@ -55,7 +55,7 @@ export function Navbar() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center space-x-4">
           <Link href="/" className="text-4xl font-bold text-primary">
-            जाग्र
+            <Image src="/logo.svg" height={60} width={60} alt="Jaagr" />
           </Link>
           <nav className="hidden md:flex space-x-4">
             {leftNavItems.map((item) => (

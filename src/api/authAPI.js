@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const baseAxiosInstance = axios.create({
-  baseURL: "https://jaagr-miy0.onrender.com/api/users",
+  baseURL: "http://localhost:5000/api/users",
 });
 
 //Signup API call Function
@@ -79,6 +79,15 @@ export const updateUser = async (id, data) => {
       },
     });
 
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const findById = async (id) => {
+  try {
+    const res = await baseAxiosInstance.get(`/findById/${id}`);
     return res;
   } catch (err) {
     return err;

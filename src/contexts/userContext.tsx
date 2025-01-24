@@ -6,6 +6,7 @@ import React, {
   useContext,
   ReactNode,
   useCallback,
+  useEffect,
 } from "react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
@@ -81,6 +82,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       // console.log(user)
     }
   }, []);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
   // Create the context value object
   const value: UserContextType = {

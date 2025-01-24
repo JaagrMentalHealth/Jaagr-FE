@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "@/contexts/userContext";
-
+import { useUser } from "@/contexts/userContext";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
