@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const baseAxiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api/users",
+  baseURL: `${process.env.BACKEND_URL}/api/users`,
 });
 
 //Signup API call Function
