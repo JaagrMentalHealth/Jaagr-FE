@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { FaXTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa6";
-
+import Image from "next/image";
 export function Footer() {
   return (
     <footer className="w-full bg-zinc-800 py-12 text-white">
       <div className="container grid gap-8 px-4 sm:grid-cols-2 md:grid-cols-3">
         <div className="text-center sm:text-left">
           <Link href="/" className="mb-4 inline-flex items-center">
-            <Image src="/logo.svg" height={60} width={60} alt="Jaagr" />
+            <Image src="/logo.svg" height={60} width={80} alt="Jaagr" />
           </Link>
           <p className="text-sm text-zinc-400">
             Share your stories with the world and connect with readers who love your content
