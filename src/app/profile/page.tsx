@@ -420,7 +420,7 @@ const lastAssessment = {
 export default function ProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { user, setUser, isLoading, fetchUser } = useUser();
-  const [isEditing, setIsEditing] = useState(false);
+  // const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({
     fullName: "",
     email: "",
@@ -451,49 +451,49 @@ export default function ProfilePage() {
     fetchUser();
   }, []);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
+  // const handleEdit = () => {
+  //   setIsEditing(true);
+  // };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setProfile((prevProfile) => ({ ...prevProfile, [name]: value }));
-    setPendingUpdates((prevUpdates) => ({ ...prevUpdates, [name]: value }));
-  };
-  const router = useRouter();
+  // const handleChange = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   const { name, value } = e.target;
+  //   setProfile((prevProfile) => ({ ...prevProfile, [name]: value }));
+  //   setPendingUpdates((prevUpdates) => ({ ...prevUpdates, [name]: value }));
+  // };
+  // const router = useRouter();
 
-  const logOut = () => {
-    try {
-      setUser(null);
-      Cookies.remove("token");
-      router.push("/");
-      toast.success("Logged Out Successfully");
-    } catch (error) {
-      toast.error("Could not log out");
-    }
-  };
+  // const logOut = () => {
+  //   try {
+  //     setUser(null);
+  //     Cookies.remove("token");
+  //     router.push("/");
+  //     toast.success("Logged Out Successfully");
+  //   } catch (error) {
+  //     toast.error("Could not log out");
+  //   }
+  // };
 
-  const handleSave = () => {
-    try {
-      if (user) {
-        const updatedUser = {
-          ...user,
-          ...pendingUpdates,
-        };
-        setUser(updatedUser);
-        setIsEditing(false);
-        setPendingUpdates({});
-        toast.success("Profile updated successfully");
-      }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
-      // Revert the changes in local state
-      setProfile((prevProfile) => ({ ...prevProfile, ...user }));
-    }
-  };
+  // const handleSave = () => {
+  //   try {
+  //     if (user) {
+  //       const updatedUser = {
+  //         ...user,
+  //         ...pendingUpdates,
+  //       };
+  //       setUser(updatedUser);
+  //       setIsEditing(false);
+  //       setPendingUpdates({});
+  //       toast.success("Profile updated successfully");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating profile:", error);
+  //     toast.error("Failed to update profile");
+  //     // Revert the changes in local state
+  //     setProfile((prevProfile) => ({ ...prevProfile, ...user }));
+  //   }
+  // };
 
   if (isLoading) {
     return (
@@ -524,6 +524,7 @@ export default function ProfilePage() {
       return "";
     }
   };
+  
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -540,7 +541,7 @@ export default function ProfilePage() {
                   <p className="text-gray-600 mt-2">{user.bio}</p>
                 </div>
                 <Avatar className="w-24 h-24">
-                  <AvatarImage src={user.profilePicture} alt={user.fullName} />
+                  <AvatarImage src={user.profilePhoto} alt={user.fullName} />
                   <AvatarFallback>
                     {user.fullName
                       .split(" ")
@@ -649,7 +650,6 @@ export default function ProfilePage() {
       <EditProfileModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        user={user}
       />
     </div>
   );
