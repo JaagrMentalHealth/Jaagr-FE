@@ -10,6 +10,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { blogUpload } from "@/api/blogAPI";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Bold, Italic, Link, Quote, MessageCircle, Type } from "lucide-react"
 // AWS S3 configuration
 
 const s3Client = new S3Client({
@@ -78,6 +79,13 @@ const BlogEditor: React.FC = () => {
     draft: true,
   });
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
+  
+  const [selectionBox, setSelectionBox] = useState<{ visible: boolean; top: number; left: number }>({
+    visible: false,
+    top: 0,
+    left: 0,
+  });
+    
 
   const router = useRouter();
 
@@ -303,6 +311,20 @@ const BlogEditor: React.FC = () => {
     // Instead of destroying the editor, just hide/show it
     setIsPreviewMode(!isPreviewMode);
   };
+  const handleTextSelection = () => {
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim()) {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setSelectionBox({
+        visible: true,
+        top: rect.top + window.scrollY - 40,
+        left: rect.left + window.scrollX,
+      });
+    } else {
+      setSelectionBox({ visible: false, top: 0, left: 0 });
+    }
+  };
 
   const handleAddTag = () => {
     if (currentTag.trim()) {
@@ -315,6 +337,12 @@ const BlogEditor: React.FC = () => {
       setTimeout(() => setUploadMessage(null), 3000);
     }
   };
+  useEffect(() => {
+    document.addEventListener("mouseup", handleTextSelection);
+    return () => {
+      document.removeEventListener("mouseup", handleTextSelection);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -466,6 +494,48 @@ const BlogEditor: React.FC = () => {
           </div>
         </aside>
       </main>
+      {selectionBox.visible && (
+        <div
+          className="absolute z-50 bg-zinc-900 rounded-md shadow-lg px-1.5 py-1 flex items-center gap-0.5"
+          style={{ top: selectionBox.top, left: selectionBox.left }}
+        >
+          <button
+            className="h-8 w-8 text-white hover:bg-zinc-800"
+          >
+            <Bold className="h-4 w-4 flex items-center justify-center" />
+
+          </button>
+          <button
+            className="h-8 w-8 text-white hover:bg-zinc-800"
+          >
+            <Italic className="h-4 w-4" />
+          </button>
+          <button
+            className="h-8 w-8 text-white hover:bg-zinc-800"
+          >
+           <Link className="h-4 w-4" />
+          </button>
+          <button
+            className="h-8 w-8 text-white hover:bg-zinc-800"
+          >
+           <Type className="h-4 w-4" />
+          </button>
+          <button
+            className="h-8 w-8 text-white hover:bg-zinc-800"
+          >
+           <Quote className="h-4 w-4" />
+          </button>
+          <button
+            className="h-8 w-8 text-white hover:bg-zinc-800"
+          >
+           <MessageCircle className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      
+
+
 
       {/* Toast Message */}
       {uploadMessage && (
