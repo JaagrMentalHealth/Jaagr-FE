@@ -1,115 +1,226 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
+import { useEffect, useState } from "react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
-import { SelfAssessmentTest } from "@/components/self-assesment-test"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, CheckCircle, Clock, HelpCircle } from 'lucide-react'
-
-const questions = [
-  { id: 1, text: "How often do you feel nervous, anxious, or on edge?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 2, text: "How often do you feel down, depressed, or hopeless?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 3, text: "How often do you have trouble falling or staying asleep, or sleeping too much?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 4, text: "How often do you feel tired or have little energy?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 5, text: "How often do you have trouble concentrating on things?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 6, text: "How often do you feel bad about yourself or that you are a failure?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 7, text: "How often do you have little interest or pleasure in doing things?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 8, text: "How often do you feel restless or have trouble sitting still?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 9, text: "How often do you have poor appetite or overeat?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 10, text: "How often do you feel afraid as if something awful might happen?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 11, text: "How often do you have trouble relaxing?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 12, text: "How often do you avoid situations that make you anxious?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 13, text: "How often do you have thoughts that you would be better off dead?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 14, text: "How often do you feel lonely or isolated?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-  { id: 15, text: "How often do you have difficulty making decisions?", options: ["Never", "Sometimes", "Often", "Very Often"] },
-]
+import { Card, CardContent } from "@/components/ui/card"
+import { motion,  useAnimation } from "framer-motion"
+import { useInView } from "react-intersection-observer"
+import { CheckCircle, Clock, Brain, HeartHandshake } from "lucide-react"
+import { UserInfoModal } from "@/components/Assessment/assessment-info-popup"
 
 export default function SelfAssessmentPage() {
-  const [showTest, setShowTest] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const controls = useAnimation()
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  })
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible")
+    }
+  }, [controls, inView])
+
+  const getButtonPosition = (progress: number) => {
+    if (progress < 0.5) {
+      // Move from center to right
+      return {
+        x: `${progress * 200}%`,
+        y: `0`,
+      }
+    } else {
+      // Move from right to bottom-right
+      // console.log(progress)
+      const remainingProgress = (progress - 0.5) * 2
+      console.log(remainingProgress,progress)
+      return {
+        x: `70vw`,
+        y: `${remainingProgress * 100}vh`,
+      }
+    }
+  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      const maxScroll = documentHeight - windowHeight
+      const progress = Math.min(scrollY / maxScroll, 1)
+      setScrollProgress(progress)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
+      },
+    },
+    hover: {
+      scale: 1.05,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
+      },
+    },
+    tap: {
+      scale: 0.95,
+    },
+    // transform:getButtonPosition(scrollProgress)
+  }
+
+  
+
+  const handleStartAssessment = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleStartTest = (userInfo: { name: string; phone: string; email: string }) => {
+    console.log("Starting test with user info:", userInfo)
+    setIsModalOpen(false)
+    // Here you would typically start the actual test or navigate to the test page
+    // For now, we'll just log the info and close the modal
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-orange-50 to-white">
-        <div className="container mx-auto px-4 py-12">
-          <h1 className="text-4xl font-bold mb-8 text-center text-orange-800">Mental Health Self-Assessment</h1>
+        <section className="py-20 text-center relative overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path d="M0,0 C40,20 60,20 100,0 L100,100 0,100 Z" fill="rgba(255,237,213,0.3)" />
+            </svg>
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <h1 className="text-5xl font-bold mb-8 text-orange-800 leading-tight">Emotional Wellbeing Check</h1>
+            <div className="text-left mb-12 max-w-2xl mx-auto">
+              <h2 className="text-3xl font-semibold mb-4 text-orange-700">Hi there,</h2>
+              <p className="text-xl text-gray-700 leading-relaxed">
+                Welcome to your emotional wellbeing check. This assessment is designed to help you understand and
+                reflect on your current emotional state. Take a moment for yourself and let&apos;s explore your mental
+                landscape together.
+              </p>
+            </div>
+            <motion.div
+  ref={ref}
+  initial="hidden"
+  animate="visible"
+  variants={buttonVariants}
+  whileHover="hover"
+  whileTap="tap"
+  style={scrollProgress<0.5?getButtonPosition(scrollProgress):undefined}
+  // transformTemplate={getButtonPosition(scrollProgress)}
+  className={`inline-block ${scrollProgress >= 0.5 ?  `${scrollProgress<0.6?`transform: translate-y-[150 vh]`:"fixed bottom-32 right-32 z-50"}` : ""}`}
+>
+  <Button
+    size="lg"
+    className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-6 rounded-full shadow-lg"
+    onClick={handleStartAssessment}
+  >
+    Start Your Assessment
+  </Button>
+</motion.div>
 
-          {!showTest && (
-            <>
-              <section className="mb-12">
-                <Card className="bg-white shadow-lg">
-                  <CardHeader className="bg-gradient-to-r from-orange-100 to-orange-200">
-                    <CardTitle className="text-2xl font-bold text-orange-800">Why Self-Assessment is Important</CardTitle>
-                  </CardHeader>
-                  <CardContent className="prose max-w-none p-6">
-                    <p className="text-lg mb-4">Self-assessment is a crucial step in understanding and managing your mental health. It helps you:</p>
-                    <ul className="space-y-2">
-                      <li className="flex items-center"><CheckCircle className="text-green-500 mr-2" /> Identify potential mental health concerns early</li>
-                      <li className="flex items-center"><CheckCircle className="text-green-500 mr-2" /> Track changes in your mental well-being over time</li>
-                      <li className="flex items-center"><CheckCircle className="text-green-500 mr-2" /> Gain insights into your thoughts, feelings, and behaviors</li>
-                      <li className="flex items-center"><CheckCircle className="text-green-500 mr-2" /> Determine when it might be appropriate to seek professional help</li>
-                      <li className="flex items-center"><CheckCircle className="text-green-500 mr-2" /> Take proactive steps towards maintaining good mental health</li>
-                    </ul>
-                    <p className="mt-4 text-sm text-gray-600">Remember, while self-assessment tools are valuable, they are not a substitute for professional diagnosis or treatment.</p>
-                  </CardContent>
-                </Card>
-              </section>
+          </div>
+        </section>
 
-              <section className="mb-12 text-center">
-                <Button onClick={() => setShowTest(true)} className="bg-orange-500 hover:bg-orange-600 text-white text-lg py-6 px-8">
-                  Start Your Self-Assessment <ArrowRight className="ml-2" />
-                </Button>
-              </section>
-            </>
-          )}
+        <section className="py-20 bg-gradient-to-r from-orange-100 to-orange-200">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold mb-12 text-center text-orange-800">Things to Consider</h2>
+            <ul className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <li className="flex items-start space-x-4">
+                <CheckCircle className="w-8 h-8 text-orange-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-2xl mb-2 text-orange-700">Be Honest</h3>
+                  <p className="text-lg text-gray-700">
+                    Answer questions truthfully for the most accurate assessment of your emotional wellbeing.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start space-x-4">
+                <Clock className="w-8 h-8 text-orange-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-2xl mb-2 text-orange-700">Take Your Time</h3>
+                  <p className="text-lg text-gray-700">
+                    There&apos;s no rush. Reflect on each question and choose the answer that best describes your feelings.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start space-x-4">
+                <Brain className="w-8 h-8 text-orange-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-2xl mb-2 text-orange-700">Consider Recent Events</h3>
+                  <p className="text-lg text-gray-700">
+                    Think about how you&apos;ve felt over the past two weeks when answering the questions.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start space-x-4">
+                <HeartHandshake className="w-8 h-8 text-orange-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-2xl mb-2 text-orange-700">Seek Help If Needed</h3>
+                  <p className="text-lg text-gray-700">
+                    If you&apos;re feeling distressed, don&apos;t hesitate to reach out to a mental health professional.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
 
-          {showTest && (
-            <section className="mb-12">
-              <SelfAssessmentTest questions={questions} />
-            </section>
-          )}
-
-          <section className="mb-12">
-            <Card className="bg-white shadow-lg">
-              <CardHeader className="bg-gradient-to-r from-orange-100 to-orange-200">
-                <CardTitle className="text-2xl font-bold text-orange-800">When to Take a Mental Wellness Check</CardTitle>
-              </CardHeader>
-              <CardContent className="prose max-w-none p-6">
-                <p className="text-lg mb-4">Consider taking a mental wellness check:</p>
-                <ul className="space-y-2">
-                  <li className="flex items-center"><Clock className="text-blue-500 mr-2" /> Regularly, as part of your self-care routine (e.g., monthly or quarterly)</li>
-                  <li className="flex items-center"><Clock className="text-blue-500 mr-2" /> When you're experiencing significant life changes or stressors</li>
-                  <li className="flex items-center"><Clock className="text-blue-500 mr-2" /> If you notice changes in your mood, behavior, or thought patterns</li>
-                  <li className="flex items-center"><Clock className="text-blue-500 mr-2" /> Before and after starting a new mental health treatment or medication</li>
-                  <li className="flex items-center"><Clock className="text-blue-500 mr-2" /> If you're concerned about your mental well-being for any reason</li>
-                </ul>
-                <p className="mt-4 text-sm text-gray-600">Remember, it's always okay to seek help or take a mental wellness check, even if you're not sure you need it.</p>
-              </CardContent>
-            </Card>
-          </section>
-
-          <section>
-            <Card className="bg-white shadow-lg">
-              <CardHeader className="bg-gradient-to-r from-orange-100 to-orange-200">
-                <CardTitle className="text-2xl font-bold text-orange-800">How It Works</CardTitle>
-              </CardHeader>
-              <CardContent className="prose max-w-none p-6">
-                <ol className="space-y-2">
-                  <li className="flex items-start"><span className="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">1</span> Answer the questions honestly, based on how you've been feeling over the past two weeks.</li>
-                  <li className="flex items-start"><span className="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">2</span> Take your time and reflect on each question before answering.</li>
-                  <li className="flex items-start"><span className="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">3</span> Once you've completed all questions, you'll receive a general assessment of your mental health status.</li>
-                  <li className="flex items-start"><span className="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">4</span> Review your results and the provided recommendations.</li>
-                  <li className="flex items-start"><span className="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">5</span> If suggested, consider reaching out to a mental health professional for a more comprehensive evaluation.</li>
-                </ol>
-                <p className="mt-4 text-sm text-gray-600">Remember, this self-assessment is not a diagnostic tool. It's designed to help you understand your mental health better and determine if you might benefit from professional support.</p>
-              </CardContent>
-            </Card>
-          </section>
-        </div>
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold mb-12 text-center text-orange-800">What Our Users Say</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <p className="italic mb-4 text-lg text-gray-700">
+                    This assessment helped me understand my emotions better. It was a great starting point for my
+                    mental health journey.
+                  </p>
+                  <p className="font-semibold text-orange-600">- Sarah T.</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <p className="italic mb-4 text-lg text-gray-700">
+                    I appreciate how comprehensive yet easy to understand this wellbeing check is. It&apos;s now part of my
+                    monthly self-care routine.
+                  </p>
+                  <p className="font-semibold text-orange-600">- Michael R.</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <p className="italic mb-4 text-lg text-gray-700">
+                    Taking this assessment regularly has helped me track my emotional wellbeing over time. It&apos;s been
+                    invaluable for my personal growth.
+                  </p>
+                  <p className="font-semibold text-orange-600">- Emily L.</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
+      <UserInfoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onStartTest={handleStartTest} />
     </div>
   )
 }
+
