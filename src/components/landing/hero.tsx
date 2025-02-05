@@ -11,11 +11,7 @@ export function Hero() {
   const router = useRouter();
 
   const handleStartWriting = () => {
-    // if (user) {
-    //   router.push("/upload");
-    // } else {
-    //   router.push("/login?redirect=/upload");
-    // }
+    
     router.push("/self-assessment");
   };
 
@@ -47,7 +43,7 @@ export function Hero() {
               Take Assessment Yourself
             </Button>
             <div className="flex text-xl text-secondary-foreground md:text-2xl">
-              Want to read something?
+              Want to read something?   
               <Link href={"/blogs"} className="font-bold">
                 Read Here
               </Link>
