@@ -103,7 +103,7 @@ export default function SelfAssessmentPage() {
         <section className="py-20 text-center relative overflow-hidden">
           <div className="absolute inset-0 z-0">
             <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <path d="M0,0 C40,20 60,20 100,0 L100,100 0,100 Z" fill="rgba(255,237,213,0.3)" />
+              <path d="M0,0 C40,20 60,20 100,0 L100,100 0,100 Z" fill="rgba(250,245,255,0.3)" />
             </svg>
           </div>
           <div className="container mx-auto px-4 relative z-10">
