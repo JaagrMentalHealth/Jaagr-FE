@@ -8,6 +8,8 @@ import { Pagination } from "@/components/pagination"
 import { SearchBar } from "@/components/search-bar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getAllBlogs } from "@/api/blogAPI"
+import { BlogSkeleton } from "@/components/blog-skeleton"
+
 
 interface BlogPost {
   _id: string
@@ -77,7 +79,12 @@ export default function BlogsPage() {
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return 
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {[...Array(6)].map((_, index) => (
+      <BlogSkeleton key={index} />
+    ))}
+  </div>
   }
 
   if (error) {
