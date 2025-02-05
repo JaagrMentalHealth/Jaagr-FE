@@ -9,7 +9,7 @@ export default function ContactPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 bg-gradient-to-b from-orange-50 to-white py-12">
+      <main className="flex-1 bg-gradient-to-b from-purple-50 to-white py-12">
         <div className="container mx-auto px-4">
           <Card className="mx-auto max-w-2xl">
             <CardHeader>

@@ -8,11 +8,11 @@ interface TestimonialCardProps {
 
 export function TestimonialCard({ quote, author, role }: TestimonialCardProps) {
   return (
-    <Card className="bg-orange-50 hover:bg-orange-100 transition-colors duration-300">
+    <Card className="bg-purple-50 hover:bg-purple-100 transition-colors duration-300">
       <CardContent className="p-6">
         <p className="mb-4 text-lg italic text-gray-700">&quot;{quote}&quot;</p>
         <div className="flex items-center gap-2">
-          <div className="h-10 w-10 rounded-full bg-orange-200 flex items-center justify-center text-orange-500 font-semibold">
+          <div className="h-10 w-10 rounded-full bg-purple-200 flex items-center justify-center text-purple-500 font-semibold">
             {author.charAt(0)}
           </div>
           <div>

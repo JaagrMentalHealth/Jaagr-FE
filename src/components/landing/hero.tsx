@@ -20,7 +20,7 @@ export function Hero() {
   };
 
   return (
-    <section className="w-full bg-gradient-to-b from-orange-50 to-white py-12 md:py-24 lg:py-32">
+    <section className="w-full bg-gradient-to-b from-purple-50 to-white py-12 md:py-24 lg:py-32">
       <div className="container mx-auto grid items-center gap-6 px-4 md:grid-cols-2 md:gap-12">
         <div className="flex flex-col gap-6 text-center md:text-left mx-auto md:mx-0 max-w-md md:max-w-none">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
@@ -42,7 +42,7 @@ export function Hero() {
           <div className="flex flex-col gap-4 sm:justify-center md:justify-start">
             <Button
               onClick={handleStartWriting}
-              className="w-full sm:w-fit sm:px-16 bg-orange-500 text-white hover:bg-orange-600  text-lg py-6 px-8"
+              className="w-full sm:w-fit sm:px-16 bg-purple-500 text-white hover:bg-purple-600  text-lg py-6 px-8"
             >
               Take Assessment Yourself
             </Button>

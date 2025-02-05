@@ -29,7 +29,7 @@ export function BlogCard({ title, excerpt, author, date, image, slug }: BlogCard
         <CardContent className="flex flex-1 flex-col justify-between">
           <p className="line-clamp-3 text-sm text-muted-foreground mb-4">{excerpt}</p>
           <div className="flex items-center gap-2">
-            <div className="h-10 w-10 rounded-full bg-orange-200 flex items-center justify-center text-orange-500 font-semibold">
+            <div className="h-10 w-10 rounded-full bg-purple-200 flex items-center justify-center text-purple-500 font-semibold">
               {author.charAt(0)}
             </div>
             <div>
