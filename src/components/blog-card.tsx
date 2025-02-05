@@ -139,7 +139,7 @@ export function BlogCard({
                 {excerpt}
               </p>
               <div className="flex items-center gap-2">
-                <div className="h-10 w-10 rounded-full bg-orange-200 flex items-center justify-center text-orange-500 font-semibold">
+                <div className="h-10 w-10 rounded-full bg-purple-200 flex items-center justify-center text-purple-500 font-semibold">
                   {writer.charAt(0)}
                 </div>
                 <div>

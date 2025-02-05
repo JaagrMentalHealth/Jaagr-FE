@@ -6,7 +6,7 @@ export function Footer() {
   <div className="container grid gap-8 px-4 sm:grid-cols-2 md:grid-cols-3">
     <div className="text-center sm:text-left">
       <Link href="/" className="mb-4 inline-flex items-center">
-        <span className="text-4xl font-bold text-orange-500">जाग्र</span>
+        <span className="text-4xl font-bold text-purple-500">जाग्र</span>
       </Link>
       <p className="text-sm text-zinc-400">
         Share your stories with the world and connect with readers who love your content

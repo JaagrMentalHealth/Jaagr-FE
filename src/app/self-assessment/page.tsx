@@ -99,7 +99,7 @@ export default function SelfAssessmentPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 bg-gradient-to-b from-orange-50 to-white">
+      <main className="flex-1 bg-gradient-to-b from-purple-50 to-white">
         <section className="py-20 text-center relative overflow-hidden">
           <div className="absolute inset-0 z-0">
             <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -107,9 +107,9 @@ export default function SelfAssessmentPage() {
             </svg>
           </div>
           <div className="container mx-auto px-4 relative z-10">
-            <h1 className="text-5xl font-bold mb-8 text-orange-800 leading-tight">Emotional Wellbeing Check</h1>
+            <h1 className="text-5xl font-bold mb-8 text-purple-800 leading-tight">Emotional Wellbeing Check</h1>
             <div className="text-left mb-12 max-w-2xl mx-auto">
-              <h2 className="text-3xl font-semibold mb-4 text-orange-700">Hi there,</h2>
+              <h2 className="text-3xl font-semibold mb-4 text-purple-700">Hi there,</h2>
               <p className="text-xl text-gray-700 leading-relaxed">
                 Welcome to your emotional wellbeing check. This assessment is designed to help you understand and
                 reflect on your current emotional state. Take a moment for yourself and let&apos;s explore your mental
@@ -129,7 +129,7 @@ export default function SelfAssessmentPage() {
 >
   <Button
     size="lg"
-    className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-6 rounded-full shadow-lg"
+    className="bg-purple-500 hover:bg-purple-600 text-white text-lg px-8 py-6 rounded-full shadow-lg"
     onClick={handleStartAssessment}
   >
     Start Your Assessment
@@ -139,41 +139,41 @@ export default function SelfAssessmentPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-gradient-to-r from-orange-100 to-orange-200">
+        <section className="py-20 bg-gradient-to-r from-purple-100 to-purple-200">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center text-orange-800">Things to Consider</h2>
+            <h2 className="text-4xl font-bold mb-12 text-center text-purple-800">Things to Consider</h2>
             <ul className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <li className="flex items-start space-x-4">
-                <CheckCircle className="w-8 h-8 text-orange-500 flex-shrink-0 mt-1" />
+                <CheckCircle className="w-8 h-8 text-purple-500 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-2xl mb-2 text-orange-700">Be Honest</h3>
+                  <h3 className="font-semibold text-2xl mb-2 text-purple-700">Be Honest</h3>
                   <p className="text-lg text-gray-700">
                     Answer questions truthfully for the most accurate assessment of your emotional wellbeing.
                   </p>
                 </div>
               </li>
               <li className="flex items-start space-x-4">
-                <Clock className="w-8 h-8 text-orange-500 flex-shrink-0 mt-1" />
+                <Clock className="w-8 h-8 text-purple-500 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-2xl mb-2 text-orange-700">Take Your Time</h3>
+                  <h3 className="font-semibold text-2xl mb-2 text-purple-700">Take Your Time</h3>
                   <p className="text-lg text-gray-700">
                     There&apos;s no rush. Reflect on each question and choose the answer that best describes your feelings.
                   </p>
                 </div>
               </li>
               <li className="flex items-start space-x-4">
-                <Brain className="w-8 h-8 text-orange-500 flex-shrink-0 mt-1" />
+                <Brain className="w-8 h-8 text-purple-500 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-2xl mb-2 text-orange-700">Consider Recent Events</h3>
+                  <h3 className="font-semibold text-2xl mb-2 text-purple-700">Consider Recent Events</h3>
                   <p className="text-lg text-gray-700">
                     Think about how you&apos;ve felt over the past two weeks when answering the questions.
                   </p>
                 </div>
               </li>
               <li className="flex items-start space-x-4">
-                <HeartHandshake className="w-8 h-8 text-orange-500 flex-shrink-0 mt-1" />
+                <HeartHandshake className="w-8 h-8 text-purple-500 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-2xl mb-2 text-orange-700">Seek Help If Needed</h3>
+                  <h3 className="font-semibold text-2xl mb-2 text-purple-700">Seek Help If Needed</h3>
                   <p className="text-lg text-gray-700">
                     If you&apos;re feeling distressed, don&apos;t hesitate to reach out to a mental health professional.
                   </p>
@@ -185,7 +185,7 @@ export default function SelfAssessmentPage() {
 
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center text-orange-800">What Our Users Say</h2>
+            <h2 className="text-4xl font-bold mb-12 text-center text-purple-800">What Our Users Say</h2>
             <div className="grid md:grid-cols-3 gap-8">
               <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardContent className="p-6">
@@ -193,7 +193,7 @@ export default function SelfAssessmentPage() {
                     This assessment helped me understand my emotions better. It was a great starting point for my
                     mental health journey.
                   </p>
-                  <p className="font-semibold text-orange-600">- Sarah T.</p>
+                  <p className="font-semibold text-purple-600">- Sarah T.</p>
                 </CardContent>
               </Card>
               <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -202,7 +202,7 @@ export default function SelfAssessmentPage() {
                     I appreciate how comprehensive yet easy to understand this wellbeing check is. It&apos;s now part of my
                     monthly self-care routine.
                   </p>
-                  <p className="font-semibold text-orange-600">- Michael R.</p>
+                  <p className="font-semibold text-purple-600">- Michael R.</p>
                 </CardContent>
               </Card>
               <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -211,7 +211,7 @@ export default function SelfAssessmentPage() {
                     Taking this assessment regularly has helped me track my emotional wellbeing over time. It&apos;s been
                     invaluable for my personal growth.
                   </p>
-                  <p className="font-semibold text-orange-600">- Emily L.</p>
+                  <p className="font-semibold text-purple-600">- Emily L.</p>
                 </CardContent>
               </Card>
             </div>

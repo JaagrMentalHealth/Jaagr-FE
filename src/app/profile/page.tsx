@@ -155,13 +155,13 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 bg-gradient-to-b from-orange-50 to-white py-12">
+      <main className="flex-1 bg-gradient-to-b from-purple-50 to-white py-12">
         <div className="container mx-auto px-4 space-y-8">
           <Card>
             <CardContent className="p-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <h1 className="text-3xl font-bold text-orange-800">
+                  <h1 className="text-3xl font-bold text-purple-800">
                     {user.fullName}
                   </h1>
                   <p className="text-gray-600 mt-2">{user.bio}</p>
