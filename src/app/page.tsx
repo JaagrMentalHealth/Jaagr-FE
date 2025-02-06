@@ -167,7 +167,7 @@ export default function Home() {
                     Connect with other mental health professionals and
                     contribute to our community-driven approach.
                   </p>
-                  <Button asChild>
+                  <Button className="bg-purple-700 text-white hover:bg-purple-600 transition-colors duration-300 rounded-full py-6 px-8 text-lg">
                     <Link href="/professionals/join">Join Now</Link>
                   </Button>
                 </CardContent>
@@ -181,7 +181,7 @@ export default function Home() {
                     Explore opportunities to conduct and participate in
                     cutting-edge mental health research.
                   </p>
-                  <Button asChild>
+                  <Button className="bg-purple-700 text-white hover:bg-purple-600 transition-colors duration-300 rounded-full py-6 px-8 text-lg">
                     <Link href="/professionals/research">Learn More</Link>
                   </Button>
                 </CardContent>
@@ -195,7 +195,7 @@ export default function Home() {
                     Access a wealth of resources, including latest research,
                     best practices, and professional development materials.
                   </p>
-                  <Button asChild>
+                  <Button className="bg-purple-700 text-white hover:bg-purple-600 transition-colors duration-300 rounded-full py-6 px-8 text-lg">
                     <Link href="/professionals/resources">
                       Access Resources
                     </Link>
