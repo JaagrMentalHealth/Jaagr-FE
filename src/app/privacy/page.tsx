@@ -5,7 +5,7 @@ export default function PrivacyPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 bg-gradient-to-b from-orange-50 to-white py-12">
+      <main className="flex-1 bg-gradient-to-b from-purple-50 to-white py-12">
         <div className="container mx-auto px-4 max-w-4xl">
           <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
           <div className="prose prose-lg max-w-none">

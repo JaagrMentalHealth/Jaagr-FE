@@ -352,7 +352,7 @@ const BlogEditor: React.FC = () => {
               Publish
             </button>
             <button
-              className="rounded bg-orange-500 px-4 py-2 text-sm text-white hover:bg-orange-600"
+              className="rounded bg-purple-500 px-4 py-2 text-sm text-white hover:bg-purple-600"
               onClick={togglePreviewMode}
             >
               {isPreviewMode ? "Edit" : "Preview"}
@@ -412,7 +412,7 @@ const BlogEditor: React.FC = () => {
                     {tag}
                     <button
                       onClick={() => handleRemoveTag(index)}
-                      className="absolute top-0 right-0 -mt-1 -mr-1 rounded-full bg-orange-200 text-white text-xs px-1.5 py-0.5 hover:bg-red-300"
+                      className="absolute top-0 right-0 -mt-1 -mr-1 rounded-full bg-purple-200 text-white text-xs px-1.5 py-0.5 hover:bg-red-300"
                       aria-label="Remove tag"
                     >
                       ×
@@ -436,7 +436,7 @@ const BlogEditor: React.FC = () => {
               />
               <button
                 onClick={handleAddTag}
-                className="rounded bg-orange-500 px-4 py-2 text-sm text-white hover:bg-orange-600"
+                className="rounded bg-purple-500 px-4 py-2 text-sm text-white hover:bg-purple-600"
               >
                 Add
               </button>

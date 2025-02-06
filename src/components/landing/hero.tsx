@@ -1,71 +1,79 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/landing/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import { useUser } from "@/contexts/userContext";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/landing/ui/button"
+import Image from "next/image"
+import Link from "next/link"
+import { useUser } from "@/contexts/userContext"
+import { useRouter } from "next/navigation"
+import { ArrowRight } from "lucide-react"
 
 export function Hero() {
-  const { user } = useUser();
-  const router = useRouter();
+  const { user } = useUser()
+  const router = useRouter()
 
   const handleStartWriting = () => {
-    // if (user) {
-    //   router.push("/upload");
-    // } else {
-    //   router.push("/login?redirect=/upload");
-    // }
-    router.push("/self-assessment");
-  };
+    router.push("/self-assessment")
+  }
 
   return (
-    <section className="w-full bg-gradient-to-b from-orange-50 to-white py-12 md:py-24 lg:py-32">
-      <div className="container mx-auto grid items-center gap-6 px-4 md:grid-cols-2 md:gap-12">
-        <div className="flex flex-col gap-6 text-center md:text-left mx-auto md:mx-0 max-w-md md:max-w-none">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            Be more aware{" "}
-            <span className="inline-block w-[118px] h-[45px] sm:w-[142px] sm:h-[54px] md:w-[140px] md:h-[72px] lg:w-[150] lg:h-[60px]  relative">
-              <Image
-                src="/logoHero.svg"
-                alt="Jaagr Logo"
-                fill
-                className="object-contain mt-2"
-                priority
-              />
-            </span>{" "}
-            about your thoughts
-          </h1>
-          <p className="text-xl text-muted-foreground md:text-2xl">
-            Bringing mental health experts to your palm
-          </p>
-          <div className="flex flex-col gap-4 sm:justify-center md:justify-start">
-            <Button
-              onClick={handleStartWriting}
-              className="w-full sm:w-fit sm:px-16 bg-orange-500 text-white hover:bg-orange-600  text-lg py-6 px-8"
-            >
-              Take Assessment Yourself
-            </Button>
-            <div className="flex text-xl text-secondary-foreground md:text-2xl">
-              Want to read something?
-              <Link href={"/blogs"} className="font-bold">
-                Read Here
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-center md:order-last mx-auto">
-          <div className="relative h-[300px] w-[300px] md:h-[500px] md:w-[500px]">
-            <Image
-              src="/images/hero.png"
-              alt="Mental Health Illustration"
-              fill
-              className="object-contain drop-shadow-xl"
-              priority
-            />
-          </div>
+  <section className="w-full min-h-screen bg-gradient-to-b from-purple-100 via-purple-50 to-white overflow-hidden flex items-center">
+  <div className="container mx-auto px-4 flex items-center min-h-screen">
+    <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="flex justify-center order-1 lg:order-2">
+        <div className="relative h-[300px] w-[300px] md:h-[600px] md:w-[500px]">
+          <Image
+            src="/images/hero.svg"
+            alt="Mental Health Illustration"
+            fill
+            className="object-contain drop-shadow-2xl animate-float"
+            priority
+          />
         </div>
       </div>
-    </section>
-  );
+
+      {/* Text Content */}
+      <div className="space-y-8 text-center lg:text-left order-2 lg:order-1">
+        <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+          Be more aware{" "}
+          <span className="inline-block relative">
+            <Image
+              src="/logoHero.svg"
+              alt="Jaagr Logo"
+              width={180}
+              height={80}
+              className="object-contain mt-2 animate-float"
+              priority
+            />
+          </span>{" "}
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+            about your thoughts
+          </span>
+        </h1>
+        <p className="text-xl text-gray-600 md:text-3xl max-w-2xl mx-auto lg:mx-0">
+          Bringing mental health experts to your palm. Discover a supportive community and valuable resources for your well-being journey.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
+          <Button
+            onClick={handleStartWriting}
+            className="w-full sm:w-auto text-lg py-6 px-8 bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-300 rounded-full shadow-lg hover:shadow-xl"
+          >
+            Take Assessment
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+          <Link href="/blogs" className="w-full sm:w-auto">
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto text-lg py-6 px-8 hover:bg-purple-100 transition-colors duration-300 rounded-full"
+            >
+              Read Blogs
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  )
 }
+

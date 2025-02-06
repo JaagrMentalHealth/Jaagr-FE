@@ -127,7 +127,7 @@ export function Navbar() {
                 <Button variant="ghost">Login</Button>
               </Link>
               <Link href="/signup">
-                <Button className="bg-orange-500 text-white hover:bg-orange-600">
+                <Button className="w-full sm:w-auto text-lg py-5 px-7 bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-300 rounded-full shadow-lg hover:shadow-xl">
                   Sign Up
                 </Button>
               </Link>

@@ -36,7 +36,7 @@ const BlogPost = () => {
       <nav className="bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <span className="text-2xl font-bold text-orange-500">Jaagr</span>
+            <span className="text-2xl font-bold text-purple-500">Jaagr</span>
             <div className="ml-10 space-x-4">
               <a href="#" className="text-gray-700">Home</a>
               <a href="#" className="text-gray-700">About Us</a>
@@ -45,7 +45,7 @@ const BlogPost = () => {
           </div>
           <div className="space-x-4">
             <button className="text-gray-700">Login</button>
-            <button className="bg-orange-500 text-white px-4 py-2 rounded">Sign Up</button>
+            <button className="bg-purple-500 text-white px-4 py-2 rounded">Sign Up</button>
           </div>
         </div>
       </nav>
@@ -93,7 +93,7 @@ const BlogPost = () => {
                     <p className="text-gray-500 text-sm">John is a leading Mental Health researcher with over 10 years of experience in Human Psychology.</p>
                   </div>
                 </div>
-                <button className="bg-orange-500 text-white px-4 py-2 rounded">Follow</button>
+                <button className="bg-purple-500 text-white px-4 py-2 rounded">Follow</button>
               </div>
             </div>
 
@@ -110,12 +110,12 @@ const BlogPost = () => {
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       placeholder="Add a comment..."
-                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                       rows="3"
                     />
                     <button 
                       type="submit"
-                      className="mt-2 bg-orange-500 text-white px-4 py-2 rounded"
+                      className="mt-2 bg-purple-500 text-white px-4 py-2 rounded"
                     >
                       Post Comment
                     </button>

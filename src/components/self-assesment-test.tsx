@@ -53,8 +53,8 @@ export function SelfAssessmentTest({ questions }: SelfAssessmentTestProps) {
 
   return (
     <Card className="w-full max-w-2xl mx-auto shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-orange-100 to-orange-200">
-        <CardTitle className="text-2xl font-bold text-orange-800">Mental Health Self-Assessment</CardTitle>
+      <CardHeader className="bg-gradient-to-r from-purple-100 to-purple-200">
+        <CardTitle className="text-2xl font-bold text-purple-800">Mental Health Self-Assessment</CardTitle>
         <Progress value={progress} className="w-full h-2" />
       </CardHeader>
       <CardContent className="p-6">
@@ -67,7 +67,7 @@ export function SelfAssessmentTest({ questions }: SelfAssessmentTestProps) {
               className="space-y-2"
             >
               {questions[currentQuestion].options.map((option, index) => (
-                <div key={index} className="flex items-center space-x-2 p-2 rounded-lg hover:bg-orange-50 transition-colors">
+                <div key={index} className="flex items-center space-x-2 p-2 rounded-lg hover:bg-purple-50 transition-colors">
                   <RadioGroupItem value={option} id={`q${questions[currentQuestion].id}-${index}`} />
                   <Label htmlFor={`q${questions[currentQuestion].id}-${index}`} className="flex-grow cursor-pointer">{option}</Label>
                 </div>
@@ -76,7 +76,7 @@ export function SelfAssessmentTest({ questions }: SelfAssessmentTestProps) {
           </div>
         ) : (
           <div className="text-center">
-            <h3 className="text-2xl font-semibold mb-4 text-orange-800">Your Result</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-purple-800">Your Result</h3>
             <p className="text-lg mb-4">{getResultMessage(calculateScore())}</p>
             <p className="text-sm text-gray-600">Remember, this assessment is not a diagnosis. If you're concerned about your mental health, please consult with a healthcare professional.</p>
           </div>
@@ -88,7 +88,7 @@ export function SelfAssessmentTest({ questions }: SelfAssessmentTestProps) {
             <Button onClick={handlePrevious} disabled={currentQuestion === 0} variant="outline" className="flex items-center">
               <ChevronLeft className="mr-2 h-4 w-4" /> Previous
             </Button>
-            <Button onClick={handleNext} disabled={!answers[questions[currentQuestion].id]} className="bg-orange-500 hover:bg-orange-600 text-white flex items-center">
+            <Button onClick={handleNext} disabled={!answers[questions[currentQuestion].id]} className="bg-purple-500 hover:bg-purple-600 text-white flex items-center">
               {currentQuestion === questions.length - 1 ? 'Finish' : 'Next'} <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           </>

@@ -7,13 +7,13 @@ export default function AboutPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 bg-gradient-to-b from-orange-50 to-white">
+      <main className="flex-1 bg-gradient-to-b from-purple-50 to-white">
         <div className="container mx-auto px-4 py-16 md:py-24">
-          <h1 className="text-4xl font-bold mb-8 text-center text-orange-800">About Jaagr</h1>
+          <h1 className="text-4xl font-bold mb-8 text-center text-purple-800">About Jaagr</h1>
           <div className="max-w-3xl mx-auto space-y-8">
             <Card className="bg-white shadow-lg">
-              <CardHeader className="bg-gradient-to-r from-orange-100 to-orange-200">
-                <CardTitle className="text-2xl font-bold text-orange-800">Our Mission</CardTitle>
+              <CardHeader className="bg-gradient-to-r from-purple-100 to-purple-200">
+                <CardTitle className="text-2xl font-bold text-purple-800">Our Mission</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <p className="text-lg mb-4">
@@ -28,28 +28,28 @@ export default function AboutPage() {
             <div className="grid md:grid-cols-2 gap-6">
               <Card className="bg-white shadow-lg">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <Heart className="w-12 h-12 text-orange-500 mb-4" />
+                  <Heart className="w-12 h-12 text-purple-500 mb-4" />
                   <h2 className="text-xl font-semibold mb-2">Compassionate Support</h2>
                   <p>We foster a community of empathy and understanding, where every voice is heard and valued.</p>
                 </CardContent>
               </Card>
               <Card className="bg-white shadow-lg">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <Users className="w-12 h-12 text-orange-500 mb-4" />
+                  <Users className="w-12 h-12 text-purple-500 mb-4" />
                   <h2 className="text-xl font-semibold mb-2">Diverse Perspectives</h2>
                   <p>We celebrate the diversity of experiences and viewpoints in mental health journeys.</p>
                 </CardContent>
               </Card>
               <Card className="bg-white shadow-lg">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <Lightbulb className="w-12 h-12 text-orange-500 mb-4" />
+                  <Lightbulb className="w-12 h-12 text-purple-500 mb-4" />
                   <h2 className="text-xl font-semibold mb-2">Continuous Learning</h2>
                   <p>We&apos;re committed to providing up-to-date resources and insights on mental health.</p>
                 </CardContent>
               </Card>
               <Card className="bg-white shadow-lg">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <Globe className="w-12 h-12 text-orange-500 mb-4" />
+                  <Globe className="w-12 h-12 text-purple-500 mb-4" />
                   <h2 className="text-xl font-semibold mb-2">Global Community</h2>
                   <p>We&apos;re building a worldwide network of support and understanding.</p>
                 </CardContent>
@@ -57,8 +57,8 @@ export default function AboutPage() {
             </div>
 
             <Card className="bg-white shadow-lg">
-              <CardHeader className="bg-gradient-to-r from-orange-100 to-orange-200">
-                <CardTitle className="text-2xl font-bold text-orange-800">Our Story</CardTitle>
+              <CardHeader className="bg-gradient-to-r from-purple-100 to-purple-200">
+                <CardTitle className="text-2xl font-bold text-purple-800">Our Story</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <p className="mb-4">

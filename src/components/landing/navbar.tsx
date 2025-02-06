@@ -15,7 +15,7 @@ export function Navbar() {
     <header className="w-full border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center">
-          <span className="text-6xl font-bold text-orange-500">जाग्र</span>
+          <span className="text-6xl font-bold text-purple-500">जाग्र</span>
         </Link>
         <button
           className="md:hidden"
@@ -31,19 +31,19 @@ export function Navbar() {
         >
           <Link
             href="/"
-            className="text-sm font-medium hover:text-orange-500 transition-colors"
+            className="text-sm font-medium hover:text-purple-500 transition-colors"
           >
             Home
           </Link>
           <Link
             href="/about"
-            className="text-sm font-medium hover:text-orange-500 transition-colors"
+            className="text-sm font-medium hover:text-purple-500 transition-colors"
           >
             About Us
           </Link>
           <Link
             href="/blogs"
-            className="text-sm font-medium hover:text-orange-500 transition-colors"
+            className="text-sm font-medium hover:text-purple-500 transition-colors"
           >
             Blogs
           </Link>
@@ -78,13 +78,13 @@ export function Navbar() {
                 <Link href="/login" className="w-full md:w-auto">
                   <Button
                     variant="ghost"
-                    className="w-full md:w-auto hover:text-orange-500"
+                    className="w-full md:w-auto hover:text-purple-500"
                   >
                     Login
                   </Button>
                 </Link>
                 <Link href="/signup" className="w-full md:w-auto">
-                  <Button className="w-full bg-orange-500 text-white hover:bg-orange-600 md:w-auto">
+                  <Button className="w-full sm:w-auto text-lg py-6 px-8 bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-300 rounded-full shadow-lg hover:shadow-xl">
                     Sign Up
                   </Button>
                 </Link>
@@ -93,13 +93,13 @@ export function Navbar() {
             {/* <Link href="/login" className="w-full md:w-auto">
               <Button
                 variant="ghost"
-                className="w-full md:w-auto hover:text-orange-500"
+                className="w-full md:w-auto hover:text-purple-500"
               >
                 Login
               </Button>
             </Link>
             <Link href="/signup" className="w-full md:w-auto">
-              <Button className="w-full bg-orange-500 text-white hover:bg-orange-600 md:w-auto">
+              <Button className="w-full bg-purple-500 text-white hover:bg-purple-600 md:w-auto">
                 Sign Up
               </Button>
             </Link> */}
