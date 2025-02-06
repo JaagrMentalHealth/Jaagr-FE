@@ -16,18 +16,18 @@ export function Hero() {
   }
 
   return (
-    <section className="w-full bg-gradient-to-b from-purple-100 via-purple-50 to-white py-16 md:py-24 lg:py-32 overflow-hidden">
+    <section className="w-full min-h-screen bg-gradient-to-b from-purple-100 via-purple-50 to-white py-16 md:py-24 lg:py-32 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 text-center lg:text-left">
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
               Be more aware{" "}
               <span className="inline-block relative">
                 <Image
                   src="/logoHero.svg"
                   alt="Jaagr Logo"
-                  width={150}
-                  height={60}
+                  width={160}
+                  height={70}
                   className="object-contain mt-2 animate-float"
                   priority
                 />
@@ -36,7 +36,7 @@ export function Hero() {
                 about your thoughts
               </span>
             </h1>
-            <p className="text-xl text-gray-600 md:text-2xl max-w-2xl mx-auto lg:mx-0">
+            <p className="text-xl text-gray-600 md:text-3xl max-w-3xl mx-auto lg:mx-0">
               Bringing mental health experts to your palm. Discover a supportive community and valuable resources for
               your well-being journey.
             </p>
@@ -59,9 +59,9 @@ export function Hero() {
             </div>
           </div>
           <div className="flex justify-end">
-          <div className="relative h-[300px] w-[300px] md:h-[500px] md:w-[500px]">
+          <div className="relative h-[300px] w-[300px] md:h-[600px] md:w-[500px]">
           <Image
-            src="/images/hero.png"
+            src="/images/hero.svg"
             alt="Mental Health Illustration"
             fill
             className="object-contain drop-shadow-2xl animate-float"
