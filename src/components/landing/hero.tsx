@@ -58,15 +58,17 @@ export function Hero() {
               </Link>
             </div>
           </div>
-          <div className="relative h-[300px] w-[300px] md:h-[500px] md:w-[500px] mx-auto lg:mx-0">
-            <Image
-              src="/images/hero.png"
-              alt="Mental Health Illustration"
-              fill
-              className="object-contain drop-shadow-2xl animate-float"
-              priority
-            />
-          </div>
+          <div className="flex justify-end">
+          <div className="relative h-[300px] w-[300px] md:h-[500px] md:w-[500px]">
+          <Image
+            src="/images/hero.png"
+            alt="Mental Health Illustration"
+            fill
+            className="object-contain drop-shadow-2xl animate-float"
+            priority
+          />
+        </div>
+        </div>
         </div>
       </div>
     </section>
