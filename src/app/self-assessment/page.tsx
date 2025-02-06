@@ -101,8 +101,8 @@ export default function SelfAssessmentPage() {
   <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
     {/* Left Content */}
     <div className="md:w-1/2 text-left mb-12 md:mb-0">
-      <h1 className="text-5xl font-bold mb-8 text-purple-800 leading-tight">Emotional Wellbeing Check</h1>
-      <h2 className="text-3xl font-semibold mb-4 text-purple-700">Hi there,</h2>
+      <h1 className="text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">Emotional Wellbeing Check</h1>
+      <h2 className="text-4xl font-semibold mb-4 text-purple-700">Hi there,</h2>
       <p className="text-xl text-gray-700 leading-relaxed">
         Welcome to your emotional wellbeing check. This assessment is designed to help you understand and
         reflect on your current emotional state. Take a moment for yourself and let&apos;s explore your mental
@@ -130,7 +130,7 @@ export default function SelfAssessmentPage() {
       <Image
         src="/images/lighthouse.svg"
         alt="Emotional Wellbeing"
-        width={800}
+        width={700}
         height={400}
         className="object-contain drop-shadow-2xl animate-float"
       />
