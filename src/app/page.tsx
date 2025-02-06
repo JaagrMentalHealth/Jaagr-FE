@@ -79,33 +79,30 @@ export default function Home() {
         <Hero />
 
         {/* Mission Statement Section */}
-        <section className="bg-accent py-16 md:py-24">
+        <section className="bg-gradient-to-r from-purple-100 to-pink-100 py-24">
           <div className="container mx-auto px-4 text-center">
-            <SectionHeader
-              title="Our Mission"
-              subtitle="Creating a supportive community for mental well-being"
-            />
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
-              At Jaagr, we believe in building habits and models that serve your
-              life purpose
+            <h2 className="text-4xl font-bold mb-8 text-purple-800">Our Mission</h2>
+            <p className="text-xl mb-12 max-w-3xl mx-auto text-gray-700">
+              At Jaagr, we believe in the power of shared experiences and open dialogue to foster mental well-being. Our
+              mission is to create a supportive community where individuals can express themselves freely, learn from
+              others, and access valuable mental health resources.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-              <Button
+              <Button 
                 onClick={() => {
-                  router.push("/contact");
+                router.push("/contact");
                 }}
-                className="bg-primary text-white hover:bg-primary/90"
-              >
+                className="bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-300 rounded-full py-6 px-8 text-lg">
                 Need Help?
               </Button>
               <Button
                 onClick={() => {
-                  router.push("/mental-health-exercise");
+                router.push("/mental-health-exercise");
                 }}
                 variant="outline"
-                className="hover:bg-accent-foreground/10"
+                className="hover:bg-purple-100 transition-colors duration-300 rounded-full py-6 px-8 text-lg"
               >
-                Learn more
+                Learn More
               </Button>
             </div>
           </div>
@@ -131,30 +128,23 @@ export default function Home() {
         </section>
 
         {/* Support Our Cause Section */}
-        <section className="bg-accent py-16 md:py-24">
+        <section className="bg-gradient-to-r from-purple-100 to-pink-100 py-24">
           <div className="container mx-auto px-4 text-center">
-            <SectionHeader
-              title="Support Our Cause"
-              subtitle="Join us in our mission to promote mental health awareness and prevention"
-            />
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Our prevention mission is is about looking for the root causes of
-              today's problems. Our work looks to address these issues through
-              research, community work and influencing policy.
+            <h2 className="text-4xl font-bold mb-8 text-purple-800">Support Our Cause </h2>
+            <p className="text-xl mb-12 max-w-3xl mx-auto text-gray-700">
+            Our prevention mission is is about looking for the root causes of today&apos;s problems. Our
+            work looks to address these issues through research, community work and influencing
+            policy.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-              <Button
-                asChild
-                className="bg-primary text-white hover:bg-primary/90"
-              >
-                <Link href="/contribute">Contribute</Link>
+              <Button className="bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-300 rounded-full py-6 px-8 text-lg">
+                Contribute
               </Button>
               <Button
-                asChild
                 variant="outline"
-                className="hover:bg-accent-foreground/10"
+                className="hover:bg-purple-100 transition-colors duration-300 rounded-full py-6 px-8 text-lg"
               >
-                <Link href="/shop">Shop</Link>
+                Shop
               </Button>
             </div>
           </div>
@@ -217,7 +207,7 @@ export default function Home() {
         </section>
 
         {/* Research Section */}
-        <section className="bg-accent py-16 md:py-24">
+        {/* <section className="bg-accent py-16 md:py-24">
           <div className="container mx-auto px-4">
             <SectionHeader
               title="Research"
@@ -250,7 +240,7 @@ export default function Home() {
               </Button>
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
       <Footer />
     </div>
