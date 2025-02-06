@@ -16,10 +16,9 @@ export function Hero() {
   }
 
   return (
-    <section className="w-full min-h-screen bg-gradient-to-b from-purple-100 via-purple-50 to-white overflow-hidden">
+  <section className="w-full min-h-screen bg-gradient-to-b from-purple-100 via-purple-50 to-white overflow-hidden flex items-center">
   <div className="container mx-auto px-4 flex items-center min-h-screen">
     <div className="grid lg:grid-cols-2 gap-12 items-center">
-      {/* Hero Image First on Mobile */}
       <div className="flex justify-center order-1 lg:order-2">
         <div className="relative h-[300px] w-[300px] md:h-[600px] md:w-[500px]">
           <Image
@@ -40,8 +39,8 @@ export function Hero() {
             <Image
               src="/logoHero.svg"
               alt="Jaagr Logo"
-              width={160}
-              height={70}
+              width={180}
+              height={80}
               className="object-contain mt-2 animate-float"
               priority
             />
