@@ -10,7 +10,7 @@ export function Footer() {
             <Image src="/logo.svg" height={60} width={80} alt="Jaagr" />
           </Link>
           <p className="text-sm text-zinc-400">
-            Share your stories with the world and connect with readers who love your content
+            Bringing mental health experts to your palm. Discover a supportive community and valuable resources for your well-being journey.
           </p>
         </div>
         <div className="text-center sm:text-left">
