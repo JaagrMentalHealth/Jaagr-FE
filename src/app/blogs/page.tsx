@@ -79,12 +79,13 @@ export default function BlogsPage() {
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
   if (isLoading) {
-    return 
+    return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
     {[...Array(6)].map((_, index) => (
       <BlogSkeleton key={index} />
     ))}
   </div>
+    )
   }
 
   if (error) {
