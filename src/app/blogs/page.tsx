@@ -80,8 +80,12 @@ export default function BlogsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-      <BlogSkeleton/>
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 w-full max-w-4xl">
+          {[...Array(3)].map((_, index) => (
+            <BlogSkeleton key={index} />
+          ))}
+        </div>
       </div>
     )
   }
