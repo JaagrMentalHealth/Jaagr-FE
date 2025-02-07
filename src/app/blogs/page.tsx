@@ -80,13 +80,12 @@ export default function BlogsPage() {
 
   if (isLoading) {
     return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-    {[...Array(6)].map((_, index) => (
-      <BlogSkeleton key={index} />
-    ))}
-  </div>
+      <div className="flex justify-center items-center min-h-screen">
+      <BlogSkeleton/>
+      </div>
     )
   }
+  
 
   if (error) {
     return <div>{error}</div>
