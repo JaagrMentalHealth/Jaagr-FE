@@ -78,7 +78,7 @@ export function SelfAssessmentTest({ questions }: SelfAssessmentTestProps) {
           <div className="text-center">
             <h3 className="text-2xl font-semibold mb-4 text-purple-800">Your Result</h3>
             <p className="text-lg mb-4">{getResultMessage(calculateScore())}</p>
-            <p className="text-sm text-gray-600">Remember, this assessment is not a diagnosis. If you're concerned about your mental health, please consult with a healthcare professional.</p>
+            <p className="text-sm text-gray-600">Remember, this assessment is not a diagnosis. If you&apos;re concerned about your mental health, please consult with a healthcare professional</p>
           </div>
         )}
       </CardContent>

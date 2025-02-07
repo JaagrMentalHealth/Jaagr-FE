@@ -51,26 +51,26 @@ export default function Home() {
     },
   ];
 
-  const researchHighlights = [
-    {
-      title: "The Impact of Online Communities on Mental Health",
-      description:
-        "A study on how platforms like Jaagr contribute to mental well-being and support networks.",
-      link: "#",
-    },
-    {
-      title: "Effectiveness of Digital Mental Health Interventions",
-      description:
-        "Research findings on the efficacy of online mental health resources and tools.",
-      link: "#",
-    },
-    {
-      title: "Peer Support in Mental Health Recovery",
-      description:
-        "Exploring the role of community engagement in mental health improvement and recovery.",
-      link: "#",
-    },
-  ];
+  // const researchHighlights = [
+  //   {
+  //     title: "The Impact of Online Communities on Mental Health",
+  //     description:
+  //       "A study on how platforms like Jaagr contribute to mental well-being and support networks.",
+  //     link: "#",
+  //   },
+  //   {
+  //     title: "Effectiveness of Digital Mental Health Interventions",
+  //     description:
+  //       "Research findings on the efficacy of online mental health resources and tools.",
+  //     link: "#",
+  //   },
+  //   {
+  //     title: "Peer Support in Mental Health Recovery",
+  //     description:
+  //       "Exploring the role of community engagement in mental health improvement and recovery.",
+  //     link: "#",
+  //   },
+  // ];
 
   return (
     <div className="flex items min-h-screen flex-col">
@@ -137,10 +137,17 @@ export default function Home() {
             policy.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-              <Button className="bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-300 rounded-full py-6 px-8 text-lg">
-                Contribute
+              <Button 
+              onClick={() => {
+                router.push("/contact");
+                }}
+              className="bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-300 rounded-full py-6 px-8 text-lg">
+                Get in touch
               </Button>
               <Button
+              onClick={() => {
+                router.push("/coming-soon");
+                }}
                 variant="outline"
                 className="hover:bg-purple-100 transition-colors duration-300 rounded-full py-6 px-8 text-lg"
               >

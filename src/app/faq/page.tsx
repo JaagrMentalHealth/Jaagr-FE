@@ -66,7 +66,7 @@ export default function FAQPage() {
           </div>
           <div className="mt-12 text-center">
             <p className="text-lg text-gray-700">
-              Can't find the answer you're looking for?
+              Can&apos;t find the answer you&apoos;re looking for?
               <a href="/contact" className="text-purple-600 hover:text-purple-700 ml-1 font-semibold">
                 Contact us
               </a>

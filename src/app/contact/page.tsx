@@ -15,7 +15,7 @@ export default function ContactPage() {
             <CardHeader>
               <CardTitle>Contact Us</CardTitle>
               <CardDescription>
-                Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+                Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
               </CardDescription>
             </CardHeader>
             <CardContent>
