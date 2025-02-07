@@ -19,7 +19,7 @@ export default function TermsAndConditionsPage() {
                   <p className="text-sm text-gray-600 mb-4">Last Updated: 21st Feb 2025</p>
 
                   <p>
-                    Welcome to Jaagr! These terms of use, together with this site's privacy policy and our cookies
+                    Welcome to Jaagr! These terms of use, together with this site&apos;s privacy policy and our cookies
                     policy, set out the terms on which you may use this site. Please read these terms of use carefully
                     before you start to use the site. By using this site you indicate you accept and agree to abide by
                     these terms of use. If you do not agree to these terms of use please stop using this site
@@ -44,7 +44,7 @@ export default function TermsAndConditionsPage() {
                   <p>
                     THESE TERMS OF SERVICES IS A LEGALLY BINDING DOCUMENT BETWEEN JAAGR HEALTH LLP AND THE USER (BOTH
                     TERMS DEFINED BELOW). THESE TERMS OF SERVICES WILL BE EFFECTIVE UPON YOUR ACCEPTANCE OF THE SAME
-                    (DIRECTLY OR INDIRECTLY IN ELECTRONIC FORM, BY CLICKING ON THE "I ACCEPT" TAB OR BY USE OF THE
+                    (DIRECTLY OR INDIRECTLY IN ELECTRONIC FORM, BY CLICKING ON THE &quot;I ACCEPT&quot; TAB OR BY USE OF THE
                     WEBSITE OR BY OTHER MEANS OF AN ELECTRONIC RECORD) AND WILL GOVERN THE RELATIONSHIP BETWEEN Jaagr
                     AND USER
                   </p>
@@ -64,35 +64,35 @@ export default function TermsAndConditionsPage() {
                   <p>
                     These Terms of Services of the website located at the URL www.jaagr.com, on mobile sites or mobile
                     application and the other associated/ancillary applications, products, websites and services
-                    ("Website") is between JAAGR HEALTH LLP (referred as "Jaagr" or "We" or "Us" or "Our"), a company
+                    (&quot;Website&quot;) is between JAAGR HEALTH LLP (referred as &quot;Jaagr&quot; or &quot;We&quot; or &quot;Us&quot; or &quot;Our&quot;), a company
                     incorporated under the Companies Act, 2013 with its registered office situated at C-1012 Divyasree,
                     77 Town Centre, Yemlur Mn Off HAL Old Airport Road, Kadubeesanahalli, Bangalore 560037, India, and
                     the Users of the Website including but not limited to Users who are patients, medical practitioners,
-                    and/or health care providers (referred as "You" or "Your" or "Yourself" or "User") describe the
+                    and/or health care providers (referred as &quot;You&quot; or &quot;Your&quot; or &quot;Yourself&quot; or &quot;User&quot;) describe the
                     terms on which Jaagr offers You access to the Website and such other services which include but are
                     not limited to interactive session related services, platform services, self-assessments, to
                     interact with medical practitioners, doctors and health care providers from across the globe
-                    ("Practitioners"), to help the User receive appropriate diagnosis and quality treatment, knowledge
-                    and perspectives through various interactive sessions with the Practitioners ("Services").
+                    (&quot;Practitioners&quot;), to help the User receive appropriate diagnosis and quality treatment, knowledge
+                    and perspectives through various interactive sessions with the Practitioners (&quot;Services&quot;).
                   </p>
 
                   <p>
                     These Terms of Services are a contract between You and Jaagr. These Terms of Services shall be read
                     together with the Privacy Policy or other terms and conditions with all other notices, disclaimers,
                     and guidelines appearing on the Website from time to time (collectively referred to as
-                    "Agreement(s)") constitute the entire agreement upon which You are allowed to access and use the
+                      &quot;Agreement(s)&quot;) constitute the entire agreement upon which You are allowed to access and use the
                     Website and avail the Services.
                   </p>
 
                   <p>
-                    For these purposes, the term "Person" shall mean any natural person, firm, company, governmental
+                    For these purposes, the term &quot;Person&quot; shall mean any natural person, firm, company, governmental
                     authority, joint venture, association, partnership, limited liability partnership, society, or other
                     entity (whether or not having separate legal personality).
                   </p>
 
                   <p>
-                    You and Jaagr shall hereinafter be individually referred to as a "Party" and collectively as the
-                    "Parties"
+                    You and Jaagr shall hereinafter be individually referred to as a &quot;Party&quot; and collectively as the
+                    &quot;Parties&quot;
                   </p>
 
                   <h2>1. Acceptance of Terms</h2>
@@ -113,7 +113,7 @@ export default function TermsAndConditionsPage() {
                   <h3>1.3 Account:</h3>
                   <p>
                     For availing certain Services, You will be required to register an account on the Website (an
-                    "Account"). When You register on the Website and set up Your Account, You must: (i) be of age 18 or
+                      &quot;Account&quot;). When You register on the Website and set up Your Account, You must: (i) be of age 18 or
                     older (ii) provide accurate and complete information; (iii) promptly update Your Account information
                     with any new information that may affect the operation of Your Account; (iv) authorize Jaagr to make
                     any inquiries We consider necessary or appropriate to verify Your Account information or the
@@ -122,7 +122,7 @@ export default function TermsAndConditionsPage() {
                     acknowledge and accept any applicable policies, including but not limited to those pertaining to
                     service quality, confidentiality, User integrity, anti-harassment and conflict of interest. You will
                     not use false identities or impersonate any other person or use another account that You are not
-                    authorized to use on any computer, mobile phone, tablet, or other devices (collectively "Device").
+                    authorized to use on any computer, mobile phone, tablet, or other devices (collectively &quot;Device&quot;).
                   </p>
 
                   <h3>1.4 Account Access:</h3>
@@ -344,7 +344,7 @@ export default function TermsAndConditionsPage() {
                   <h2>10. Disclaimer of Warranties</h2>
                   <h3>10.1 As-Is Basis:</h3>
                   <p>
-                    The Services are provided "as is" and "as available" without any warranties of any kind, either
+                    The Services are provided &quot;as is&quot; and &quot;as available&quot; without any warranties of any kind, either
                     express or implied, including but not limited to warranties of merchantability, fitness for a
                     particular purpose, or non-infringement.
                   </p>
@@ -379,7 +379,7 @@ export default function TermsAndConditionsPage() {
                   <p>
                     You agree to indemnify, defend, and hold harmless Jaagr, its affiliates, and their respective
                     officers, directors, employees, and agents from and against any and all claims, liabilities,
-                    damages, losses, or expenses (including reasonable attorneys' fees) arising out of or in any way
+                    damages, losses, or expenses (including reasonable attorney&apos;s fees) arising out of or in any way
                     connected with your access to or use of the Services, your violation of these Terms, or your
                     infringement of any third-party rights.
                   </p>
@@ -432,10 +432,9 @@ export default function TermsAndConditionsPage() {
                   <p>
                     Jaagr Legal Department
                     <br />
-                    Email: legal@jaagr.com
+                    Email: hello@jaagr.com
                     <br />
-                    Address: C-1012 Divyasree, 77 Town Centre, Yemlur Mn Off HAL Old Airport Road, Kadubeesanahalli,
-                    Bangalore 560037, India
+                    Address: Gyan Swami Sadan, Chandrabani Dehradun(U.K)
                   </p>
 
                   <p>

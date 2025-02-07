@@ -225,7 +225,7 @@ export default function ProfilePage() {
                     })}
                   </>
                 ) : (
-                  <>You haven't read any blogs</>
+                  <>You haven&apos;t read any blogs</>
                 )}
               </div>
             </CardContent>
