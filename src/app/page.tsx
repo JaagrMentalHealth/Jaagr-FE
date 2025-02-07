@@ -189,7 +189,7 @@ export default function Home() {
                     cutting-edge mental health research.
                   </p>
                   <Button className="bg-purple-700 text-white hover:bg-purple-600 transition-colors duration-300 rounded-full py-6 px-8 text-lg">
-                    <Link href="/professionals/research">Learn More</Link>
+                    <Link href="/contact">Get in touch</Link>
                   </Button>
                 </CardContent>
               </Card>
