@@ -65,7 +65,7 @@ export default function MentalHealthExercisesPage() {
               Try to incorporate these exercises into your daily routine for the best results.
             </p>
             <p>
-              If you're struggling with your mental health, don't hesitate to reach out to a mental health professional for personalized guidance and support.
+              If you&apos;re struggling with your mental health, don&apos;t hesitate to reach out to a mental health professional for personalized guidance and support.
             </p>
           </div>
         </div>
