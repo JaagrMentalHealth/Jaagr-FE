@@ -121,7 +121,7 @@ export default function SignUpPage() {
                     required
                     value={name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                    placeholder="John Doe"
+                    placeholder="Name"
                   />
                 </div>
                 <div className="space-y-2">
@@ -132,7 +132,7 @@ export default function SignUpPage() {
                     required
                     value={email}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                    placeholder="john.doe@example.com"
+                    placeholder="E-mail"
                   />
                 </div>
                 <div className="space-y-2">
@@ -147,7 +147,7 @@ export default function SignUpPage() {
                         setUsername(e.target.value)
                         setUsernameStatus("idle")
                       }}
-                      placeholder="johndoe"
+                      placeholder="Username"
                       className={`flex-1 ${
                         usernameStatus === "valid"
                           ? "border-green-500"
