@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
@@ -159,7 +159,9 @@ export default function ChangePasswordPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-purple-50 to-white flex items-center justify-center">
+        <Suspense>
         <ChangePasswordForm />
+        </Suspense>
       </main>
       <Footer />
     </div>
