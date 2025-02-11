@@ -1,79 +1,123 @@
 "use client"
 
-import { Button } from "@/components/landing/ui/button"
+import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
+import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useUser } from "@/contexts/userContext"
-import { useRouter } from "next/navigation"
-import { ArrowRight } from "lucide-react"
+import { useState, useEffect } from "react"
+
+const slides = [
+  {
+    image: "/images/hero.jpeg?height=600&width=800",
+    title: "Rediscover Your Inner Peace",
+    subtitle: "Holistic Well-being",
+  },
+  {
+    image: "/images/hero.jpeg?height=600&width=800",
+    title: "Your Companion for Mental Well-being",
+    subtitle: "24/7 Support",
+  },
+]
 
 export function Hero() {
-  const { user } = useUser()
-  const router = useRouter()
+  const [currentSlide, setCurrentSlide] = useState(0)
 
-  const handleStartWriting = () => {
-    router.push("/self-assessment")
-  }
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [])
 
   return (
-  <section className="w-full min-h-screen bg-gradient-to-b from-purple-100 via-purple-50 to-white overflow-hidden flex items-center">
-  <div className="container mx-auto px-4 flex items-center min-h-screen">
-    <div className="grid lg:grid-cols-2 gap-12 items-center">
-      <div className="flex justify-center order-1 lg:order-2">
-        <div className="relative h-[300px] w-[300px] md:h-[600px] md:w-[500px]">
-          <Image
-            src="/images/hero.svg"
-            alt="Mental Health Illustration"
-            fill
-            className="object-contain drop-shadow-2xl animate-float"
-            priority
-          />
-        </div>
-      </div>
-
-      {/* Text Content */}
-      <div className="space-y-8 text-center lg:text-left order-2 lg:order-1">
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-          Be more aware{" "}
-          <span className="inline-block relative">
+    <section className="relative overflow-hidden bg-white">
+      <div className="container mx-auto px-4">
+        <div className="grid lg:grid-cols-2 gap-12 items-center py-12 md:py-20">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6"
+          >
+            <div className="text-sm text-gray-600">Enhancement and Support for Mental Health</div>
+            <h1 className="text-5xl font-bold leading-tight">
+              BE MORE <br />
+              AWARE <span className="inline-block relative">
             <Image
               src="/logoHero.svg"
               alt="Jaagr Logo"
-              width={180}
-              height={80}
+              width={150}
+              height={50}
               className="object-contain mt-2 animate-float"
               priority
             />
-          </span>{" "}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
-            about your thoughts
-          </span>
-        </h1>
-        <p className="text-xl text-gray-600 md:text-3xl max-w-2xl mx-auto lg:mx-0">
-          Bringing mental health experts to your palm. Discover a supportive community and valuable resources for your well-being journey.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-          <Button
-            onClick={handleStartWriting}
-            className="w-full sm:w-auto text-lg py-6 px-8 bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-300 rounded-full shadow-lg hover:shadow-xl"
+          </span>{" "} <br />
+              ABOUT YOUR <br />
+              THOUGHTS
+            </h1>
+            <p className="text-lg text-gray-600 max-w-lg">
+              Bringing mental health experts to your palm. Discover a supportive community and valuable resources for
+              your well-being journey.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link href="/self-assessment">
+                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">
+                  Start Test <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/resources">
+                <Button variant="outline">
+                  Explore
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative"
           >
-            Take Assessment
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-          <Link href="/blogs" className="w-full sm:w-auto">
-            <Button
-              variant="outline"
-              className="w-full sm:w-auto text-lg py-6 px-8 hover:bg-purple-100 transition-colors duration-300 rounded-full"
-            >
-              Read Blogs
-            </Button>
-          </Link>
+            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+              {slides.map((slide, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: currentSlide === index ? 1 : 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={slide.image || "/placeholder.svg"}
+                    alt={slide.title}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 text-white">
+                    <h3 className="text-xl font-semibold">{slide.title}</h3>
+                    <p className="text-sm">{slide.subtitle}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    currentSlide === index ? "bg-purple-600" : "bg-gray-300"
+                  }`}
+                  onClick={() => setCurrentSlide(index)}
+                />
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
+    </section>
   )
 }
 

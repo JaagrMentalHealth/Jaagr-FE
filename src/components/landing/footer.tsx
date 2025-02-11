@@ -1,42 +1,66 @@
-import Link from "next/link"
+import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
-    <footer className="w-full bg-zinc-800 py-12 text-white">
-  <div className="container grid gap-8 px-4 sm:grid-cols-2 md:grid-cols-3">
-    <div className="text-center sm:text-left">
-      <Link href="/" className="mb-4 inline-flex items-center">
-        <span className="text-4xl font-bold text-purple-500">जाग्र</span>
-      </Link>
-      <p className="text-sm text-zinc-400">
-        Share your stories with the world and connect with readers who love your content
-      </p>
-    </div>
-    <div className="text-center sm:text-left">
-      <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
-      <div className="flex flex-col gap-2">
-        <Link href="/about" className="text-sm text-zinc-400 hover:text-white">
-          About Us
-        </Link>
-        <Link href="/contact" className="text-sm text-zinc-400 hover:text-white">
-          Contact
-        </Link>
-        <Link href="/privacy" className="text-sm text-zinc-400 hover:text-white">
-          Privacy Policy
-        </Link>
-        <Link href="/terms" className="text-sm text-zinc-400 hover:text-white">
-          Terms of Service
-        </Link>
-      </div>
-    </div>
-    <div className="text-center sm:text-left">
-      <h3 className="mb-4 text-lg font-semibold">Follow Us</h3>
-      <div className="flex justify-center gap-4 sm:justify-start">
-        {/* Add social media icons here */}
-      </div>
-    </div>
-  </div>
-</footer>
-  )
-}
+    <footer className="w-full bg-purple-600 py-12 text-white rounded-t-3xl overflow-hidden">
+      <div className="container mx-auto grid gap-8 px-6 md:grid-cols-4">
+        {/* Brand Section */}
+        <div>
+          <h2 className="flex items-center space-x-4">
+          <Link href="/" className="text-4xl font-bold text-primary">
+            <Image src="/footer_logo.svg" height={60} width={60} alt="Jaagr" />
+          </Link></h2>
+          <p className="mt-2 text-sm text-white-400">
+            We are mental health experienced therapists passionate about empowering you mentally.
+          </p>
+          <div className="mt-4">
+            <input
+              type="email"
+              placeholder="Enter email for newsletter..."
+              className="w-full rounded-lg bg-white-800 px-4 py-2 text-white focus:outline-none"
+            />
+          </div>
+        </div>
 
+        {/* Quick Links */}
+        <div>
+          <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
+          <ul className="space-y-2 text-sm text-white-400">
+            <li><Link href="/about" className="hover:text-white">About Us</Link></li>
+            <li><Link href="/career" className="hover:text-white">Career</Link></li>
+            <li><Link href="/testimonials" className="hover:text-white">Testimonials</Link></li>
+          </ul>
+        </div>
+
+        {/* Support Section */}
+        <div>
+          <h3 className="mb-4 text-lg font-semibold">Support</h3>
+          <ul className="space-y-2 text-sm text-white-400">
+            <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
+            <li><Link href="/policy" className="hover:text-white">User Policy</Link></li>
+            <li><Link href="/support" className="hover:text-white">Support</Link></li>
+          </ul>
+        </div>
+
+        {/* Contact Details */}
+        <div>
+          <h3 className="mb-4 text-lg font-semibold">Contact</h3>
+          <ul className="space-y-2 text-sm text-white-400">
+            <li>📞 Phone</li>
+            <li>📧 Email</li>
+            <li>📍 Location</li>
+            <li>🔗 Social Media</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Back to Top */}
+      <div className="mt-8 text-center">
+        <button className="rounded-lg bg-purple-500 px-4 py-2 text-white hover:bg-purple-600">
+          Back to Top
+        </button>
+      </div>
+    </footer>
+  );
+}
