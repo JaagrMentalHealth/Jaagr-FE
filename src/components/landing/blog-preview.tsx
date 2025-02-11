@@ -40,7 +40,7 @@ export function BlogPreview() {
                   src={blog.image || "/placeholder.svg"}
                   alt={blog.title}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105 "
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
                 <div className="absolute top-4 left-4">
