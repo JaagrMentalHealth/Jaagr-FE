@@ -43,7 +43,16 @@ export function Hero() {
             <div className="text-sm text-gray-600">Enhancement and Support for Mental Health</div>
             <h1 className="text-5xl font-bold leading-tight">
               BE MORE <br />
-              AWARE <span className="text-purple-600">(जाग्र)</span> <br />
+              AWARE <span className="inline-block relative">
+            <Image
+              src="/logoHero.svg"
+              alt="Jaagr Logo"
+              width={150}
+              height={50}
+              className="object-contain mt-2 animate-float"
+              priority
+            />
+          </span>{" "} <br />
               ABOUT YOUR <br />
               THOUGHTS
             </h1>
@@ -53,12 +62,14 @@ export function Hero() {
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href="/self-assessment">
-                <Button className="bg-purple-600 text-white hover:bg-purple-700">
+                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">
                   Start Test <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/resources">
-                <Button variant="outline">Explore</Button>
+                <Button variant="outline">
+                  Explore
+                </Button>
               </Link>
             </div>
           </motion.div>

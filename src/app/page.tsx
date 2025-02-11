@@ -5,7 +5,7 @@ import { ForWhom } from "@/components/landing/for-whom"
 import { WhyJaagr } from "@/components/landing/why-jaagr"
 import { BlogPreview } from "@/components/landing/blog-preview"
 import { Testimonial } from "@/components/landing/testimonials"
-import { Footer } from "@/components/footer"
+import { Footer } from "@/components/landing/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -25,7 +25,7 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-8">GET STARTED TODAY</h2>
             <div className="flex justify-center gap-4">
               <Link href="/self-assessment">
-                <Button className="bg-purple-600 text-white hover:bg-purple-700">Take the Depression Analysis Test</Button>
+                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">Take the Depression Analysis Test</Button>
               </Link>
               <Link href="/resources">
                 <Button variant="outline">Explore Resources</Button>
