@@ -94,3 +94,36 @@ export const findById = async (id) => {
   }
 };
 
+export const changePassword = async () => {
+  try {
+    const token = Cookies.get("token");
+
+    const res = await baseAxiosInstance.get("/change-password", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(res);
+    return res;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+export const changePasswordResponse = async (hashedUserId, newPassword) => {
+  try {
+    // const token = Cookies.get("token");
+
+    const res = await baseAxiosInstance.post("/change-password", {
+      hashedUserId,
+      newPassword,
+    });
+    // console.log(res);
+    return res;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};

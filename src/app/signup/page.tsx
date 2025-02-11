@@ -128,7 +128,7 @@ export default function SignUpPage() {
 
   return (
     <>
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!} children={undefined}>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!} >
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex-1 bg-gradient-to-b from-purple-50 to-white flex items-center justify-center py-12">
