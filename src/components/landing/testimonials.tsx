@@ -18,8 +18,8 @@ export function Testimonial() {
             # Testimonials
           </span>
           <blockquote className="text-2xl font-medium text-gray-900 mb-8">
-            "Jaagr gave me the strength to overcome my anxiety. The compassionate therapists provided unwavering
-            support, and I've found a renewed sense of purpose and tranquility in my life."
+            &qout;Jaagr gave me the strength to overcome my anxiety. The compassionate therapists provided unwavering
+            support, and I&apos;ve found a renewed sense of purpose and tranquility in my life.&quot;
           </blockquote>
           <div className="flex items-center justify-center gap-4">
             <Avatar className="w-12 h-12">
