@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/landing/navbar"
-import { Footer } from "@/components/landing/footer"
+import { Footer } from "@/components/footer"
 import { Button } from "@/components/landing/ui/button"
 import Link from "next/link"
 
