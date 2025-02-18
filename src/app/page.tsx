@@ -5,7 +5,7 @@ import { ForWhom } from "@/components/landing/for-whom"
 import { WhyJaagr } from "@/components/landing/why-jaagr"
 import { BlogPreview } from "@/components/landing/blog-preview"
 import { Testimonial } from "@/components/landing/testimonials"
-import { Footer } from "@/components/landing/footer"
+import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
