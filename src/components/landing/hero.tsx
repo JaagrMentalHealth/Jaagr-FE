@@ -14,7 +14,7 @@ const slides = [
     subtitle: "Holistic Well-being",
   },
   {
-    image: "/images/hero.jpeg?height=600&width=800",
+    image: "/images/hero2.jpg?height=600&width=800",
     title: "Your Companion for Mental Well-being",
     subtitle: "24/7 Support",
   },
