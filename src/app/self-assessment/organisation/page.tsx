@@ -1,26 +1,26 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import {testHit} from '@/api/assessment'
 
 export default function UserPage() {
   const [userName, setUserName] = useState<string | null>(null);
-  const searchParams=useSearchParams();
-  const token=searchParams.get("a")
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response:any = await testHit(token); 
-        console.log(response);
-        setUserName(response.data.fullName) 
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
+//   const searchParams=useSearchParams();
+//   const token=searchParams.get("a")
+//   useEffect(() => {
+//     const fetchUser = async () => {
+//       try {
+//         const response:any = await testHit(token); 
+//         console.log(response);
+//         setUserName(response.data.fullName) 
+//       } catch (error) {
+//         console.error("Error fetching user:", error);
+//       }
+//     };
 
-    fetchUser();
-  }, []);
+//     fetchUser();
+//   }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
