@@ -50,7 +50,7 @@ export function BlogPreview() {
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <h3 className="text-2xl font-bold mb-2">{blog.title}</h3>
                   <p className="text-white/90 mb-4">{blog.description}</p>
-                  <Link href="/src/app/blogs">
+                  <Link href="/blogs">
                   <Button variant="secondary" size="sm">
                     Read Blog
                   </Button></Link>
