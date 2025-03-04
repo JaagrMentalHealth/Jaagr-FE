@@ -29,6 +29,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/api/authAPI.js"
-  ],
+, "src/contexts/questionsContext.tsx"  ],
   "exclude": ["node_modules"]
 }
