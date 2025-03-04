@@ -54,13 +54,6 @@ export function Footer() {
           </ul>
         </div>
       </div>
-
-      {/* Back to Top */}
-      <div className="mt-8 text-center">
-        <button className="rounded-lg bg-purple-500 px-4 py-2 text-white hover:bg-purple-600">
-          Back to Top
-        </button>
-      </div>
     </footer>
   );
 }
