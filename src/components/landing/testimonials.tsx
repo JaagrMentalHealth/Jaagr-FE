@@ -1,7 +1,6 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function Testimonial() {
   return (
@@ -22,10 +21,7 @@ export function Testimonial() {
             support, and I&apos;ve found a renewed sense of purpose and tranquility in my life.&quot;
           </blockquote>
           <div className="flex items-center justify-center gap-4">
-            <Avatar className="w-12 h-12">
-              <AvatarImage src="/placeholder.svg?height=48&width=48" alt="Reena Singh" />
-              <AvatarFallback>RS</AvatarFallback>
-            </Avatar>
+            
             <div className="text-left">
               <div className="font-semibold">Reena Singh</div>
               <div className="text-sm text-gray-600">Client from Delhi</div>
