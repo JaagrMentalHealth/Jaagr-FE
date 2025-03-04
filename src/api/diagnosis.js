@@ -1,7 +1,8 @@
 import axios from "axios";
+import { URL } from "@/api/URL";
 
 export const baseAxiosInstance = axios.create({
-    baseURL: `http://localhost:5001/api/`,
+    baseURL: `${URL}/assessment/api/`,
   });
 
 export const getQuestions=async ()=>{
@@ -18,7 +19,7 @@ export const getQuestions=async ()=>{
 
 export const submitAnswers=async (answers)=>{
   try{
-    const res=await baseAxiosInstance.post('diagnose/',{answers})
+    const res=await baseAxiosInstance.post('diagnose/phase1/',{answers})
     console.log(res);
     return res;
   }
@@ -26,4 +27,17 @@ export const submitAnswers=async (answers)=>{
     return err;
   }
 }
+
+
+export const submitAnswersPhase2=async (answers,phase1Diagnosis)=>{
+  try{
+    const res=await baseAxiosInstance.post('diagnose/phase2/',{answers,phase1Diagnosis})
+    console.log(res);
+    return res;
+  }
+  catch(err){
+    return err;
+  }
+}
+
   

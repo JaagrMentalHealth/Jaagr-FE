@@ -20,17 +20,26 @@ type Answer = {
 
 type QuestionsContextType = {
   questions: Question[]
+  phase2Questions: Question[]
   answers: Answer[]
+  phase1Diagnosis: any
+  currentPhase: number
   setQuestions: (questions: Question[]) => void
+  setPhase2Questions: (questions: Question[]) => void
   setAnswer: (questionId: string, percentage: number) => void
   clearAnswers: () => void
+  setPhase1Diagnosis: (diagnosis: any) => void
+  setCurrentPhase: (phase: number) => void
 }
 
-const QuestionsContext = createContext<QuestionsContextType | undefined>(undefined)
+const QuestionsContext = createContext < QuestionsContextType | undefined > (undefined)
 
 export function QuestionsProvider({ children }: { children: ReactNode }) {
   const [questions, setQuestions] = useState<Question[]>([])
+  const [phase2Questions, setPhase2Questions] = useState<Question[]>([])
   const [answers, setAnswers] = useState<Answer[]>([])
+  const [phase1Diagnosis, setPhase1Diagnosis] = useState<any>(null)
+  const [currentPhase, setCurrentPhase] = useState<number>(1)
 
   const setAnswer = (questionId: string, percentage: number) => {
     setAnswers((prev) => {
@@ -47,7 +56,21 @@ export function QuestionsProvider({ children }: { children: ReactNode }) {
   const clearAnswers = () => setAnswers([])
 
   return (
-    <QuestionsContext.Provider value={{ questions, answers, setQuestions, setAnswer, clearAnswers }}>
+    <QuestionsContext.Provider 
+      value={{ 
+        questions, 
+        phase2Questions, 
+        answers, 
+        phase1Diagnosis,
+        currentPhase,
+        setQuestions, 
+        setPhase2Questions,
+        setAnswer, 
+        clearAnswers,
+        setPhase1Diagnosis,
+        setCurrentPhase
+      }}
+    >
       {children}
     </QuestionsContext.Provider>
   )
