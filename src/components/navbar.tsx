@@ -14,6 +14,7 @@ import {
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { changePassword } from "@/api/authAPI";
 
 const leftNavItems = [
   { href: "/self-assessment", label: "Self Assessment" },
@@ -47,6 +48,20 @@ export function Navbar() {
       toast.success("Logged Out Successfully");
     } catch (error) {
       toast.error("Could not log out");
+    }
+  };
+  const changePass = async () => {
+    const res: any = await changePassword();
+    console.log(res.status);
+    if (res.status == 200) {
+      console.log(res.data);
+      toast.success(
+        "A link  has been sent to your email to change the password"
+      );
+      router.push("/message");
+    } else {
+      console.log("Hi");
+      toast.error("An unknown error has occured");
     }
   };
 
@@ -109,7 +124,10 @@ export function Navbar() {
                   >
                     My Profile
                   </Link>
-                  <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <button
+                    onClick={changePass}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
                     Change Password
                   </button>
                   <button
@@ -127,7 +145,7 @@ export function Navbar() {
                 <Button variant="ghost">Login</Button>
               </Link>
               <Link href="/signup">
-                <Button className="w-full sm:w-auto text-lg py-5 px-7 bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-300 rounded-full shadow-lg hover:shadow-xl">
+                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full shadow-lg hover:shadow-xl">
                   Sign Up
                 </Button>
               </Link>

@@ -38,7 +38,7 @@ export default function ContactPage() {
                   <label htmlFor="message" className="block text-sm font-medium mb-2">Message</label>
                   <Textarea id="message" placeholder="Your message" rows={6} />
                 </div>
-                <Button type="submit" className="w-full">Send Message</Button>
+                <Button type="submit" className="w-full bg-purple-600">Send Message</Button>
               </form>
             </CardContent>
           </Card>
