@@ -38,8 +38,8 @@ export function Footer() {
           <h3 className="mb-4 text-lg font-semibold">Support</h3>
           <ul className="space-y-2 text-sm text-white-400">
             <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
-            <li><Link href="/policy" className="hover:text-white">User Policy</Link></li>
-            <li><Link href="/support" className="hover:text-white">Support</Link></li>
+            <li><Link href="/privacy" className="hover:text-white">User Policy</Link></li>
+            <li><Link href="/contact" className="hover:text-white">Support</Link></li>
           </ul>
         </div>
 
