@@ -67,7 +67,8 @@ export function DiagnosisForm() {
       console.log("Phase 1 diagnosis result:", response.data);
 
       // Store the phase 1 diagnosis result
-      setPhase1Diagnosis(response.data);
+      setPhase1Diagnosis(response.data.diagnosis);
+      // console.log(phase1Diagnosis)
 
       // Set phase 2 questions from the response
       if (

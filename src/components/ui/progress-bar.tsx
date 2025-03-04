@@ -21,7 +21,7 @@ export function ProgressBar({
 
   return (
     <div className="mb-8">
-      <div className="flex justify-between mb-2 text-sm font-medium">
+      {/* <div className="flex justify-between mb-2 text-sm font-medium">
         <span
           className={
             currentPhase === 1 ? "text-primary" : "text-muted-foreground"
@@ -36,7 +36,7 @@ export function ProgressBar({
         >
           Phase 2
         </span>
-      </div>
+      </div> */}
       <div className="flex w-full">
         <div className="flex w-[48%] h-2 bg-muted rounded-full overflow-hidden">
           <div
