@@ -47,8 +47,8 @@ export function Hero() {
             <Image
               src="/logoHero.svg"
               alt="Jaagr Logo"
-              width={150}
-              height={50}
+              width={120}
+              height={45}
               className="object-contain mt-2 animate-float"
               priority
             />
@@ -66,9 +66,9 @@ export function Hero() {
                   Start Test <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/resources">
-                <Button variant="outline">
-                  Explore
+              <Link href="/blogs">
+                <Button className="bg-white-600 text-black hover:bg-purple-100 border rounded-full">
+                  Explore more
                 </Button>
               </Link>
             </div>

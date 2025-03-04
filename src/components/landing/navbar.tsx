@@ -83,8 +83,8 @@ export function Navbar() {
                     Login
                   </Button>
                 </Link>
-                <Link href="/signup" className="w-full md:w-auto">
-                  <Button className="w-full sm:w-auto text-lg py-6 px-8 bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-300 rounded-full shadow-lg hover:shadow-xl">
+                <Link href="/signup" className="flex flex-wrap gap-4">
+                  <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">
                     Sign Up
                   </Button>
                 </Link>
