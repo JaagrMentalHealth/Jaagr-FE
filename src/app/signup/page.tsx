@@ -169,6 +169,8 @@ export default function SignUpPage() {
                       onClick={initiateOTP}
                       size="sm"
                       disabled={!email || isEmailVerified}
+                      className="w bg-purple-600"
+
                     >
                       {isEmailVerifyin?<Loader2 className="h-4 w-4 animate-spin" />:
                       <>{isEmailVerified ? "Verified" : "Verify"}</>}
@@ -197,6 +199,7 @@ export default function SignUpPage() {
                       onClick={checkUsername}
                       disabled={!username || isVerifying}
                       size="sm"
+                      className="w bg-purple-600"
                     >
                       {isVerifying ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -230,7 +233,7 @@ export default function SignUpPage() {
               <CardFooter className="flex flex-col space-y-4">
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full bg-purple-600"
                   disabled={
                     isLoading || !isEmailVerified || usernameStatus !== "valid"
                   }

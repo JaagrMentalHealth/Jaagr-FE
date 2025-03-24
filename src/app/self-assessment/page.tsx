@@ -91,7 +91,7 @@ export default function SelfAssessmentPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 bg-gradient-to-b from-purple-50 to-white">
+      <main className="flex-1 bg-gradient-to-b from-white-50 to-white">
       <section className="py-20 text-center relative overflow-hidden">
   <div className="absolute inset-0 z-0">
     <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -101,8 +101,8 @@ export default function SelfAssessmentPage() {
   <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
     {/* Left Content */}
     <div className="md:w-1/2 text-left mb-12 md:mb-0">
-      <h1 className="text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">Emotional Wellbeing Check</h1>
-      <h2 className="text-4xl font-semibold mb-4 text-purple-700">Hi there,</h2>
+      <h1 className="text-6xl font-bold leading-tight">Emotional Wellbeing Check</h1>
+      <h2 className="text-4xl font-semibold mb-4 text-purple-600">Hi there,</h2>
       <p className="text-xl text-gray-700 leading-relaxed">
         Welcome to your emotional wellbeing check. This assessment is designed to help you understand and
         reflect on your current emotional state. Take a moment for yourself and let&apos;s explore your mental
@@ -119,7 +119,7 @@ export default function SelfAssessmentPage() {
       >
         <Button
           size="lg"
-          className="bg-purple-500 hover:bg-purple-600 text-white text-lg px-8 py-6 rounded-full shadow-lg"
+          className="bg-purple-600 hover:bg-purple-600 text-white text-lg px-8 py-6 rounded-full shadow-lg"
           onClick={handleStartAssessment}
         >
           Start Your Assessment
@@ -138,55 +138,80 @@ export default function SelfAssessmentPage() {
   </div>
 </section>
 
+<section className="py-20 bg-gray-50">
+  <div className="container mx-auto px-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }}
+      className="max-w-4xl mx-auto text-center"
+    >
+      <span className="inline-block px-6 py-2 bg-purple-200 text-purple-600 rounded-full text-sm font-medium mb-4 shadow-sm">
+        #Important Guidelines
+      </span>
+      <h2 className="text-4xl font-bold text-gray-900 mb-8">Things to Keep in Mind</h2>
+    </motion.div>
 
-        <section className="py-20 bg-gradient-to-r from-purple-100 to-purple-200">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center text-purple-800">Things to Consider</h2>
-            <ul className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <li className="flex items-start space-x-4">
-                <CheckCircle className="w-8 h-8 text-purple-500 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-2xl mb-2 text-purple-700">Be Honest</h3>
-                  <p className="text-lg text-gray-700">
-                    Answer questions truthfully for the most accurate assessment of your emotional wellbeing.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start space-x-4">
-                <Clock className="w-8 h-8 text-purple-500 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-2xl mb-2 text-purple-700">Take Your Time</h3>
-                  <p className="text-lg text-gray-700">
-                    There&apos;s no rush. Reflect on each question and choose the answer that best describes your feelings.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start space-x-4">
-                <Brain className="w-8 h-8 text-purple-500 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-2xl mb-2 text-purple-700">Consider Recent Events</h3>
-                  <p className="text-lg text-gray-700">
-                    Think about how you&apos;ve felt over the past two weeks when answering the questions.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start space-x-4">
-                <HeartHandshake className="w-8 h-8 text-purple-500 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-2xl mb-2 text-purple-700">Seek Help If Needed</h3>
-                  <p className="text-lg text-gray-700">
-                    If you&apos;re feeling distressed, don&apos;t hesitate to reach out to a mental health professional.
-                  </p>
-                </div>
-              </li>
-            </ul>
+    <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      {[
+        {
+          icon: <CheckCircle className="w-10 h-10 text-purple-600" />,
+          title: "Be Honest",
+          description:
+            "Answer truthfully for the most accurate results. This assessment is for your self-reflection.",
+        },
+        {
+          icon: <Clock className="w-10 h-10 text-purple-600" />,
+          title: "Take Your Time",
+          description:
+            "There’s no rush. Read each question carefully and reflect before selecting your answer.",
+        },
+        {
+          icon: <Brain className="w-10 h-10 text-purple-600" />,
+          title: "Consider Recent Feelings",
+          description:
+            "Think about your emotions and experiences over the past two weeks while answering.",
+        },
+        {
+          icon: <HeartHandshake className="w-10 h-10 text-purple-600" />,
+          title: "Reach Out if Needed",
+          description:
+            "If you're struggling, don’t hesitate to talk to someone or seek professional support.",
+        },
+      ].map((item, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: index * 0.2 }}
+          viewport={{ once: true }}
+          className="flex items-start bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+        >
+          <div className="mr-4">{item.icon}</div>
+          <div>
+            <h3 className="text-xl font-semibold text-purple-800 mb-2">{item.title}</h3>
+            <p className="text-gray-700 text-lg">{item.description}</p>
           </div>
-        </section>
-
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center text-purple-800">What Our Users Say</h2>
-            <div className="grid md:grid-cols-3 gap-8">
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
+<section className="py-20 bg-gray-50">
+  <div className="container mx-auto px-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }}
+      className="max-w-4xl mx-auto text-center"
+    >
+      <span className="inline-block px-6 py-2 bg-purple-200 text-purple-600 rounded-full text-sm font-medium mb-4 shadow-sm">
+        #What Our Users Say
+      </span>
+    </motion.div>           
+           <div className="grid md:grid-cols-3 gap-8">
               <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardContent className="p-6">
                   <p className="italic mb-4 text-lg text-gray-700">

@@ -26,7 +26,7 @@ interface BlogPost {
   slug: string
 }
 
-const categories = ["All", "Mental Health", "Mindfulness", "Depression", "Self-Care", "Wellness", "Relationships"]
+const categories = ["Latest", "Mental Health", "Mindfulness", "Depression", "Self-Care", "Wellness", "Relationships"]
 
 export default function BlogsPage() {
   const [currentPage, setCurrentPage] = useState(1)
@@ -45,7 +45,7 @@ export default function BlogsPage() {
         setError(null)
       } catch (err) {
         console.error(err)
-        setError("Failed to fetch blogs. Please try again later.")
+        setError("Failed to fetch Articles. Please try again later.")
       } finally {
         setIsLoading(false)
       }
@@ -100,7 +100,7 @@ export default function BlogsPage() {
       <Navbar />
       <main className="flex-1 bg-background">
         <div className="container mx-auto px-4 py-8">
-          <h1 className="mb-8 text-4xl font-bold">Blogs</h1>
+          <h1 className="mb-8 text-4xl font-bold">Articles</h1>
           <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <SearchBar onSearch={setSearchQuery} />
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>

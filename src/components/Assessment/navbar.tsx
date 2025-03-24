@@ -126,11 +126,11 @@ export function Navbar() {
               <Link href="/login">
                 <Button variant="ghost">Login</Button>
               </Link>
-              <Link href="/signup">
-                <Button className="w-full sm:w-auto text-lg py-5 px-7 bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-300 rounded-full shadow-lg hover:shadow-xl">
-                  Sign Up
-                </Button>
-              </Link>
+              <Link href="/signup" className="flex flex-wrap gap-4">
+                <Button className="bg-purple-600 text-white hover:bg-purple-600 rounded-full shadow-lg hover:shadow-xl">
+                    Sign Up
+                  </Button>
+                </Link>
             </>
           )}
           <button onClick={toggleMenu} className="md:hidden">

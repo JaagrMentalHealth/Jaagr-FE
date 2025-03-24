@@ -40,7 +40,7 @@ const BlogPost = () => {
             <div className="ml-10 space-x-4">
               <a href="#" className="text-gray-700">Home</a>
               <a href="#" className="text-gray-700">About Us</a>
-              <a href="#" className="text-gray-700">Blogs</a>
+              <a href="#" className="text-gray-700">Articles</a>
             </div>
           </div>
           <div className="space-x-4">

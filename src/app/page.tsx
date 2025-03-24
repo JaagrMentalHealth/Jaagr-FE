@@ -28,7 +28,9 @@ export default function Home() {
                 <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">Take the Depression Analysis Test</Button>
               </Link>
               <Link href="/resources">
-                <Button variant="outline">Explore Resources</Button>
+              <Button className="bg-white-600 text-black hover:bg-purple-100 border rounded-full">
+                Explore Resources
+                </Button>
               </Link>
             </div>
           </div>
