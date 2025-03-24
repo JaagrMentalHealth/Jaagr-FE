@@ -1,250 +1,476 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { useQuestions } from "@/contexts/questionsContext";
-import { Card, CardContent } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import {
-  getQuestions as getQ,
-  submitAnswers,
-  submitAnswersPhase2,
-} from "@/api/diagnosis";
-import { ProgressBar } from "@/components/ui/progress-bar";
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { getWarmupQuestions, submitWarmup, submitScreening, submitSeverity } from "@/api/assessment"
 
-async function getQuestions() {
-  const res: any = await getQ();
-  if (res.status != 200) throw new Error("Failed to fetch questions");
-  console.log(res);
-  return res.data;
+// Question type definition based on the actual data structure
+type Question = {
+  _id: string
+  questionName: string
+  optionType: "Slider" | "Radio" | "Buttons" | "Emoji"
+  options: string[]
+  validOptions: string[]
+  disease: string | null
+  phase: 0 | 1 | 2
 }
 
-async function submitDiagnosis(
-  answers: { questionId: string; answerPercentage: number }[]
-) {
-  const res: any = await submitAnswers(answers);
-  if (res.status != 200) throw new Error("Failed to submit diagnosis");
-  return res;
+// Answer type definition
+type Answer = {
+  questionId: string
+  answer: string
 }
 
-async function submitDiagnosisPhase2(
-  answers: { questionId: string; answerPercentage: number }[],
-  phase1Diagnosis: any
-) {
-  const res: any = await submitAnswersPhase2(answers, phase1Diagnosis);
-  if (res.status != 200) throw new Error("Failed to submit phase 2 diagnosis");
-  return res;
-}
+export default function DiagnoseForm() {
+  // State for questions and answers
+  const [warmupQuestions, setWarmupQuestions] = useState<Question[]>([])
+  const [screeningQuestions, setScreeningQuestions] = useState<Question[]>([])
+  const [severityQuestions, setSeverityQuestions] = useState<Question[]>([])
+  const [answers, setAnswers] = useState<Answer[]>([])
 
-export function DiagnosisForm() {
-  const {
-    questions,
-    phase2Questions,
-    answers,
-    phase1Diagnosis,
-    currentPhase,
-    setQuestions,
-    setPhase2Questions,
-    setAnswer,
-    setPhase1Diagnosis,
-    setCurrentPhase,
-  } = useQuestions();
+  // UI state
+  const [currentPhase, setCurrentPhase] = useState<0 | 1 | 2>(0)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [diagnosisResult, setDiagnosisResult] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [diagnosisResult, setDiagnosisResult] = useState<any>(null);
+  // Get current questions based on phase
+  const currentQuestions =
+    currentPhase === 0 ? warmupQuestions : currentPhase === 1 ? screeningQuestions : severityQuestions
 
+  const currentQuestion = currentQuestions[currentQuestionIndex]
+  const isLastQuestion = currentQuestionIndex === currentQuestions.length - 1
+
+  // Fetch initial warmup questions
   useEffect(() => {
-    getQuestions().then(setQuestions).catch(console.error);
-  }, [setQuestions]);
-
-  const handleSubmitPhase1 = async () => {
-    try {
-      setIsSubmitting(true);
-      console.log("Submitting phase 1 answers:", answers);
-      const response = await submitDiagnosis(answers);
-      console.log("Phase 1 diagnosis result:", response.data);
-
-      // Store the phase 1 diagnosis result
-      setPhase1Diagnosis(response.data.diagnosis);
-      // console.log(phase1Diagnosis)
-
-      // Set phase 2 questions from the response
-      if (
-        response.data.phase2Questions &&
-        response.data.phase2Questions.length > 0
-      ) {
-        setPhase2Questions(response.data.phase2Questions);
-        setCurrentPhase(2);
-        setCurrentQuestionIndex(0);
-      } else {
-        // If no phase 2 questions, show final result
-        setDiagnosisResult(response.data);
+    const fetchWarmupQuestions = async () => {
+      try {
+        setIsLoading(true)
+        const response = await getWarmupQuestions()
+        setWarmupQuestions(response.data)
+      } catch (err) {
+        setError("Failed to load questions. Please try again.")
+        console.error(err)
+      } finally {
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.log("Error submitting phase 1 diagnosis:", error);
-    } finally {
-      setIsSubmitting(false);
     }
-  };
 
-  const handleSubmitPhase2 = async () => {
-    try {
-      setIsSubmitting(true);
-      console.log("Submitting phase 2 answers:", answers);
-      console.log("With phase 1 diagnosis:", phase1Diagnosis);
+    fetchWarmupQuestions()
+  }, [])
 
-      const response = await submitDiagnosisPhase2(answers, phase1Diagnosis);
-      console.log("Final diagnosis result:", response.data);
+  // Set an answer for the current question
+  const setAnswer = (questionId: string, answer: string) => {
+    setAnswers((prev) => {
+      const existingAnswerIndex = prev.findIndex((a) => a.questionId === questionId)
 
-      // Show final result
-      setDiagnosisResult(response.data);
-    } catch (error) {
-      console.log("Error submitting phase 2 diagnosis:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Determine which questions to use based on current phase
-  const currentPhaseQuestions =
-    currentPhase === 1 ? questions : phase2Questions;
-  const currentQuestion = currentPhaseQuestions[currentQuestionIndex];
-  const isLastQuestion =
-    currentQuestionIndex === currentPhaseQuestions.length - 1;
-  const currentAnswer = answers.find(
-    (a) => currentQuestion && a.questionId === currentQuestion._id
-  );
-
-  // Show loading state if questions aren't loaded yet
-  if (currentPhase === 1 && !questions.length) {
-    return <div>Loading questions...</div>;
+      if (existingAnswerIndex >= 0) {
+        const newAnswers = [...prev]
+        newAnswers[existingAnswerIndex] = { questionId, answer }
+        return newAnswers
+      } else {
+        return [...prev, { questionId, answer }]
+      }
+    })
   }
 
-  // Show final diagnosis result if available
+  // Get the current answer for a question
+  const getAnswer = (questionId: string) => {
+    return answers.find((a) => a.questionId === questionId)?.answer || ""
+  }
+
+  // Handle phase transitions
+  const handleSubmitPhase = async () => {
+    try {
+      setIsSubmitting(true)
+
+      if (currentPhase === 0) {
+        // Submit warmup and get screening questions
+        const response = await submitWarmup()
+        setScreeningQuestions(response.data)
+        setCurrentPhase(1)
+        setCurrentQuestionIndex(0)
+      } else if (currentPhase === 1) {
+        // Submit screening and get severity questions
+        const response = await submitScreening({ answers })
+        setSeverityQuestions(response.data)
+
+        if (response.data.length > 0) {
+          setCurrentPhase(2)
+          setCurrentQuestionIndex(0)
+        } else {
+          // No severity questions means no conditions detected
+          setDiagnosisResult({ message: "No conditions requiring further assessment were detected." })
+        }
+      } else if (currentPhase === 2) {
+        // Submit severity and get final results
+        const response = await submitSeverity({ answers })
+        setDiagnosisResult(response.data)
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.")
+      console.error(err)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Handle next question
+  const handleNext = () => {
+    if (isLastQuestion) {
+      handleSubmitPhase()
+    } else {
+      setCurrentQuestionIndex((prev) => prev + 1)
+    }
+  }
+
+  // Handle previous question
+  const handlePrevious = () => {
+    setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))
+  }
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="pt-6 flex items-center justify-center min-h-[300px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p>Loading questions...</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <div className="text-center text-red-500">
+            <p>{error}</p>
+            <Button className="mt-4" onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // Show diagnosis result
   if (diagnosisResult) {
     return (
       <Card>
         <CardContent className="pt-6">
-          <h2 className="text-xl font-semibold mb-4">Diagnosis Result</h2>
-          <pre className="bg-muted p-4 rounded-md overflow-auto">
-            {JSON.stringify(diagnosisResult, null, 2)}
-          </pre>
-          <Button className="mt-4" onClick={() => window.location.reload()}>
-            Start New Diagnosis
+          <h2 className="text-xl font-semibold mb-4">Assessment Results</h2>
+
+          {Array.isArray(diagnosisResult) ? (
+            <div className="space-y-4">
+              {diagnosisResult.map((result, index) => (
+                <div key={index} className="p-4 rounded-lg border">
+                  <h3 className="font-medium">{result.disease}</h3>
+                  <div
+                    className={`mt-2 font-semibold ${
+                      result.severity === "Severe"
+                        ? "text-red-500"
+                        : result.severity === "Moderate"
+                          ? "text-orange-500"
+                          : "text-yellow-500"
+                    }`}
+                  >
+                    Severity: {result.severity}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-4 rounded-lg border">
+              <p>{diagnosisResult.message || "Assessment complete."}</p>
+            </div>
+          )}
+
+          <Button className="mt-6 w-full" onClick={() => window.location.reload()}>
+            Start New Assessment
           </Button>
         </CardContent>
       </Card>
-    );
+    )
   }
 
-  const options = [
-    { value: 0, label: "Never", color: "text-green-500" },
-    { value: 25, label: "Rarely", color: "text-green-400" },
-    { value: 50, label: "Sometimes", color: "text-yellow-500" },
-    { value: 75, label: "Often", color: "text-orange-500" },
-    { value: 100, label: "Every time", color: "text-red-500" },
-  ];
+  // Get options based on question type
+  const renderOptions = () => {
+    if (!currentQuestion) return null
+
+    switch (currentQuestion.optionType) {
+      case "Radio":
+        return (
+          <RadioGroup
+            value={getAnswer(currentQuestion._id)}
+            onValueChange={(value) => setAnswer(currentQuestion._id, value)}
+            className="grid gap-3 mt-4"
+          >
+            {currentQuestion.options.map((option, index) => (
+              <div
+                key={index}
+                className={`flex items-center space-x-3 space-y-0 rounded-lg border p-4 transition-colors ${
+                  getAnswer(currentQuestion._id) === option ? "bg-muted border-primary" : ""
+                }`}
+              >
+                <RadioGroupItem value={option} id={`option-${index}`} />
+                <Label htmlFor={`option-${index}`} className="font-medium w-full cursor-pointer">
+                  {option}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        )
+
+      case "Emoji":
+        return (
+          <div className="grid grid-cols-5 gap-3 mt-4">
+            {currentQuestion.options.map((emoji, index) => (
+              <button
+                key={index}
+                className={`text-3xl p-4 rounded-lg border transition-colors ${
+                  getAnswer(currentQuestion._id) === emoji ? "bg-muted border-primary" : "hover:bg-muted/50"
+                }`}
+                onClick={() => setAnswer(currentQuestion._id, emoji)}
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+        )
+
+      case "Buttons":
+        return (
+          <div className="grid grid-cols-3 gap-3 mt-4">
+            {currentQuestion.options.map((option, index) => (
+              <Button
+                key={index}
+                variant={getAnswer(currentQuestion._id) === option ? "default" : "outline"}
+                className="h-16"
+                onClick={() => setAnswer(currentQuestion._id, option)}
+              >
+                {option}
+              </Button>
+            ))}
+          </div>
+        )
+
+      case "Slider":
+        return (
+          <div className="space-y-6 mt-4">
+            <div className="flex justify-between text-sm">
+              {currentQuestion.options.map((label, index) => (
+                <span key={index}>{label}</span>
+              ))}
+            </div>
+            <input
+              type="range"
+              min="0"
+              max={currentQuestion.options.length - 1}
+              step="1"
+              value={
+                currentQuestion.options.indexOf(getAnswer(currentQuestion._id)) >= 0
+                  ? currentQuestion.options.indexOf(getAnswer(currentQuestion._id))
+                  : "0"
+              }
+              onChange={(e) => {
+                const index = Number.parseInt(e.target.value)
+                setAnswer(currentQuestion._id, currentQuestion.options[index])
+              }}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+          </div>
+        )
+
+      default:
+        return null
+    }
+  }
 
   return (
-    <div className="space-y-8">
-      <ProgressBar
-        currentPhase={currentPhase}
-        currentQuestionIndex={currentQuestionIndex}
-        totalQuestions={questions.length}
-        phase2Questions={phase2Questions}
-      />
-
-      <Card>
-        <CardContent className="pt-6">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">
-              Phase {currentPhase}: Question {currentQuestionIndex + 1} of{" "}
-              {currentPhaseQuestions.length}
-            </h2>
-            <p className="text-muted-foreground">{currentQuestion?.text}</p>
-          </div>
-
-          <div className="space-y-6">
-            <RadioGroup
-              value={currentAnswer?.answerPercentage?.toString() || ""}
-              onValueChange={(value) => {
-                if (currentQuestion) {
-                  setAnswer(currentQuestion._id, Number.parseInt(value));
-                }
-              }}
-              className="grid gap-3"
-            >
-              {options.map((option) => (
-                <div
-                  key={option.value}
-                  className="flex items-center space-x-3 space-y-0"
-                >
-                  <RadioGroupItem
-                    value={option.value.toString()}
-                    id={`option-${option.value}`}
-                  />
-                  <Label
-                    htmlFor={`option-${option.value}`}
-                    className={`font-medium ${option.color}`}
-                  >
-                    {option.label} ({option.value}%)
-                  </Label>
+    <div className="flex justify-center items-center min-h-[50vh] w-full px-4 sm:px-6 md:px-8">
+      <div className="w-full max-w-md mx-auto">
+        <Card className="shadow-lg">
+          <CardContent className="pt-6 px-4 sm:px-6">
+            {/* Loading indicator */}
+            {isLoading && (
+              <div className="flex items-center justify-center min-h-[300px]">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p>Loading questions...</p>
                 </div>
-              ))}
-            </RadioGroup>
+              </div>
+            )}
 
-            <div className="flex justify-between gap-4 pt-4">
-              <Button
-                variant="outline"
-                onClick={() =>
-                  setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))
-                }
-                disabled={currentQuestionIndex === 0}
-              >
-                Previous
-              </Button>
-
-              {isLastQuestion ? (
-                <Button
-                  onClick={
-                    currentPhase === 1 ? handleSubmitPhase1 : handleSubmitPhase2
-                  }
-                  disabled={isSubmitting || currentAnswer === undefined}
-                >
-                  {isSubmitting
-                    ? "Submitting..."
-                    : currentPhase === 1
-                    ? "Submit Phase 1"
-                    : "Submit Final Diagnosis"}
+            {/* Error message */}
+            {error && (
+              <div className="text-center text-red-500 py-8">
+                <p>{error}</p>
+                <Button className="mt-4" onClick={() => window.location.reload()}>
+                  Try Again
                 </Button>
-              ) : (
-                <Button
-                  onClick={() =>
-                    setCurrentQuestionIndex((prev) =>
-                      Math.min(currentPhaseQuestions.length - 1, prev + 1)
-                    )
-                  }
-                  disabled={currentAnswer === undefined}
-                >
-                  Next
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              </div>
+            )}
 
-      <div className="text-sm text-muted-foreground">
-        Phase {currentPhase} Progress:{" "}
-        {
-          currentPhaseQuestions.filter((q) =>
-            answers.some((a) => a.questionId === q._id)
-          ).length
-        }{" "}
-        of {currentPhaseQuestions.length} questions answered
+            {/* Diagnosis result */}
+            {diagnosisResult && (
+              <div className="py-4">
+                <h2 className="text-xl font-semibold mb-4 text-center">Assessment Results</h2>
+
+                {Array.isArray(diagnosisResult) ? (
+                  <div className="space-y-4">
+                    {diagnosisResult.map((result, index) => (
+                      <div key={index} className="p-4 rounded-lg border">
+                        <h3 className="font-medium">{result.disease}</h3>
+                        <div
+                          className={`mt-2 font-semibold ${
+                            result.severity === "Severe"
+                              ? "text-red-500"
+                              : result.severity === "Moderate"
+                                ? "text-orange-500"
+                                : "text-yellow-500"
+                          }`}
+                        >
+                          Severity: {result.severity}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-lg border">
+                    <p className="text-center">{diagnosisResult.message || "Assessment complete."}</p>
+                  </div>
+                )}
+
+                <Button className="mt-6 w-full" onClick={() => window.location.reload()}>
+                  Start New Assessment
+                </Button>
+              </div>
+            )}
+
+            {/* Question and options */}
+            {!isLoading && !error && !diagnosisResult && currentQuestion && (
+              <>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold mb-2 text-center">{currentQuestion.questionName}</h2>
+                  <p className="text-sm text-muted-foreground text-center">
+                    Question {currentQuestionIndex + 1} of {currentQuestions.length}
+                  </p>
+                </div>
+
+                <div className="my-6">
+                  {currentQuestion.optionType === "Radio" && (
+                    <RadioGroup
+                      value={getAnswer(currentQuestion._id)}
+                      onValueChange={(value) => setAnswer(currentQuestion._id, value)}
+                      className="grid gap-3"
+                    >
+                      {currentQuestion.options.map((option, index) => (
+                        <div
+                          key={index}
+                          className={`flex items-center space-x-3 space-y-0 rounded-lg border p-4 transition-colors ${
+                            getAnswer(currentQuestion._id) === option ? "bg-muted border-primary" : ""
+                          }`}
+                        >
+                          <RadioGroupItem value={option} id={`option-${index}`} />
+                          <Label htmlFor={`option-${index}`} className="font-medium w-full cursor-pointer">
+                            {option}
+                          </Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  )}
+
+                  {currentQuestion.optionType === "Emoji" && (
+                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                      {currentQuestion.options.map((emoji, index) => (
+                        <button
+                          key={index}
+                          className={`text-3xl p-4 rounded-lg border transition-colors ${
+                            getAnswer(currentQuestion._id) === emoji ? "bg-muted border-primary" : "hover:bg-muted/50"
+                          }`}
+                          onClick={() => setAnswer(currentQuestion._id, emoji)}
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {currentQuestion.optionType === "Buttons" && (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {currentQuestion.options.map((option, index) => (
+                        <Button
+                          key={index}
+                          variant={getAnswer(currentQuestion._id) === option ? "default" : "outline"}
+                          className="h-16 w-full"
+                          onClick={() => setAnswer(currentQuestion._id, option)}
+                        >
+                          {option}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+
+                  {currentQuestion.optionType === "Slider" && (
+                    <div className="space-y-6">
+                      <div className="flex justify-between text-sm">
+                        {currentQuestion.options.map((label, index) => (
+                          <span key={index} className="text-xs sm:text-sm">
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max={currentQuestion.options.length - 1}
+                        step="1"
+                        value={
+                          currentQuestion.options.indexOf(getAnswer(currentQuestion._id)) >= 0
+                            ? currentQuestion.options.indexOf(getAnswer(currentQuestion._id))
+                            : "0"
+                        }
+                        onChange={(e) => {
+                          const index = Number.parseInt(e.target.value)
+                          setAnswer(currentQuestion._id, currentQuestion.options[index])
+                        }}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-between gap-4 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevious}
+                    disabled={currentQuestionIndex === 0}
+                    className="w-1/2"
+                  >
+                    Previous
+                  </Button>
+
+                  <Button onClick={handleNext} disabled={!getAnswer(currentQuestion._id || "")} className="w-1/2">
+                    {isLastQuestion ? (isSubmitting ? "Submitting..." : "Submit") : "Next"}
+                  </Button>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
-  );
+  )
 }
+

@@ -2,20 +2,20 @@
 
 import { createContext, useContext, useState, type ReactNode } from "react"
 
+// Define types
 type Question = {
   _id: string
-  questionKey: string
-  text: string
-  symptom: {
-    _id: string
-    name: string
-  }
-  phase: string
+  questionName: string
+  optionType: string
+  options: string[]
+  validOptions: string[]
+  disease: string | null
+  phase: number
 }
 
 type Answer = {
   questionId: string
-  answerPercentage: number
+  answer: string
 }
 
 type QuestionsContextType = {
@@ -23,52 +23,52 @@ type QuestionsContextType = {
   phase2Questions: Question[]
   answers: Answer[]
   phase1Diagnosis: any
-  currentPhase: number
+  currentPhase: 0 | 1 | 2
   setQuestions: (questions: Question[]) => void
   setPhase2Questions: (questions: Question[]) => void
-  setAnswer: (questionId: string, percentage: number) => void
-  clearAnswers: () => void
+  setAnswer: (questionId: string, answer: string) => void
   setPhase1Diagnosis: (diagnosis: any) => void
-  setCurrentPhase: (phase: number) => void
+  setCurrentPhase: (phase: 0 | 1 | 2) => void
 }
 
-const QuestionsContext = createContext < QuestionsContextType | undefined > (undefined)
+// Create context
+const QuestionsContext = createContext<QuestionsContextType | undefined>(undefined)
 
+// Provider component
 export function QuestionsProvider({ children }: { children: ReactNode }) {
   const [questions, setQuestions] = useState<Question[]>([])
   const [phase2Questions, setPhase2Questions] = useState<Question[]>([])
   const [answers, setAnswers] = useState<Answer[]>([])
   const [phase1Diagnosis, setPhase1Diagnosis] = useState<any>(null)
-  const [currentPhase, setCurrentPhase] = useState<number>(1)
+  const [currentPhase, setCurrentPhase] = useState<0 | 1 | 2>(0)
 
-  const setAnswer = (questionId: string, percentage: number) => {
+  const setAnswer = (questionId: string, answer: string) => {
     setAnswers((prev) => {
-      const existing = prev.findIndex((a) => a.questionId === questionId)
-      if (existing !== -1) {
+      const existingAnswerIndex = prev.findIndex((a) => a.questionId === questionId)
+
+      if (existingAnswerIndex >= 0) {
         const newAnswers = [...prev]
-        newAnswers[existing] = { questionId, answerPercentage: percentage }
+        newAnswers[existingAnswerIndex] = { questionId, answer }
         return newAnswers
+      } else {
+        return [...prev, { questionId, answer }]
       }
-      return [...prev, { questionId, answerPercentage: percentage }]
     })
   }
 
-  const clearAnswers = () => setAnswers([])
-
   return (
-    <QuestionsContext.Provider 
-      value={{ 
-        questions, 
-        phase2Questions, 
-        answers, 
+    <QuestionsContext.Provider
+      value={{
+        questions,
+        phase2Questions,
+        answers,
         phase1Diagnosis,
         currentPhase,
-        setQuestions, 
+        setQuestions,
         setPhase2Questions,
-        setAnswer, 
-        clearAnswers,
+        setAnswer,
         setPhase1Diagnosis,
-        setCurrentPhase
+        setCurrentPhase,
       }}
     >
       {children}
@@ -76,6 +76,7 @@ export function QuestionsProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Hook for using the context
 export function useQuestions() {
   const context = useContext(QuestionsContext)
   if (context === undefined) {
