@@ -1,4 +1,4 @@
-import { DiagnosisForm } from "./diagnosis-form"
+import  DiagnoseForm  from "./diagnosis-form"
 import { QuestionsProvider } from "@/contexts/questionsContext"
 
 export default function DiagnosePage() {
@@ -6,7 +6,7 @@ export default function DiagnosePage() {
     <QuestionsProvider>
       <main className="container mx-auto p-4 max-w-2xl">
         <h1 className="text-2xl font-bold mb-6">Symptom Diagnosis</h1>
-        <DiagnosisForm />
+        <DiagnoseForm />
       </main>
     </QuestionsProvider>
   )
