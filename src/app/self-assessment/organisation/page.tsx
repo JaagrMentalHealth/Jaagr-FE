@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 // import { useSearchParams } from "next/navigation";
-import {testHit} from '@/api/assessment'
+// import {testHit} from '@/api/assessment'
 
 export default function UserPage() {
   const [userName, setUserName] = useState<string | null>(null);
