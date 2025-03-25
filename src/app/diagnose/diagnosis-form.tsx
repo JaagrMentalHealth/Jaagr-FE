@@ -298,7 +298,7 @@ export default function DiagnoseForm() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-[50vh] w-full px-4 sm:px-6 md:px-8">
+    <div className="flex justify-center items-center min-h-screen w-full px-4 sm:px-6 md:px-8">
       <div className="w-full max-w-md mx-auto">
         <Card className="shadow-lg">
           <CardContent className="pt-6 px-4 sm:px-6">
