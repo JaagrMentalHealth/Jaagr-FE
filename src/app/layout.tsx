@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "@/contexts/userContext";
 import { useUser } from "@/contexts/userContext";
+import { GoogleAnalytics } from '@next/third-parties/google'
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -28,6 +29,7 @@ export default function RootLayout({
           <Toaster />
         </UserProvider>
       </body>
+      <GoogleAnalytics gaId="G-YLB2EJJWK3" />
     </html>
   );
 }
