@@ -29,7 +29,7 @@ export default function RootLayout({
           <Toaster />
         </UserProvider>
       </body>
-      <GoogleAnalytics gaId="G-YLB2EJJWK3" />
+      <GoogleAnalytics gaId="G-35Z47WS7HJ" />
     </html>
   );
 }
