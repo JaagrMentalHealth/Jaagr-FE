@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Jaagr</title>
+        <title>Jaagr | BE MORE AWARE ABOUT YOUR THOUGHTS</title>
       </head>
       <body
         className={cn(
