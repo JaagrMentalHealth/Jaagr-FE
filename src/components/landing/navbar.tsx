@@ -84,7 +84,7 @@ export function Navbar() {
                   </Button>
                 </Link>
                 <Link href="/signup" className="flex flex-wrap gap-4">
-                  <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">
+                <Button className="bg-purple-600 text-white hover:bg-purple-600 rounded-full shadow-lg hover:shadow-xl">
                     Sign Up
                   </Button>
                 </Link>

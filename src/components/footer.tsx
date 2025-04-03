@@ -38,8 +38,8 @@ export function Footer() {
           <h3 className="mb-4 text-lg font-semibold">Support</h3>
           <ul className="space-y-2 text-sm text-white-400">
             <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
-            <li><Link href="/policy" className="hover:text-white">User Policy</Link></li>
-            <li><Link href="/support" className="hover:text-white">Support</Link></li>
+            <li><Link href="/privacy" className="hover:text-white">User Policy</Link></li>
+            <li><Link href="/contact" className="hover:text-white">Support</Link></li>
           </ul>
         </div>
 
@@ -53,13 +53,6 @@ export function Footer() {
             <li>🔗 Social Media</li>
           </ul>
         </div>
-      </div>
-
-      {/* Back to Top */}
-      <div className="mt-8 text-center">
-        <button className="rounded-lg bg-purple-500 px-4 py-2 text-white hover:bg-purple-600">
-          Back to Top
-        </button>
       </div>
     </footer>
   );

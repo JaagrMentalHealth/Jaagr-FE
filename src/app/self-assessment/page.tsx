@@ -198,13 +198,20 @@ export default function SelfAssessmentPage() {
     </div>
   </div>
 </section>
-
-        
-
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center text-purple-800">What Our Users Say</h2>
-            <div className="grid md:grid-cols-3 gap-8">
+<section className="py-20 bg-gray-50">
+  <div className="container mx-auto px-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }}
+      className="max-w-4xl mx-auto text-center"
+    >
+      <span className="inline-block px-6 py-2 bg-purple-200 text-purple-600 rounded-full text-sm font-medium mb-4 shadow-sm">
+        #What Our Users Say
+      </span>
+    </motion.div>           
+           <div className="grid md:grid-cols-3 gap-8">
               <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardContent className="p-6">
                   <p className="italic mb-4 text-lg text-gray-700">
