@@ -24,7 +24,6 @@ export function Testimonial() {
             
             <div className="text-left">
               <div className="font-semibold">Reena Singh</div>
-              <div className="text-sm text-gray-600">Client from Delhi</div>
             </div>
           </div>
         </motion.div>
