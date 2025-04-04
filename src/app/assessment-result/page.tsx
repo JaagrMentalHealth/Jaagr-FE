@@ -50,7 +50,7 @@ export default function WellBeingReport() {
         {/* Introduction */}
         <div className="mb-12 max-w-6xl mx-auto">
           <p className="text-lg font-medium text-gray-700">Hello, [Child&apos;s Name]!</p>
-          <p className="text-lg mt-3 text-gray-600 leading-relaxed">
+          <p className="text-lg mt-3 text-gray-600 leading-relaxed text-justify">
             This report is here to help us understand how you&apos;re feeling and what might be affecting you. It&apos;s okay to
             sometimes feel like things are tough—you&apos;re not alone, and there are lots of ways to feel better. Let&apos;s go
             through what we found step by step!
@@ -64,7 +64,7 @@ export default function WellBeingReport() {
             <h2 className="text-2xl font-bold text-gray-800">How You&apos;re Feeling</h2>
           </div>
 
-          <p className="text-lg mb-8 text-gray-600 leading-relaxed max-w-6xl">
+          <p className="text-lg mb-8 text-gray-600 leading-relaxed max-w-6xl text-justify">
             We looked at a few areas to learn about your emotions, thoughts, and energy. Here&apos;s what we found and some
             ideas on how to help you feel more like your awesome self!
           </p>
@@ -112,20 +112,18 @@ export default function WellBeingReport() {
 
         {/* Improvement Section */}
         <div className="mb-16  py-12 px-6 rounded-xl">
-          <div className="text-center mb-10">
+          <div className="text-center mb-4">
             <h2 className="text-2xl font-bold mb-2 text-gray-800">How can I improve my well-being?</h2>
             <div className="w-24 h-1 bg-purple-500 mx-auto"></div>
           </div>
-
           <div className="flex justify-center">
             <Image
               src="/infographic.svg" // Replace this with the actual image path
               alt="Well-being Tips"
-              width={900} // Adjust width as needed
-              height={500} // Adjust height as needed
+              width={900} 
+              height={500} 
             />
           </div>
-
         </div>
 
         {/* Important Reminder */}
