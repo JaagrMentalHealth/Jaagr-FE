@@ -9,12 +9,12 @@ import { useState, useEffect } from "react"
 
 const slides = [
   {
-    image: "/images/hero.jpeg?height=600&width=800",
+    image: "/images/hero.jpeg",
     title: "Rediscover Your Inner Peace",
     subtitle: "Holistic Well-being",
   },
   {
-    image: "/images/hero2.jpg?height=600&width=800",
+    image: "/images/hero2.jpg",
     title: "Your Companion for Mental Well-being",
     subtitle: "24/7 Support",
   },
@@ -43,16 +43,18 @@ export function Hero() {
             <div className="text-sm text-gray-600">Enhancement and Support for Mental Health</div>
             <h1 className="text-5xl font-bold leading-tight">
               BE MORE <br />
-              AWARE <span className="inline-block relative">
-            <Image
-              src="/logoHero.svg"
-              alt="Jaagr Logo"
-              width={120}
-              height={45}
-              className="object-contain mt-2 animate-float"
-              priority
-            />
-          </span>{" "} <br />
+              AWARE{" "}
+              <span className="inline-block relative">
+                <Image
+                  src="/logoHero.svg"
+                  alt="Jaagr Logo"
+                  width={120}
+                  height={45}
+                  className="object-contain mt-2 animate-float"
+                  priority
+                />
+              </span>{" "}
+              <br />
               ABOUT YOUR <br />
               THOUGHTS
             </h1>
@@ -90,7 +92,7 @@ export function Hero() {
                   className="absolute inset-0"
                 >
                   <Image
-                    src={slide.image || "/placeholder.svg"}
+                    src={slide.image}
                     alt={slide.title}
                     fill
                     className="object-cover"
@@ -120,4 +122,3 @@ export function Hero() {
     </section>
   )
 }
-
