@@ -58,13 +58,13 @@ export default function WellBeingReport() {
         </div>
 
         {/* How You're Feeling Section */}
-        <div className="mb-16">
+        <div className="mb-12 max-w-6xl mx-auto">
           <div className="flex items-center mb-6">
             <div className="w-1 h-8 bg-purple-500 mr-3"></div>
             <h2 className="text-2xl font-bold text-gray-800">How You&apos;re Feeling</h2>
           </div>
 
-          <p className="text-lg mb-8 text-gray-600 leading-relaxed max-w-4xl">
+          <p className="text-lg mb-8 text-gray-600 leading-relaxed max-w-6xl">
             We looked at a few areas to learn about your emotions, thoughts, and energy. Here&apos;s what we found and some
             ideas on how to help you feel more like your awesome self!
           </p>
