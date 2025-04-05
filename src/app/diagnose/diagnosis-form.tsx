@@ -1,5 +1,7 @@
 "use client"
 
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -24,12 +26,22 @@ type Answer = {
   answer: string
 }
 
-export default function DiagnoseForm() {
+export default function DiagnoseForm({
+  orgUserId,
+  organizationId,
+  assessmentId
+}: {
+  orgUserId?: string | null,
+  organizationId?: string | null,
+  assessmentId?: string | null
+}) {
   // State for questions and answers
   const [warmupQuestions, setWarmupQuestions] = useState<Question[]>([])
   const [screeningQuestions, setScreeningQuestions] = useState<Question[]>([])
   const [severityQuestions, setSeverityQuestions] = useState<Question[]>([])
   const [answers, setAnswers] = useState<Answer[]>([])
+  const [outcomeId, setOutcomeId] = useState<string>("")
+
 
   // UI state
   const [currentPhase, setCurrentPhase] = useState<0 | 1 | 2>(0)
@@ -45,6 +57,7 @@ export default function DiagnoseForm() {
 
   const currentQuestion = currentQuestions[currentQuestionIndex]
   const isLastQuestion = currentQuestionIndex === currentQuestions.length - 1
+  const router=useRouter();
 
   // Fetch initial warmup questions
   useEffect(() => {
@@ -88,28 +101,50 @@ export default function DiagnoseForm() {
   const handleSubmitPhase = async () => {
     try {
       setIsSubmitting(true)
-
+  
       if (currentPhase === 0) {
         // Submit warmup and get screening questions
-        const response = await submitWarmup()
-        setScreeningQuestions(response.data)
+        const response = await submitWarmup({
+          warmupAnswers: warmupQuestions.map((q) => ({
+            questionId: q._id,
+            answer: getAnswer(q._id),
+          })),
+          orgUserId,
+          organizationId,
+          assessmentId,
+        })
+  
+        setScreeningQuestions(response.data.screeningQuestions)
+        setOutcomeId(response.data.outcomeId)
+        Cookies.set("outcomeId", response.data.outcomeId); 
         setCurrentPhase(1)
         setCurrentQuestionIndex(0)
       } else if (currentPhase === 1) {
         // Submit screening and get severity questions
-        const response = await submitScreening({ answers })
+        const response = await submitScreening({
+          answers,
+          outcomeId, // <-- Send outcomeId
+        })
+  
         setSeverityQuestions(response.data)
-
+  
         if (response.data.length > 0) {
           setCurrentPhase(2)
           setCurrentQuestionIndex(0)
         } else {
-          // No severity questions means no conditions detected
-          setDiagnosisResult({ message: "No conditions requiring further assessment were detected." })
+          router.push(`/assessment-result?outcomeId=${outcomeId}`);
+          setDiagnosisResult({
+            message: "No conditions requiring further assessment were detected.",
+          })
         }
       } else if (currentPhase === 2) {
         // Submit severity and get final results
-        const response = await submitSeverity({ answers })
+        const response = await submitSeverity({
+          answers,
+          outcomeId, // <-- Send outcomeId
+        })
+        router.push(`/result?outcomeId=${outcomeId}`);
+  
         setDiagnosisResult(response.data)
       }
     } catch (err) {
@@ -119,7 +154,7 @@ export default function DiagnoseForm() {
       setIsSubmitting(false)
     }
   }
-
+  
   // Handle next question
   const handleNext = () => {
     if (isLastQuestion) {
