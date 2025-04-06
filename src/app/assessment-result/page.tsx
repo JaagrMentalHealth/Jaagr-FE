@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { notFound, useSearchParams } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -78,6 +78,7 @@ export default function WellBeingReport() {
   }
 
   return (
+    <Suspense fallback=<LoadingScreen/>>
     <div className="min-h-screen bg-white">
       {/* Fixed Download Button */}
       <div className="fixed bottom-6 right-6 z-10">
@@ -262,5 +263,21 @@ export default function WellBeingReport() {
         </div>
       </div>
     </div>
+    </Suspense>
   );
+}
+
+
+
+const LoadingScreen=()=>{
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
+          <p className="text-lg text-gray-600 font-medium">
+            Preparing your well-being report...
+          </p>
+        </div>
+      </div>
+  )
 }
