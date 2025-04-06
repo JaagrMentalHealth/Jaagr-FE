@@ -1,11 +1,20 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams, useParams,notFound } from "next/navigation"
 import Cookies from "js-cookie"
 import DiagnoseForm from "./diagnosis-form"
+import { Loader2 } from "lucide-react"
 
-export default function SelfAssessmentPage() {
+export default function DiagnosePage(){
+  return (
+    <Suspense fallback=<LoadingScreen/>>
+      <SelfAssessmentPage/>
+    </Suspense>
+  )
+}
+
+ function SelfAssessmentPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const organizationId = searchParams.get("organizationId") || null
@@ -38,3 +47,17 @@ export default function SelfAssessmentPage() {
     />
   ) : null
 }
+
+
+const LoadingScreen = () => {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <div className="text-center">
+        <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
+        <p className="text-lg text-gray-600 font-medium">
+          Preparing your Questions...
+        </p>
+      </div>
+    </div>
+  );
+};
