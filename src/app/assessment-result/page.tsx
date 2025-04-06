@@ -169,7 +169,7 @@ export default function WellBeingReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {outcome.results.map((item, index) => (
+                    {outcome.results.map((item:any, index:number) => (
                       <tr
                         key={index}
                         className={index % 2 === 1 ? "bg-gray-50" : ""}
