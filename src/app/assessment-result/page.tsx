@@ -11,7 +11,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { fetchOutcome, fetchOrgUser } from "@/api/assessment";
 import { useUser } from "@/contexts/userContext";
 
-export default function WellBeingReport() {
+export default function AssessmentReport() {
+  return (
+    <Suspense fallback=<LoadingScreen />>
+      <WellBeingReport />
+    </Suspense>
+  );
+}
+
+function WellBeingReport() {
   const [downloading, setDownloading] = useState(false);
   const [outcome, setOutcome] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -21,7 +29,6 @@ export default function WellBeingReport() {
   const searchParams = useSearchParams();
   const outcomeId = searchParams.get("outcomeId");
 
-
   if (!outcomeId) return notFound();
 
   useEffect(() => {
@@ -30,11 +37,11 @@ export default function WellBeingReport() {
         const res = await fetchOutcome(outcomeId);
         const data = res.data;
         setOutcome(data);
-        console.log(data)
-  
+        console.log(data);
+
         // Dynamically check outcome for organizationId
         const isOrgUser = !!data.organizationId;
-  
+
         if (isOrgUser && data.userId) {
           const orgRes = await fetchOrgUser(data.userId); // In your model, orgUser is stored in userId
           setUserName(orgRes?.data?.fullName || "Child");
@@ -47,7 +54,7 @@ export default function WellBeingReport() {
         setLoading(false);
       }
     }
-  
+
     fetchReport();
   }, [outcomeId, user]);
 
@@ -78,7 +85,6 @@ export default function WellBeingReport() {
   }
 
   return (
-    <Suspense fallback=<LoadingScreen/>>
     <div className="min-h-screen bg-white">
       {/* Fixed Download Button */}
       <div className="fixed bottom-6 right-6 z-10">
@@ -99,16 +105,14 @@ export default function WellBeingReport() {
         {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-           {userName}&apos;s Well-Being Report
+            {userName}&apos;s Well-Being Report
           </h1>
           <div className="w-24 h-1 bg-purple-500 mx-auto"></div>
         </div>
 
         {/* Introduction */}
         <div className="mb-12 max-w-6xl mx-auto">
-          <p className="text-lg font-medium text-gray-700">
-            Hello,{userName}!
-          </p>
+          <p className="text-lg font-medium text-gray-700">Hello,{userName}!</p>
           <p className="text-lg mt-3 text-gray-600 leading-relaxed text-justify">
             This report is here to help us understand how you&apos;re feeling
             and what might be affecting you. It&apos;s okay to sometimes feel
@@ -170,7 +174,7 @@ export default function WellBeingReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {outcome.results.map((item:any, index:number) => (
+                    {outcome.results.map((item: any, index: number) => (
                       <tr
                         key={index}
                         className={index % 2 === 1 ? "bg-gray-50" : ""}
@@ -263,21 +267,18 @@ export default function WellBeingReport() {
         </div>
       </div>
     </div>
-    </Suspense>
   );
 }
 
-
-
-const LoadingScreen=()=>{
+const LoadingScreen = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
-        <div className="text-center">
-          <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
-          <p className="text-lg text-gray-600 font-medium">
-            Preparing your well-being report...
-          </p>
-        </div>
+      <div className="text-center">
+        <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
+        <p className="text-lg text-gray-600 font-medium">
+          Preparing your well-being report...
+        </p>
       </div>
-  )
-}
+    </div>
+  );
+};
