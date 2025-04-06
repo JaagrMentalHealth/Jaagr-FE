@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "@/contexts/userContext";
 import { useUser } from "@/contexts/userContext";
+import Head from "next/head";
+import { GoogleAnalytics } from '@next/third-parties/google'
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -16,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <title>Jaagr | BE MORE AWARE ABOUT YOUR THOUGHTS</title>
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -28,6 +32,7 @@ export default function RootLayout({
           <Toaster />
         </UserProvider>
       </body>
+      <GoogleAnalytics gaId="G-35Z47WS7HJ" />
     </html>
   );
 }

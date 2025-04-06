@@ -1,275 +1,266 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { ArrowRight, Download } from "lucide-react"
-import { format } from "date-fns"
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-} from "recharts"
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
+import { useState, useEffect } from "react";
+import { notFound, useSearchParams } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { fetchOutcome, fetchOrgUser } from "@/api/assessment";
+import { useUser } from "@/contexts/userContext";
 
-// Mock data (in a real application, this would come from an API or database)
-const userData = {
-  name: "Jane Doe",
-  assessmentDate: new Date(),
-  overallScore: 65,
-  symptoms: [
-    { name: "Anxiety", value: 30 },
-    { name: "Depression", value: 20 },
-    { name: "Stress", value: 35 },
-    { name: "OCD", value: 15 },
-  ],
-  trends: [
-    { date: "2023-01-01", score: 50 },
-    { date: "2023-02-01", score: 55 },
-    { date: "2023-03-01", score: 60 },
-    { date: "2023-04-01", score: 58 },
-    { date: "2023-05-01", score: 65 },
-  ],
-  conditionBreakdown: [
-    { condition: "Anxiety", mild: 20, moderate: 30, severe: 10 },
-    { condition: "Depression", mild: 30, moderate: 15, severe: 5 },
-    { condition: "Stress", mild: 25, moderate: 35, severe: 15 },
-    { condition: "OCD", mild: 35, moderate: 10, severe: 5 },
-  ],
-  emotionalStates: [
-    { date: "2023-05-01", happy: 60, neutral: 30, sad: 10 },
-    { date: "2023-05-02", happy: 50, neutral: 40, sad: 10 },
-    { date: "2023-05-03", happy: 70, neutral: 20, sad: 10 },
-    { date: "2023-05-04", happy: 55, neutral: 35, sad: 10 },
-    { date: "2023-05-05", happy: 65, neutral: 25, sad: 10 },
-  ],
-}
+export default function WellBeingReport() {
+  const [downloading, setDownloading] = useState(false);
+  const [outcome, setOutcome] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState("Child");
 
-const recommendations = [
-  {
-    title: "Practice Mindfulness",
-    description: "Try daily meditation or mindfulness exercises to reduce stress and anxiety.",
-  },
-  {
-    title: "Stay Active",
-    description: "Regular physical activity can significantly improve mood and overall mental well-being.",
-  },
-  {
-    title: "Connect with Others",
-    description: "Maintain strong social connections. Reach out to friends, family, or join support groups.",
-  },
-  {
-    title: "Seek Professional Help",
-    description: "Consider talking to a therapist or counselor for personalized support and guidance.",
-  },
-]
+  const { user } = useUser();
+  const searchParams = useSearchParams();
+  const outcomeId = searchParams.get("outcomeId");
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
-export default function AssessmentResultPage() {
-  const [animationComplete, setAnimationComplete] = useState(false)
+  if (!outcomeId) return notFound();
 
   useEffect(() => {
-    const timer = setTimeout(() => setAnimationComplete(true), 1000)
-    return () => clearTimeout(timer)
-  }, [])
+    async function fetchReport() {
+      try {
+        const res = await fetchOutcome(outcomeId);
+        const data = res.data;
+        setOutcome(data);
+        console.log(data)
+  
+        // Dynamically check outcome for organizationId
+        const isOrgUser = !!data.organizationId;
+  
+        if (isOrgUser && data.userId) {
+          const orgRes = await fetchOrgUser(data.userId); // In your model, orgUser is stored in userId
+          setUserName(orgRes?.data?.fullName || "Child");
+        } else if (user?.fullName) {
+          setUserName(user.fullName);
+        }
+      } catch (err) {
+        console.error("Error fetching outcome or user:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    fetchReport();
+  }, [outcomeId, user]);
+
+  const handleDownload = () => {
+    setDownloading(true);
+
+    // Simulate download process
+    setTimeout(() => {
+      setDownloading(false);
+      toast({
+        title: "Report Downloaded",
+        description: "Your well-being report has been downloaded successfully.",
+      });
+    }, 1500);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
+          <p className="text-lg text-gray-600 font-medium">
+            Preparing your well-being report...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
-      <main className="flex-1 bg-gradient-to-b from-purple-50 to-white py-12">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Card className="mb-8">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-3xl font-bold text-purple-800">Mental Health Assessment Report</CardTitle>
-                  <p className="text-gray-600">for {userData.name}</p>
-                  <p className="text-sm text-gray-500">
-                    Assessment Date: {format(userData.assessmentDate, "MMMM d, yyyy")}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-4xl font-bold text-purple-500">{userData.overallScore}</p>
-                  <p className="text-sm text-gray-500">Overall Score</p>
-                </div>
-              </CardHeader>
-            </Card>
-          </motion.div>
+    <div className="min-h-screen bg-white">
+      {/* Fixed Download Button */}
+      <div className="fixed bottom-6 right-6 z-10">
+        <Button
+          onClick={handleDownload}
+          className="rounded-full shadow-lg px-6 bg-purple-600 hover:bg-purple-700"
+          disabled={downloading}
+        >
+          <Download className="mr-2 h-4 w-4" />
+          {downloading ? "Downloading..." : "Download Report"}
+        </Button>
+      </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle>Symptom Distribution</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={userData.symptoms}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      >
-                        {userData.symptoms.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </motion.div>
+      <Toaster />
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle>Mental Health Trends</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={userData.trends}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="score" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </motion.div>
+      {/* Report Content */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+           {userName}&apos;s Well-Being Report
+          </h1>
+          <div className="w-24 h-1 bg-purple-500 mx-auto"></div>
+        </div>
+
+        {/* Introduction */}
+        <div className="mb-12 max-w-6xl mx-auto">
+          <p className="text-lg font-medium text-gray-700">
+            Hello,{userName}!
+          </p>
+          <p className="text-lg mt-3 text-gray-600 leading-relaxed text-justify">
+            This report is here to help us understand how you&apos;re feeling
+            and what might be affecting you. It&apos;s okay to sometimes feel
+            like things are tough—you&apos;re not alone, and there are lots of
+            ways to feel better. Let&apos;s go through what we found step by
+            step!
+          </p>
+        </div>
+
+        {/* How You're Feeling Section */}
+        <div className="mb-12 max-w-6xl mx-auto">
+          <div className="flex items-center mb-6">
+            <div className="w-1 h-8 bg-purple-500 mr-3"></div>
+            <h2 className="text-2xl font-bold text-gray-800">
+              How You&apos;re Feeling
+            </h2>
           </div>
 
-          <motion.div
-            className="mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle>Condition Breakdown</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={userData.conditionBreakdown}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="condition" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="mild" stackId="a" fill="#8884d8" />
-                    <Bar dataKey="moderate" stackId="a" fill="#82ca9d" />
-                    <Bar dataKey="severe" stackId="a" fill="#ffc658" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <p className="text-lg mb-8 text-gray-600 leading-relaxed max-w-6xl text-justify">
+            We looked at a few areas to learn about your emotions, thoughts, and
+            energy. Here&apos;s what we found and some ideas on how to help you
+            feel more like your awesome self!
+          </p>
 
-          <motion.div
-            className="mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle>Emotional State Tracking</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={userData.emotionalStates}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="happy" stroke="#8884d8" />
-                    <Line type="monotone" dataKey="neutral" stroke="#82ca9d" />
-                    <Line type="monotone" dataKey="sad" stroke="#ffc658" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            className="mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1 }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle>Recommendations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  {recommendations.map((rec, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white mr-2">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h4 className="font-semibold">{rec.title}</h4>
-                        <p className="text-sm text-gray-600">{rec.description}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            className="mt-8 flex justify-between items-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1.2 }}
-          >
-            <Link href="/mental-health-exercise">
-              <Button className="bg-purple-500 text-white hover:bg-purple-600">
-                Explore Mental Health Exercises <ArrowRight className="ml-2" />
-              </Button>
-            </Link>
-            <Button variant="outline">
-              Download Report <Download className="ml-2" />
-            </Button>
-          </motion.div>
+          {/* Assessment Table */}
+          <div className="w-full mb-4 overflow-x-auto bg-white rounded-lg shadow-md">
+            {/* Assessment Table or Healthy Message */}
+            {outcome && outcome.results && outcome.results.length === 0 ? (
+              <div className="text-center bg-green-50 border border-green-200 p-8 rounded-lg shadow-md mb-12">
+                <h2 className="text-2xl font-bold text-green-700 mb-4">
+                  Great News! 🎉
+                </h2>
+                <p className="text-lg text-green-600">
+                  Based on your responses, we did not find any significant
+                  indicators of mental health concerns. Keep taking care of
+                  yourself and remember that it’s always okay to check in again!
+                </p>
+              </div>
+            ) : outcome && outcome.results ? (
+              <div className="w-full mb-4 overflow-x-auto bg-white rounded-lg shadow-md">
+                <table className="w-full border-collapse text-base">
+                  <thead className="bg-purple-50">
+                    <tr>
+                      <th className="border-b border-gray-200 p-4 text-left font-semibold text-gray-700">
+                        Assessment Parameter
+                      </th>
+                      <th className="border-b border-gray-200 p-4 text-left font-semibold text-gray-700">
+                        What it means
+                      </th>
+                      <th className="border-b border-gray-200 p-4 text-left font-semibold text-gray-700">
+                        Your Result
+                      </th>
+                      <th className="border-b border-gray-200 p-4 text-left font-semibold text-gray-700">
+                        How this feels
+                      </th>
+                      <th className="border-b border-gray-200 p-4 text-left font-semibold text-gray-700">
+                        What can help
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {outcome.results.map((item, index) => (
+                      <tr
+                        key={index}
+                        className={index % 2 === 1 ? "bg-gray-50" : ""}
+                      >
+                        <td className="border-b border-gray-200 p-4">
+                          {item.assessmentParameter}
+                        </td>
+                        <td className="border-b border-gray-200 p-4">
+                          {item.reportText.whatItMeans}
+                        </td>
+                        <td className="border-b border-gray-200 p-4">
+                          {item.severity}
+                        </td>
+                        <td className="border-b border-gray-200 p-4">
+                          {item.reportText.howItFeels}
+                        </td>
+                        <td className="border-b border-gray-200 p-4">
+                          {item.reportText.whatCanHelp}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-center text-gray-500 py-4">
+                Loading report...
+              </p>
+            )}
+          </div>
         </div>
-      </main>
-      <Footer />
-    </div>
-  )
-}
 
+        {/* Improvement Section */}
+        <div className="mb-16  py-12 px-6 rounded-xl">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold mb-2 text-gray-800">
+              How can I improve my well-being?
+            </h2>
+            <div className="w-24 h-1 bg-purple-500 mx-auto"></div>
+          </div>
+          <div className="flex justify-center">
+            <Image
+              src="/infographic.svg" // Replace this with the actual image path
+              alt="Well-being Tips"
+              width={900}
+              height={500}
+            />
+          </div>
+        </div>
+
+        {/* Important Reminder */}
+        <div className="mb-16 max-w-4xl mx-auto">
+          <div className="bg-purple-50 p-8 rounded-xl border-l-4 border-purple-500 shadow-md">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+              Important Reminder
+            </h2>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              You are brave and amazing, and this report is just a way to make
+              sure you&apos;re getting the right care and support. If things
+              feel tough, remember there are always people ready to help you—you
+              don&apos;t have to do it all alone.
+            </p>
+          </div>
+        </div>
+
+        {/* Conclusion */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <div className="flex items-center mb-6">
+            <div className="w-1 h-8 bg-purple-500 mr-3"></div>
+            <h2 className="text-2xl font-bold text-gray-800">Conclusion</h2>
+          </div>
+
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            While this assessment is highly relevant for identifying mental
+            health challenges, incorporating broader and more inclusive
+            perspectives ensures it is comprehensive. Questions or social media
+            usage beyond normal expectations will provide a well-rounded
+            evaluation of modern challenges affecting pre-teens.
+          </p>
+
+          <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mt-8">
+            <h3 className="font-semibold text-lg mb-2 text-gray-700">
+              Support Resources
+            </h3>
+            <p className="text-gray-600">
+              [Add relevant contact details for counselors, helplines, or school
+              nurse.]
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

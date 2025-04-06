@@ -11,14 +11,14 @@ const blogs = [
     title: "Overcome Anxiety",
     description:
       "Discover tools to boost your self-esteem and confidence, enabling you to embrace your full potential and worth in your own self.",
-    image: "/images/pi.jpeg?height=400&width=600",
+    image: "/images/pi.jpeg", // Removed query params
   },
   {
     category: "Mental Health",
     title: "Role of Meditation",
     description:
       "Learn effective techniques to manage daily work stressors, enhancing your overall well-being, work productivity, and mental resilience.",
-    image: "/images/mh.jpeg?height=400&width=600",
+    image: "/images/mh.jpeg", // Removed query params
   },
 ]
 
@@ -41,19 +41,23 @@ export function BlogPreview() {
                   src={blog.image || "/placeholder.svg"}
                   alt={blog.title}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105 "
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  priority={index === 0}
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 bg-white/90 rounded-full text-sm font-medium">{blog.category}</span>
+                  <span className="px-3 py-1 bg-white/90 rounded-full text-sm font-medium">
+                    {blog.category}
+                  </span>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <h3 className="text-2xl font-bold mb-2">{blog.title}</h3>
                   <p className="text-white/90 mb-4">{blog.description}</p>
                   <Link href="/blogs">
-                  <Button variant="secondary" size="sm">
-                    Read Blog
-                  </Button></Link>
+                    <Button variant="secondary" size="sm">
+                      Read Blog
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </motion.div>
@@ -63,4 +67,3 @@ export function BlogPreview() {
     </section>
   )
 }
-
