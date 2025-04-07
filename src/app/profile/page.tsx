@@ -106,6 +106,11 @@ export default function ProfilePage() {
     {}
   );
 
+  useEffect(()=>{
+    
+    fetchUser();
+  },[])
+
   useEffect(() => {
     if (user) {
       setProfile({
