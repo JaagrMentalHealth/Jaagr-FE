@@ -42,7 +42,7 @@ function LoginForm() {
         Cookies.set("token", res.token, { expires: 7 });
         await fetchUser();
         toast.success("Login successful!");
-        router.push(redirect);
+        router.back();
       } else {
         throw new Error("Login failed");
       }
@@ -66,7 +66,7 @@ function LoginForm() {
         Cookies.set("token", res.token, { expires: 7 });
         setUser(res.data.user);
         toast.success("Google login successful!");
-        router.push("/");
+        router.back();
       } else {
         throw new Error(res.message || "Google login failed");
       }

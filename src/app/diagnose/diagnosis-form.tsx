@@ -126,9 +126,9 @@ export default function DiagnoseForm({
           outcomeId, // <-- Send outcomeId
         })
   
-        setSeverityQuestions(response.data)
+        setSeverityQuestions(response.data.severityQuestions)
   
-        if (response.data.length > 0) {
+        if (response.data.severityQuestions.length > 0) {
           setCurrentPhase(2)
           setCurrentQuestionIndex(0)
         } else {
@@ -143,7 +143,7 @@ export default function DiagnoseForm({
           answers,
           outcomeId, // <-- Send outcomeId
         })
-        router.push(`/result?outcomeId=${outcomeId}`);
+        router.push(`/assessment-result?outcomeId=${outcomeId}`);
   
         setDiagnosisResult(response.data)
       }

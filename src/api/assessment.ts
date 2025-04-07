@@ -1,5 +1,6 @@
 import axios from "axios"
 import { URL } from "@/api/URL"
+import Cookies from "js-cookie"
 
 const baseAxiosInstance = axios.create({
   baseURL: `${URL}`,
@@ -15,7 +16,12 @@ export const submitWarmup = async (data: {
   organizationId?: string | null
   assessmentId?: string | null
 }) => {
-  return await baseAxiosInstance.post("/assessment/assessment/submit-warmup", data)
+  const token = Cookies.get("token")
+  return await baseAxiosInstance.post("/assessment/assessment/submit-warmup", data, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  })
 }
 
 export const submitScreening = async (data: {

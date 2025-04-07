@@ -17,7 +17,7 @@ interface User {
   userName: string;
   email: string;
   dateOfBirth: string;
-  country: string;  // This was missing in original interface
+  country: string;
   gender: "male" | "female" | "other";
   fullName: string;
   bio: string;
@@ -25,11 +25,13 @@ interface User {
   likedBlogs: any[];
   savedBlogs: any[];
   history: any[];
+  assessment: any[]; 
   profilePhoto: string;
   createdAt: string;
   updatedAt: string;
-  __v: number;  // This was missing in original interface
+  __v: number;
 }
+
 
 interface UserContextType {
   user: any | null;
