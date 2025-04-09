@@ -1,93 +1,262 @@
-"use client";
+"use client"
 
-import { Loader2 } from "lucide-react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
-import { useState, useEffect, Suspense } from "react";
-import { notFound, useSearchParams } from "next/navigation";
-import { toast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
-import { fetchOutcome, fetchOrgUser } from "@/api/assessment";
-import { useUser } from "@/contexts/userContext";
+import { Loader2 } from "lucide-react"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Download } from "lucide-react"
+import { useState, useEffect, Suspense, useRef } from "react"
+import { notFound, useSearchParams } from "next/navigation"
+import { toast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
+import { fetchOutcome, fetchOrgUser } from "@/api/assessment"
+import { useUser } from "@/contexts/userContext"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 
 export default function AssessmentReport() {
   return (
-    <Suspense fallback=<LoadingScreen />>
+    <Suspense fallback={<LoadingScreen />}>
       <WellBeingReport />
     </Suspense>
-  );
+  )
 }
 
 function WellBeingReport() {
-  const [downloading, setDownloading] = useState(false);
-  const [outcome, setOutcome] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [userName, setUserName] = useState("Child");
+  const [downloading, setDownloading] = useState(false)
+  const [outcome, setOutcome] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [userName, setUserName] = useState("Child")
+  const reportRef = useRef<HTMLDivElement>(null)
+  const downloadButtonRef = useRef<HTMLDivElement>(null)
 
-  const { user } = useUser();
-  const searchParams = useSearchParams();
-  const outcomeId = searchParams.get("outcomeId");
+  const { user } = useUser()
+  const searchParams = useSearchParams()
+  const outcomeId = searchParams.get("outcomeId")
+  const [isOrgUserCheckDone, setIsOrgUserCheckDone] = useState(false)
 
-  if (!outcomeId) return notFound();
+  if (!outcomeId) return notFound()
 
   useEffect(() => {
+    let isMounted = true
+
     async function fetchReport() {
       try {
-        const res = await fetchOutcome(outcomeId);
-        const data = res.data;
-        setOutcome(data);
-        console.log(data);
+        const res = await fetchOutcome(outcomeId)
+        const data = res.data
 
-        // Dynamically check outcome for organizationId
-        const isOrgUser = !!data.organizationId;
+        if (isMounted) {
+          setOutcome(data)
+          console.log(data)
 
-        if (isOrgUser && data.userId) {
-          const orgRes = await fetchOrgUser(data.userId); // In your model, orgUser is stored in userId
-          setUserName(orgRes?.data?.fullName || "Child");
-        } else if (user?.fullName) {
-          setUserName(user.fullName);
+          // Dynamically check outcome for organizationId
+          const isOrgUser = !!data.organizationId
+
+          let name = "Child"
+
+          if (isOrgUser && data.userId) {
+            const orgRes = await fetchOrgUser(data.userId) // In your model, orgUser is stored in userId
+            if (isMounted) {
+              name = orgRes?.data?.fullName || "Child"
+            }
+          } else if (user?.fullName) {
+            if (isMounted) {
+              name = user.fullName
+            }
+          }
+
+          if (isMounted) {
+            setUserName(name)
+          }
         }
       } catch (err) {
-        console.error("Error fetching outcome or user:", err);
+        console.error("Error fetching outcome or user:", err)
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false)
+          setIsOrgUserCheckDone(true)
+        }
       }
     }
 
-    fetchReport();
-  }, [outcomeId, user]);
+    fetchReport()
 
-  const handleDownload = () => {
-    setDownloading(true);
+    return () => {
+      isMounted = false
+    }
+  }, [outcomeId, user])
 
-    // Simulate download process
-    setTimeout(() => {
-      setDownloading(false);
+  const handleDownload = async () => {
+    if (!reportRef.current) return
+
+    setDownloading(true)
+
+    try {
+      // Hide download button before capturing
+      if (downloadButtonRef.current) {
+        downloadButtonRef.current.style.display = "none"
+      }
+
+      // Create PDF document with margins
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+        compress: true,
+      })
+
+      // Define PDF dimensions with margins
+      const pageWidth = pdf.internal.pageSize.getWidth()
+      const pageHeight = pdf.internal.pageSize.getHeight()
+      const margin = 15 // 15mm margins
+      const contentWidth = pageWidth - margin * 2
+      const contentHeight = pageHeight - margin * 2
+
+      // Get all sections to process them individually for better pagination
+      const sections = reportRef.current.querySelectorAll(".report-section")
+      let currentY = margin
+      let pageNumber = 1
+
+      // Add header to first page
+      const headerElement = reportRef.current.querySelector(".report-header")
+      if (headerElement) {
+        const headerCanvas = await html2canvas(headerElement as HTMLElement, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: "#FFFFFF",
+        })
+
+        const headerImgData = headerCanvas.toDataURL("image/png")
+        const headerImgWidth = contentWidth
+        const headerImgHeight = (headerCanvas.height * headerImgWidth) / headerCanvas.width
+
+        pdf.addImage(headerImgData, "PNG", margin, currentY, headerImgWidth, headerImgHeight)
+        currentY += headerImgHeight + 10 // Add some space after header
+      }
+
+      // Process each section individually
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i] as HTMLElement
+
+        // Create canvas from the section
+        const canvas = await html2canvas(section, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: "#FFFFFF",
+        })
+
+        const imgData = canvas.toDataURL("image/png")
+        const imgWidth = contentWidth
+        const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+        // Check if this section needs to start on a new page
+        if (currentY + imgHeight > pageHeight - margin) {
+          pdf.addPage()
+          pageNumber++
+          currentY = margin
+
+          // Add page number at the bottom
+          pdf.setFontSize(10)
+          pdf.setTextColor(150, 150, 150)
+          pdf.text(`Page ${pageNumber}`, pageWidth / 2, pageHeight - 5, { align: "center" })
+        }
+
+        // Add section to PDF
+        pdf.addImage(imgData, "PNG", margin, currentY, imgWidth, imgHeight)
+        currentY += imgHeight + 10 // Add some space between sections
+
+        // Add page number to the first page (we do it here to ensure it's done at least once)
+        if (i === 0) {
+          pdf.setFontSize(10)
+          pdf.setTextColor(150, 150, 150)
+          pdf.text(`Page ${pageNumber}`, pageWidth / 2, pageHeight - 5, { align: "center" })
+        }
+      }
+
+      // Add footer with date on all pages
+      const totalPages = pdf.getNumberOfPages()
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i)
+        pdf.setFontSize(10)
+        pdf.setTextColor(150, 150, 150)
+        const today = new Date().toLocaleDateString()
+        pdf.text(`Generated on: ${today}`, margin, pageHeight - 5)
+      }
+
+      // Save the PDF
+      pdf.save(`${userName}_WellBeing_Report.pdf`)
+
       toast({
         title: "Report Downloaded",
         description: "Your well-being report has been downloaded successfully.",
-      });
-    }, 1500);
-  };
+      })
+    } catch (error) {
+      console.error("Error generating PDF:", error)
+      toast({
+        title: "Download Failed",
+        description: "There was an error downloading your report. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      // Show download button again
+      if (downloadButtonRef.current) {
+        downloadButtonRef.current.style.display = "block"
+      }
+      setDownloading(false)
+    }
+  }
+
+  useEffect(() => {
+    // Add custom styles for PDF generation
+    const style = document.createElement("style")
+    style.innerHTML = `
+      @media print {
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .report-section {
+          page-break-inside: avoid;
+          margin-bottom: 20px;
+        }
+        table {
+          page-break-inside: auto;
+        }
+        tr {
+          page-break-inside: avoid;
+          page-break-after: auto;
+        }
+        thead {
+          display: table-header-group;
+        }
+        tfoot {
+          display: table-footer-group;
+        }
+      }
+    `
+    document.head.appendChild(style)
+
+    return () => {
+      document.head.removeChild(style)
+    }
+  }, [])
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-white">
         <div className="text-center">
           <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
-          <p className="text-lg text-gray-600 font-medium">
-            Preparing your well-being report...
-          </p>
+          <p className="text-lg text-gray-600 font-medium">Preparing your well-being report...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="min-h-screen bg-white">
       {/* Fixed Download Button */}
-      <div className="fixed bottom-6 right-6 z-10">
+      <div ref={downloadButtonRef} className="fixed bottom-6 right-6 z-10">
         <Button
           onClick={handleDownload}
           className="rounded-full shadow-lg px-6 bg-purple-600 hover:bg-purple-700"
@@ -101,40 +270,33 @@ function WellBeingReport() {
       <Toaster />
 
       {/* Report Content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div ref={reportRef} id="report-content" className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            {userName}&apos;s Well-Being Report
-          </h1>
+        <div className="text-center mb-10 report-header">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">{userName}&apos;s Well-Being Report</h1>
           <div className="w-24 h-1 bg-purple-500 mx-auto"></div>
         </div>
 
         {/* Introduction */}
-        <div className="mb-12 max-w-6xl mx-auto">
-          <p className="text-lg font-medium text-gray-700">Hello,{userName}!</p>
+        <div className="mb-12 max-w-6xl mx-auto report-section">
+          <p className="text-lg font-medium text-gray-700">Hello, {userName}!</p>
           <p className="text-lg mt-3 text-gray-600 leading-relaxed text-justify">
-            This report is here to help us understand how you&apos;re feeling
-            and what might be affecting you. It&apos;s okay to sometimes feel
-            like things are tough—you&apos;re not alone, and there are lots of
-            ways to feel better. Let&apos;s go through what we found step by
-            step!
+            This report is here to help us understand how you&apos;re feeling and what might be affecting you. It&apos;s
+            okay to sometimes feel like things are tough—you&apos;re not alone, and there are lots of ways to feel
+            better. Let&apos;s go through what we found step by step!
           </p>
         </div>
 
         {/* How You're Feeling Section */}
-        <div className="mb-12 max-w-6xl mx-auto">
+        <div className="mb-12 max-w-6xl mx-auto report-section">
           <div className="flex items-center mb-6">
             <div className="w-1 h-8 bg-purple-500 mr-3"></div>
-            <h2 className="text-2xl font-bold text-gray-800">
-              How You&apos;re Feeling
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-800">How You&apos;re Feeling</h2>
           </div>
 
           <p className="text-lg mb-8 text-gray-600 leading-relaxed max-w-6xl text-justify">
-            We looked at a few areas to learn about your emotions, thoughts, and
-            energy. Here&apos;s what we found and some ideas on how to help you
-            feel more like your awesome self!
+            We looked at a few areas to learn about your emotions, thoughts, and energy. Here&apos;s what we found and
+            some ideas on how to help you feel more like your awesome self!
           </p>
 
           {/* Assessment Table */}
@@ -142,13 +304,10 @@ function WellBeingReport() {
             {/* Assessment Table or Healthy Message */}
             {outcome && outcome.results && outcome.results.length === 0 ? (
               <div className="text-center bg-green-50 border border-green-200 p-8 rounded-lg shadow-md mb-12">
-                <h2 className="text-2xl font-bold text-green-700 mb-4">
-                  Great News! 🎉
-                </h2>
+                <h2 className="text-2xl font-bold text-green-700 mb-4">Great News! 🎉</h2>
                 <p className="text-lg text-green-600">
-                  Based on your responses, we did not find any significant
-                  indicators of mental health concerns. Keep taking care of
-                  yourself and remember that it’s always okay to check in again!
+                  Based on your responses, we did not find any significant indicators of mental health concerns. Keep
+                  taking care of yourself and remember that it's always okay to check in again!
                 </p>
               </div>
             ) : outcome && outcome.results ? (
@@ -175,44 +334,27 @@ function WellBeingReport() {
                   </thead>
                   <tbody>
                     {outcome.results.map((item: any, index: number) => (
-                      <tr
-                        key={index}
-                        className={index % 2 === 1 ? "bg-gray-50" : ""}
-                      >
-                        <td className="border-b border-gray-200 p-4">
-                          {item.assessmentParameter}
-                        </td>
-                        <td className="border-b border-gray-200 p-4">
-                          {item.reportText.whatItMeans}
-                        </td>
-                        <td className="border-b border-gray-200 p-4">
-                          {item.severity}
-                        </td>
-                        <td className="border-b border-gray-200 p-4">
-                          {item.reportText.howItFeels}
-                        </td>
-                        <td className="border-b border-gray-200 p-4">
-                          {item.reportText.whatCanHelp}
-                        </td>
+                      <tr key={index} className={index % 2 === 1 ? "bg-gray-50" : ""}>
+                        <td className="border-b border-gray-200 p-4">{item.assessmentParameter}</td>
+                        <td className="border-b border-gray-200 p-4">{item.reportText.whatItMeans}</td>
+                        <td className="border-b border-gray-200 p-4">{item.severity}</td>
+                        <td className="border-b border-gray-200 p-4">{item.reportText.howItFeels}</td>
+                        <td className="border-b border-gray-200 p-4">{item.reportText.whatCanHelp}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             ) : (
-              <p className="text-center text-gray-500 py-4">
-                Loading report...
-              </p>
+              <p className="text-center text-gray-500 py-4">Loading report...</p>
             )}
           </div>
         </div>
 
         {/* Improvement Section */}
-        <div className="mb-16  py-12 px-6 rounded-xl">
+        <div className="mb-16  py-12 px-6 rounded-xl report-section">
           <div className="text-center mb-4">
-            <h2 className="text-2xl font-bold mb-2 text-gray-800">
-              How can I improve my well-being?
-            </h2>
+            <h2 className="text-2xl font-bold mb-2 text-gray-800">How can I improve my well-being?</h2>
             <div className="w-24 h-1 bg-purple-500 mx-auto"></div>
           </div>
           <div className="flex justify-center">
@@ -226,48 +368,38 @@ function WellBeingReport() {
         </div>
 
         {/* Important Reminder */}
-        <div className="mb-16 max-w-4xl mx-auto">
+        <div className="mb-16 max-w-4xl mx-auto report-section">
           <div className="bg-purple-50 p-8 rounded-xl border-l-4 border-purple-500 shadow-md">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">
-              Important Reminder
-            </h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Important Reminder</h2>
             <p className="text-lg text-gray-700 leading-relaxed">
-              You are brave and amazing, and this report is just a way to make
-              sure you&apos;re getting the right care and support. If things
-              feel tough, remember there are always people ready to help you—you
-              don&apos;t have to do it all alone.
+              You are brave and amazing, and this report is just a way to make sure you&apos;re getting the right care
+              and support. If things feel tough, remember there are always people ready to help you—you don&apos;t have
+              to do it all alone.
             </p>
           </div>
         </div>
 
         {/* Conclusion */}
-        <div className="max-w-4xl mx-auto mb-12">
+        <div className="max-w-4xl mx-auto mb-12 report-section">
           <div className="flex items-center mb-6">
             <div className="w-1 h-8 bg-purple-500 mr-3"></div>
             <h2 className="text-2xl font-bold text-gray-800">Conclusion</h2>
           </div>
 
           <p className="text-lg text-gray-600 leading-relaxed mb-6">
-            While this assessment is highly relevant for identifying mental
-            health challenges, incorporating broader and more inclusive
-            perspectives ensures it is comprehensive. Questions or social media
-            usage beyond normal expectations will provide a well-rounded
-            evaluation of modern challenges affecting pre-teens.
+            While this assessment is highly relevant for identifying mental health challenges, incorporating broader and
+            more inclusive perspectives ensures it is comprehensive. Questions or social media usage beyond normal
+            expectations will provide a well-rounded evaluation of modern challenges affecting pre-teens.
           </p>
 
           <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mt-8">
-            <h3 className="font-semibold text-lg mb-2 text-gray-700">
-              Support Resources
-            </h3>
-            <p className="text-gray-600">
-              [Add relevant contact details for counselors, helplines, or school
-              nurse.]
-            </p>
+            <h3 className="font-semibold text-lg mb-2 text-gray-700">Support Resources</h3>
+            <p className="text-gray-600">[Add relevant contact details for counselors, helplines, or school nurse.]</p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 const LoadingScreen = () => {
@@ -275,10 +407,9 @@ const LoadingScreen = () => {
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="text-center">
         <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
-        <p className="text-lg text-gray-600 font-medium">
-          Preparing your well-being report...
-        </p>
+        <p className="text-lg text-gray-600 font-medium">Preparing your well-being report...</p>
       </div>
     </div>
-  );
-};
+  )
+}
+

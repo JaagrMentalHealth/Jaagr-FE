@@ -92,6 +92,7 @@ const lastAssessment = {
 export default function ProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { user, setUser, isLoading, fetchUser } = useUser();
+  console.log(user);
   // const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({
     fullName: "",
@@ -265,14 +266,45 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
+          <Card className="flex">
+            <CardHeader className="w-[45%]">
               <CardTitle>Last Assessment</CardTitle>
             </CardHeader>
-            {/* <CardContent>
-              <p>Date: {lastAssessment.date}</p>
-              <p>Score: {lastAssessment.score}</p>
-            </CardContent> */}
+            <CardContent className="flex mt-6 justify-between w-[55%]">
+              {user.assessment && user.assessment.length > 0 ? (
+                <>
+                  {/** Sort assessments by creation date */}
+                  {(() => {
+                    const sorted = [...user.assessment].sort(
+                      (a: any, b: any) =>
+                        new Date(b.date).getTime() -
+                        new Date(a.date).getTime()
+                    );
+                    const latest = sorted[0];
+
+                    return (
+                      <>
+                        <p className="text-gray-700 font-bold mb-0">
+                          Date: {new Date(latest.date).toLocaleDateString()}
+                        </p>
+                        <Button
+                          onClick={() =>
+                            router.push(
+                              `/assessment-result?outcomeId=${latest._id}`
+                            )
+                          }
+                          className=" text-white"
+                        >
+                          View Report
+                        </Button>
+                      </>
+                    );
+                  })()}
+                </>
+              ) : (
+                <p>You haven&apos;t taken any assessments yet.</p>
+              )}
+            </CardContent>
           </Card>
         </div>
       </main>
