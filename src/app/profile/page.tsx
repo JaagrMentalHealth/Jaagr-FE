@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useEffect, useState } from "react"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -41,6 +43,23 @@ import {
   Pencil,
 } from "lucide-react"
 
+// Define types for our data structures
+interface BlogPost {
+  _id: string
+  heading: string
+  content: string
+  author: string
+  createdAt: string
+  coverPhoto?: string
+  slug: string
+}
+
+interface Assessment {
+  _id: string
+  date: string
+  [key: string]: any
+}
+
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("dashboard")
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -56,7 +75,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-purple-600">Loading...</div>
+        <div className="text-teal-600">Loading...</div>
       </div>
     )
   }
@@ -66,7 +85,7 @@ export default function ProfilePage() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center space-y-4">
           <p className="text-xl">Please log in to view your profile</p>
-          <Button onClick={() => router.push("/login")} className="bg-purple-600 hover:bg-purple-700">
+          <Button onClick={() => router.push("/login")} className="bg-teal-600 hover:bg-teal-700">
             Log In
           </Button>
         </div>
@@ -74,10 +93,10 @@ export default function ProfilePage() {
     )
   }
 
-  const getExcerpt = (content) => {
+  const getExcerpt = (content: string): string => {
     try {
       const parsedContent = JSON.parse(content)
-      const firstParagraph = parsedContent.blocks.find((block) => block.type === "paragraph")
+      const firstParagraph = parsedContent.blocks.find((block: any) => block.type === "paragraph")
       return firstParagraph ? firstParagraph.data.text.slice(0, 150) + "..." : ""
     } catch (error) {
       console.error("Error parsing blog content:", error)
@@ -97,7 +116,7 @@ export default function ProfilePage() {
     { day: "Sun", mood: 4 },
   ]
 
-  const getMoodIcon = (mood) => {
+  const getMoodIcon = (mood: number) => {
     if (mood <= 2) return <Frown className="h-6 w-6 text-red-500" />
     if (mood === 3) return <Meh className="h-6 w-6 text-amber-500" />
     return <Smile className="h-6 w-6 text-green-500" />
@@ -106,7 +125,7 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 bg-gradient-to-b from-purple-50 to-white py-12">
+      <main className="flex-1 bg-gradient-to-b from-teal-50 to-white py-12">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/4">
@@ -161,7 +180,15 @@ export default function ProfilePage() {
   )
 }
 
-function ProfileSidebar({ activeTab, setActiveTab, user }) {
+function ProfileSidebar({
+  activeTab,
+  setActiveTab,
+  user,
+}: {
+  activeTab: string
+  setActiveTab: (tab: string) => void
+  user: any
+}) {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <Activity className="h-5 w-5 mr-2" /> },
     { id: "profile", label: "Profile", icon: <User className="h-5 w-5 mr-2" /> },
@@ -176,23 +203,23 @@ function ProfileSidebar({ activeTab, setActiveTab, user }) {
   ]
 
   return (
-    <Card className="h-full bg-gradient-to-b from-purple-50 to-white">
+    <Card className="h-full bg-gradient-to-b from-teal-50 to-white">
       <CardHeader>
         <CardTitle>{user.fullName}</CardTitle>
         <CardDescription>{user.email}</CardDescription>
         <div className="flex justify-center mt-4">
-          <Avatar className="h-24 w-24 border-4 border-purple-100">
+          <Avatar className="h-24 w-24 border-4 border-teal-100">
             <AvatarImage src={user.profilePhoto || "/placeholder.svg?height=96&width=96"} alt="Profile" />
-            <AvatarFallback className="bg-purple-100 text-purple-700">
+            <AvatarFallback className="bg-teal-100 text-teal-700">
               {user.fullName
                 .split(" ")
-                .map((n) => n[0])
+                .map((n: string) => n[0])
                 .join("")}
             </AvatarFallback>
           </Avatar>
         </div>
         <div className="mt-2 text-center">
-          <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200">30 Day Streak</Badge>
+          <Badge className="bg-teal-100 text-teal-700 hover:bg-teal-200">30 Day Streak</Badge>
         </div>
       </CardHeader>
       <CardContent>
@@ -201,7 +228,7 @@ function ProfileSidebar({ activeTab, setActiveTab, user }) {
             <Button
               key={item.id}
               variant={activeTab === item.id ? "default" : "ghost"}
-              className={`justify-start ${activeTab === item.id ? "bg-purple-600 hover:bg-purple-700" : "hover:bg-purple-50"}`}
+              className={`justify-start ${activeTab === item.id ? "bg-teal-600 hover:bg-teal-700" : "hover:bg-teal-50"}`}
               onClick={() => setActiveTab(item.id)}
             >
               {item.icon}
@@ -211,7 +238,7 @@ function ProfileSidebar({ activeTab, setActiveTab, user }) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50">
+        <Button variant="outline" className="w-full border-teal-200 text-teal-700 hover:bg-teal-50">
           <MessageSquare className="h-4 w-4 mr-2" />
           Get Help Now
         </Button>
@@ -220,7 +247,19 @@ function ProfileSidebar({ activeTab, setActiveTab, user }) {
   )
 }
 
-function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, router }) {
+function DashboardSection({
+  user,
+  mentalHealthProgress,
+  moodData,
+  getMoodIcon,
+  router,
+}: {
+  user: any
+  mentalHealthProgress: number
+  moodData: Array<{ day: string; mood: number }>
+  getMoodIcon: (mood: number) => React.ReactNode
+  router: any
+}) {
   const upcomingSessions = [
     { id: 1, type: "Therapy", with: "Dr. Emily Chen", date: "Tomorrow", time: "10:00 AM" },
     { id: 2, type: "Group Support", with: "Anxiety Management Group", date: "Friday", time: "6:00 PM" },
@@ -235,9 +274,9 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+      <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
         <CardHeader>
-          <CardTitle className="text-2xl text-purple-800">Welcome back, {user.fullName.split(" ")[0]}</CardTitle>
+          <CardTitle className="text-2xl text-teal-800">Welcome back, {user.fullName.split(" ")[0]}</CardTitle>
           <CardDescription>Your wellness journey at a glance</CardDescription>
         </CardHeader>
         <CardContent>
@@ -245,7 +284,7 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
-                  <Activity className="h-5 w-5 mr-2 text-purple-600" />
+                  <Activity className="h-5 w-5 mr-2 text-teal-600" />
                   Weekly Mood Tracker
                 </CardTitle>
               </CardHeader>
@@ -253,7 +292,7 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
                 <div className="flex justify-between items-end h-32 mt-2">
                   {moodData.map((day, i) => (
                     <div key={i} className="flex flex-col items-center">
-                      <div className="bg-purple-100 rounded-full p-1 mb-1" style={{ height: `${day.mood * 20}%` }}>
+                      <div className="bg-teal-100 rounded-full p-1 mb-1" style={{ height: `${day.mood * 20}%` }}>
                         {getMoodIcon(day.mood)}
                       </div>
                       <span className="text-xs font-medium text-muted-foreground">{day.day}</span>
@@ -266,7 +305,7 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
-                  <Brain className="h-5 w-5 mr-2 text-purple-600" />
+                  <Brain className="h-5 w-5 mr-2 text-teal-600" />
                   Wellness Metrics
                 </CardTitle>
               </CardHeader>
@@ -288,19 +327,19 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
-                  <CalendarIcon className="h-5 w-5 mr-2 text-purple-600" />
+                  <CalendarIcon className="h-5 w-5 mr-2 text-teal-600" />
                   Upcoming Sessions
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {upcomingSessions.map((session) => (
-                    <div key={session.id} className="flex items-start space-x-3 p-3 rounded-lg bg-purple-50">
+                    <div key={session.id} className="flex items-start space-x-3 p-3 rounded-lg bg-teal-50">
                       <div className="bg-white p-2 rounded-full">
                         {session.type === "Therapy" ? (
-                          <MessageSquare className="h-4 w-4 text-purple-600" />
+                          <MessageSquare className="h-4 w-4 text-teal-600" />
                         ) : (
-                          <Users className="h-4 w-4 text-purple-600" />
+                          <Users className="h-4 w-4 text-teal-600" />
                         )}
                       </div>
                       <div>
@@ -315,7 +354,7 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full mt-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                    className="w-full mt-2 text-teal-600 hover:text-teal-700 hover:bg-teal-50"
                   >
                     <PlusCircle className="h-4 w-4 mr-2" />
                     Schedule New Session
@@ -327,15 +366,15 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
-                  <BookMarked className="h-5 w-5 mr-2 text-purple-600" />
+                  <BookMarked className="h-5 w-5 mr-2 text-teal-600" />
                   Journal Streak
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col items-center justify-center h-full py-4">
-                  <div className="text-5xl font-bold text-purple-600">30</div>
+                  <div className="text-5xl font-bold text-teal-600">30</div>
                   <p className="text-muted-foreground text-sm">days in a row</p>
-                  <Button variant="outline" size="sm" className="mt-4 border-purple-200 text-purple-700 hover:bg-purple-50">
+                  <Button variant="outline" size="sm" className="mt-4 border-teal-200 text-teal-700 hover:bg-teal-50">
                     Journal Today
                   </Button>
                 </div>
@@ -345,16 +384,16 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
-                  <Heart className="h-5 w-5 mr-2 text-purple-600" />
+                  <Heart className="h-5 w-5 mr-2 text-teal-600" />
                   Daily Affirmation
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col items-center justify-center h-full py-4 text-center px-2">
-                  <p className="italic text-purple-800">
+                  <p className="italic text-teal-800">
                     "I am growing and healing at my own pace. Every step forward is progress."
                   </p>
-                  <Button variant="ghost" size="sm" className="mt-4 text-purple-600 hover:text-purple-700 hover:bg-purple-50">
+                  <Button variant="ghost" size="sm" className="mt-4 text-teal-600 hover:text-teal-700 hover:bg-teal-50">
                     New Affirmation
                   </Button>
                 </div>
@@ -365,40 +404,48 @@ function DashboardSection({ user, mentalHealthProgress, moodData, getMoodIcon, r
           <Card className="mt-6">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center">
-                <Activity className="h-5 w-5 mr-2 text-purple-600" />
+                <Activity className="h-5 w-5 mr-2 text-teal-600" />
                 Mental Health Exercise Progress
               </CardTitle>
             </CardHeader>
             <CardContent>
               <Progress value={mentalHealthProgress} className="h-4" />
-              <p className="mt-2 text-center text-purple-700 font-medium">{mentalHealthProgress}% Complete</p>
-              <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700" onClick={() => router.push("/exercises")}>
+              <p className="mt-2 text-center text-teal-700 font-medium">{mentalHealthProgress}% Complete</p>
+              <Button className="w-full mt-4 bg-teal-600 hover:bg-teal-700" onClick={() => router.push("/exercises")}>
                 Continue Exercises
               </Button>
             </CardContent>
           </Card>
         </CardContent>
         <CardFooter>
-          <Button className="w-full bg-purple-600 hover:bg-purple-700">Take Today's Check-in Assessment</Button>
+          <Button className="w-full bg-teal-600 hover:bg-teal-700">Take Today's Check-in Assessment</Button>
         </CardFooter>
       </Card>
     </div>
   )
 }
 
-function ProfileSection({ user, setActiveTab, setIsEditModalOpen }) {
+function ProfileSection({
+  user,
+  setActiveTab,
+  setIsEditModalOpen,
+}: {
+  user: any
+  setActiveTab: (tab: string) => void
+  setIsEditModalOpen: (isOpen: boolean) => void
+}) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle className="text-2xl text-purple-800">Profile</CardTitle>
+            <CardTitle className="text-2xl text-teal-800">Profile</CardTitle>
             <CardDescription>Your personal information and wellness journey</CardDescription>
           </div>
           <Button
             onClick={() => setIsEditModalOpen(true)}
             variant="outline"
-            className="border-purple-200 text-purple-700 hover:bg-purple-50"
+            className="border-teal-200 text-teal-700 hover:bg-teal-50"
           >
             <Pencil className="mr-2 h-4 w-4" /> Edit Profile
           </Button>
@@ -408,23 +455,23 @@ function ProfileSection({ user, setActiveTab, setIsEditModalOpen }) {
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/3">
-              <Avatar className="h-32 w-32 border-4 border-purple-100">
+              <Avatar className="h-32 w-32 border-4 border-teal-100">
                 <AvatarImage src={user.profilePhoto || "/placeholder.svg?height=128&width=128"} alt="Profile" />
-                <AvatarFallback className="bg-purple-100 text-purple-700">
-                  {user.fullName.split(" ").map((n) => n[0])}
+                <AvatarFallback className="bg-teal-100 text-teal-700">
+                  {user.fullName.split(" ").map((n: string) => n[0])}
                 </AvatarFallback>
               </Avatar>
             </div>
             <div className="md:w-2/3 space-y-4">
               <div>
-                <h3 className="text-2xl font-bold text-purple-800">{user.fullName}</h3>
+                <h3 className="text-2xl font-bold text-teal-800">{user.fullName}</h3>
                 <p className="text-muted-foreground">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Badge className="bg-purple-100 text-purple-700">Mindfulness</Badge>
-                <Badge className="bg-purple-100 text-purple-700">Anxiety Management</Badge>
-                <Badge className="bg-purple-100 text-purple-700">Sleep Improvement</Badge>
-                <Badge className="bg-purple-100 text-purple-700">Journaling</Badge>
+                <Badge className="bg-teal-100 text-teal-700">Mindfulness</Badge>
+                <Badge className="bg-teal-100 text-teal-700">Anxiety Management</Badge>
+                <Badge className="bg-teal-100 text-teal-700">Sleep Improvement</Badge>
+                <Badge className="bg-teal-100 text-teal-700">Journaling</Badge>
               </div>
             </div>
           </div>
@@ -432,7 +479,7 @@ function ProfileSection({ user, setActiveTab, setIsEditModalOpen }) {
           <Separator />
 
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-purple-800">About Me</h4>
+            <h4 className="text-lg font-semibold text-teal-800">About Me</h4>
             <p className="text-muted-foreground">{user.bio || "No bio provided yet."}</p>
           </div>
 
@@ -440,28 +487,28 @@ function ProfileSection({ user, setActiveTab, setIsEditModalOpen }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-lg font-semibold text-purple-800">Wellness Goals</h4>
+              <h4 className="text-lg font-semibold text-teal-800">Wellness Goals</h4>
               <ul className="space-y-2 mt-2">
                 <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                  <div className="h-2 w-2 rounded-full bg-teal-500"></div>
                   <span>Reduce anxiety through daily mindfulness</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                  <div className="h-2 w-2 rounded-full bg-teal-500"></div>
                   <span>Improve sleep quality and duration</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                  <div className="h-2 w-2 rounded-full bg-teal-500"></div>
                   <span>Build a consistent journaling habit</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                  <div className="h-2 w-2 rounded-full bg-teal-500"></div>
                   <span>Develop healthy coping mechanisms</span>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-purple-800">Personal Information</h4>
+              <h4 className="text-lg font-semibold text-teal-800">Personal Information</h4>
               <ul className="space-y-2 mt-2">
                 <li className="flex items-center gap-2">
                   <span className="font-medium">Username:</span>
@@ -486,22 +533,22 @@ function ProfileSection({ user, setActiveTab, setIsEditModalOpen }) {
           <Separator />
 
           <div>
-            <h4 className="text-lg font-semibold text-purple-800">Activity Summary</h4>
+            <h4 className="text-lg font-semibold text-teal-800">Activity Summary</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
               <div className="bg-white p-4 rounded-lg text-center">
-                <p className="text-3xl font-bold text-purple-600">{user.history?.length || 0}</p>
+                <p className="text-3xl font-bold text-teal-600">{user.history?.length || 0}</p>
                 <p className="text-sm text-muted-foreground">Blogs Read</p>
               </div>
               <div className="bg-white p-4 rounded-lg text-center">
-                <p className="text-3xl font-bold text-purple-600">{user.blogs?.length || 0}</p>
+                <p className="text-3xl font-bold text-teal-600">{user.blogs?.length || 0}</p>
                 <p className="text-sm text-muted-foreground">Blogs Written</p>
               </div>
               <div className="bg-white p-4 rounded-lg text-center">
-                <p className="text-3xl font-bold text-purple-600">{user.assessment?.length || 0}</p>
+                <p className="text-3xl font-bold text-teal-600">{user.assessment?.length || 0}</p>
                 <p className="text-sm text-muted-foreground">Assessments</p>
               </div>
               <div className="bg-white p-4 rounded-lg text-center">
-                <p className="text-3xl font-bold text-purple-600">30</p>
+                <p className="text-3xl font-bold text-teal-600">30</p>
                 <p className="text-sm text-muted-foreground">Journal Entries</p>
               </div>
             </div>
@@ -511,7 +558,7 @@ function ProfileSection({ user, setActiveTab, setIsEditModalOpen }) {
       <CardFooter>
         <Button
           variant="outline"
-          className="w-full border-purple-200 text-purple-700 hover:bg-purple-50"
+          className="w-full border-teal-200 text-teal-700 hover:bg-teal-50"
           onClick={() => setActiveTab("edit-profile")}
         >
           Edit Profile
@@ -521,11 +568,11 @@ function ProfileSection({ user, setActiveTab, setIsEditModalOpen }) {
   )
 }
 
-function EditProfileSection({ user }) {
+function EditProfileSection({ user }: { user: any }) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Edit Profile</CardTitle>
+        <CardTitle className="text-2xl text-teal-800">Edit Profile</CardTitle>
         <CardDescription>Update your personal information and preferences</CardDescription>
       </CardHeader>
       <CardContent>
@@ -533,13 +580,13 @@ function EditProfileSection({ user }) {
           <div className="space-y-4">
             <div className="flex flex-col items-center md:flex-row md:items-start gap-6">
               <div>
-                <Avatar className="h-32 w-32 border-4 border-purple-100">
+                <Avatar className="h-32 w-32 border-4 border-teal-100">
                   <AvatarImage src={user.profilePhoto || "/placeholder.svg?height=128&width=128"} alt="Profile" />
-                  <AvatarFallback className="bg-purple-100 text-purple-700">
-                    {user.fullName.split(" ").map((n) => n[0])}
+                  <AvatarFallback className="bg-teal-100 text-teal-700">
+                    {user.fullName.split(" ").map((n: string) => n[0])}
                   </AvatarFallback>
                 </Avatar>
-                <Button variant="outline" size="sm" className="mt-2 border-purple-200 text-purple-700 hover:bg-purple-50">
+                <Button variant="outline" size="sm" className="mt-2 border-teal-200 text-teal-700 hover:bg-teal-50">
                   Change Avatar
                 </Button>
               </div>
@@ -550,7 +597,7 @@ function EditProfileSection({ user }) {
                     <Input
                       id="fullName"
                       defaultValue={user.fullName}
-                      className="border-purple-200 focus-visible:ring-purple-500"
+                      className="border-teal-200 focus-visible:ring-teal-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -558,7 +605,7 @@ function EditProfileSection({ user }) {
                     <Input
                       id="userName"
                       defaultValue={user.userName}
-                      className="border-purple-200 focus-visible:ring-purple-500"
+                      className="border-teal-200 focus-visible:ring-teal-500"
                     />
                   </div>
                 </div>
@@ -568,7 +615,7 @@ function EditProfileSection({ user }) {
                     id="email"
                     type="email"
                     defaultValue={user.email}
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
               </div>
@@ -580,7 +627,7 @@ function EditProfileSection({ user }) {
                 id="bio"
                 rows={4}
                 defaultValue={user.bio}
-                className="border-purple-200 focus-visible:ring-purple-500"
+                className="border-teal-200 focus-visible:ring-teal-500"
               />
             </div>
 
@@ -588,7 +635,7 @@ function EditProfileSection({ user }) {
               <div className="space-y-2">
                 <Label htmlFor="gender">Gender</Label>
                 <Select defaultValue={user.gender}>
-                  <SelectTrigger className="border-purple-200 focus-visible:ring-purple-500">
+                  <SelectTrigger className="border-teal-200 focus-visible:ring-teal-500">
                     <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
                   <SelectContent>
@@ -604,7 +651,7 @@ function EditProfileSection({ user }) {
                 <Input
                   id="country"
                   defaultValue={user.country}
-                  className="border-purple-200 focus-visible:ring-purple-500"
+                  className="border-teal-200 focus-visible:ring-teal-500"
                 />
               </div>
               <div className="space-y-2">
@@ -613,7 +660,7 @@ function EditProfileSection({ user }) {
                   id="dateOfBirth"
                   type="date"
                   defaultValue={user.dateOfBirth?.split("T")[0]}
-                  className="border-purple-200 focus-visible:ring-purple-500"
+                  className="border-teal-200 focus-visible:ring-teal-500"
                 />
               </div>
             </div>
@@ -621,14 +668,14 @@ function EditProfileSection({ user }) {
             <Separator />
 
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-purple-800">Wellness Goals</h4>
+              <h4 className="text-lg font-semibold text-teal-800">Wellness Goals</h4>
               <div className="space-y-3">
                 <div className="space-y-2">
                   <Label htmlFor="goal1">Goal 1</Label>
                   <Input
                     id="goal1"
                     defaultValue="Reduce anxiety through daily mindfulness"
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
                 <div className="space-y-2">
@@ -636,7 +683,7 @@ function EditProfileSection({ user }) {
                   <Input
                     id="goal2"
                     defaultValue="Improve sleep quality and duration"
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
                 <div className="space-y-2">
@@ -644,7 +691,7 @@ function EditProfileSection({ user }) {
                   <Input
                     id="goal3"
                     defaultValue="Build a consistent journaling habit"
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
                 <div className="space-y-2">
@@ -652,7 +699,7 @@ function EditProfileSection({ user }) {
                   <Input
                     id="goal4"
                     defaultValue="Develop healthy coping mechanisms"
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
               </div>
@@ -661,13 +708,13 @@ function EditProfileSection({ user }) {
             <Separator />
 
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-purple-800">Notification Preferences</h4>
+              <h4 className="text-lg font-semibold text-teal-800">Notification Preferences</h4>
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     id="journalReminders"
-                    className="rounded border-purple-300 text-purple-600"
+                    className="rounded border-teal-300 text-teal-600"
                     defaultChecked
                   />
                   <Label htmlFor="journalReminders">Daily journal reminders</Label>
@@ -676,7 +723,7 @@ function EditProfileSection({ user }) {
                   <input
                     type="checkbox"
                     id="sessionReminders"
-                    className="rounded border-purple-300 text-purple-600"
+                    className="rounded border-teal-300 text-teal-600"
                     defaultChecked
                   />
                   <Label htmlFor="sessionReminders">Therapy session reminders</Label>
@@ -685,7 +732,7 @@ function EditProfileSection({ user }) {
                   <input
                     type="checkbox"
                     id="assessmentReminders"
-                    className="rounded border-purple-300 text-purple-600"
+                    className="rounded border-teal-300 text-teal-600"
                     defaultChecked
                   />
                   <Label htmlFor="assessmentReminders">Weekly assessment reminders</Label>
@@ -694,7 +741,7 @@ function EditProfileSection({ user }) {
                   <input
                     type="checkbox"
                     id="newContent"
-                    className="rounded border-purple-300 text-purple-600"
+                    className="rounded border-teal-300 text-teal-600"
                     defaultChecked
                   />
                   <Label htmlFor="newContent">New content notifications</Label>
@@ -705,19 +752,19 @@ function EditProfileSection({ user }) {
             <Separator />
 
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-purple-800">Password</h4>
+              <h4 className="text-lg font-semibold text-teal-800">Password</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="currentPassword">Current Password</Label>
-                  <Input id="currentPassword" type="password" className="border-purple-200 focus-visible:ring-purple-500" />
+                  <Input id="currentPassword" type="password" className="border-teal-200 focus-visible:ring-teal-500" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="newPassword">New Password</Label>
-                  <Input id="newPassword" type="password" className="border-purple-200 focus-visible:ring-purple-500" />
+                  <Input id="newPassword" type="password" className="border-teal-200 focus-visible:ring-teal-500" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                  <Input id="confirmPassword" type="password" className="border-purple-200 focus-visible:ring-purple-500" />
+                  <Input id="confirmPassword" type="password" className="border-teal-200 focus-visible:ring-teal-500" />
                 </div>
               </div>
             </div>
@@ -725,10 +772,10 @@ function EditProfileSection({ user }) {
         </form>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+        <Button variant="outline" className="border-teal-200 text-teal-700 hover:bg-teal-50">
           Cancel
         </Button>
-        <Button className="bg-purple-600 hover:bg-purple-700">Save Changes</Button>
+        <Button className="bg-teal-600 hover:bg-teal-700">Save Changes</Button>
       </CardFooter>
     </Card>
   )
@@ -755,9 +802,9 @@ function JournalSection() {
   ]
 
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Mood Journal</CardTitle>
+        <CardTitle className="text-2xl text-teal-800">Mood Journal</CardTitle>
         <CardDescription>Track your moods and reflect on your thoughts and feelings</CardDescription>
       </CardHeader>
       <CardContent>
@@ -766,7 +813,7 @@ function JournalSection() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
-                  <BookMarked className="h-5 w-5 mr-2 text-purple-600" />
+                  <BookMarked className="h-5 w-5 mr-2 text-teal-600" />
                   Today's Journal Entry
                 </CardTitle>
                 <CardDescription>
@@ -784,7 +831,7 @@ function JournalSection() {
                   <Input
                     id="journalTitle"
                     placeholder="Give your entry a title"
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
 
@@ -794,7 +841,7 @@ function JournalSection() {
                     {moodOptions.map((mood) => (
                       <div
                         key={mood.value}
-                        className={`flex flex-col items-center cursor-pointer p-2 rounded-lg ${currentMood === mood.value ? "bg-purple-100" : ""}`}
+                        className={`flex flex-col items-center cursor-pointer p-2 rounded-lg ${currentMood === mood.value ? "bg-teal-100" : ""}`}
                         onClick={() => setCurrentMood(mood.value)}
                       >
                         {mood.icon}
@@ -810,7 +857,7 @@ function JournalSection() {
                     id="journalContent"
                     placeholder="Write about your thoughts, feelings, and experiences today..."
                     rows={8}
-                    className="min-h-[200px] border-purple-200 focus-visible:ring-purple-500"
+                    className="min-h-[200px] border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
 
@@ -818,37 +865,37 @@ function JournalSection() {
                   <Label>What contributed to your mood today?</Label>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="sleep" className="rounded border-purple-300 text-purple-600" />
+                      <input type="checkbox" id="sleep" className="rounded border-teal-300 text-teal-600" />
                       <Label htmlFor="sleep" className="text-sm">
                         Sleep
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="exercise" className="rounded border-purple-300 text-purple-600" />
+                      <input type="checkbox" id="exercise" className="rounded border-teal-300 text-teal-600" />
                       <Label htmlFor="exercise" className="text-sm">
                         Exercise
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="nutrition" className="rounded border-purple-300 text-purple-600" />
+                      <input type="checkbox" id="nutrition" className="rounded border-teal-300 text-teal-600" />
                       <Label htmlFor="nutrition" className="text-sm">
                         Nutrition
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="social" className="rounded border-purple-300 text-purple-600" />
+                      <input type="checkbox" id="social" className="rounded border-teal-300 text-teal-600" />
                       <Label htmlFor="social" className="text-sm">
                         Social Interaction
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="work" className="rounded border-purple-300 text-purple-600" />
+                      <input type="checkbox" id="work" className="rounded border-teal-300 text-teal-600" />
                       <Label htmlFor="work" className="text-sm">
                         Work/School
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="stress" className="rounded border-purple-300 text-purple-600" />
+                      <input type="checkbox" id="stress" className="rounded border-teal-300 text-teal-600" />
                       <Label htmlFor="stress" className="text-sm">
                         Stress
                       </Label>
@@ -862,12 +909,12 @@ function JournalSection() {
                     id="gratitude"
                     placeholder="List three things you're grateful for..."
                     rows={3}
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-purple-600 hover:bg-purple-700">Save Journal Entry</Button>
+                <Button className="w-full bg-teal-600 hover:bg-teal-700">Save Journal Entry</Button>
               </CardFooter>
             </Card>
           </div>
@@ -876,7 +923,7 @@ function JournalSection() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
-                  <Clock3 className="h-5 w-5 mr-2 text-purple-600" />
+                  <Clock3 className="h-5 w-5 mr-2 text-teal-600" />
                   Recent Entries
                 </CardTitle>
               </CardHeader>
@@ -884,7 +931,7 @@ function JournalSection() {
                 <ScrollArea className="h-[400px] pr-4">
                   <div className="space-y-3">
                     {recentEntries.map((entry, i) => (
-                      <div key={i} className="p-3 rounded-lg bg-white hover:bg-purple-50 cursor-pointer">
+                      <div key={i} className="p-3 rounded-lg bg-white hover:bg-teal-50 cursor-pointer">
                         <div className="flex justify-between items-start">
                           <div>
                             <p className="font-medium">{entry.title}</p>
@@ -899,7 +946,7 @@ function JournalSection() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full mt-4 border-purple-200 text-purple-700 hover:bg-purple-50"
+                  className="w-full mt-4 border-teal-200 text-teal-700 hover:bg-teal-50"
                 >
                   View All Entries
                 </Button>
@@ -909,24 +956,24 @@ function JournalSection() {
             <Card className="mt-4">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
-                  <Brain className="h-5 w-5 mr-2 text-purple-600" />
+                  <Brain className="h-5 w-5 mr-2 text-teal-600" />
                   Journaling Prompts
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="p-3 rounded-lg bg-purple-50">
-                    <p className="text-sm font-medium text-purple-800">
+                  <div className="p-3 rounded-lg bg-teal-50">
+                    <p className="text-sm font-medium text-teal-800">
                       What are three things that brought you joy today?
                     </p>
                   </div>
-                  <div className="p-3 rounded-lg bg-purple-50">
-                    <p className="text-sm font-medium text-purple-800">
+                  <div className="p-3 rounded-lg bg-teal-50">
+                    <p className="text-sm font-medium text-teal-800">
                       Describe a challenge you faced today and how you handled it.
                     </p>
                   </div>
-                  <div className="p-3 rounded-lg bg-purple-50">
-                    <p className="text-sm font-medium text-purple-800">
+                  <div className="p-3 rounded-lg bg-teal-50">
+                    <p className="text-sm font-medium text-teal-800">
                       What's one thing you'd like to improve about tomorrow?
                     </p>
                   </div>
@@ -934,7 +981,7 @@ function JournalSection() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full mt-4 text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                  className="w-full mt-4 text-teal-600 hover:text-teal-700 hover:bg-teal-50"
                 >
                   Get New Prompts
                 </Button>
@@ -947,11 +994,11 @@ function JournalSection() {
   )
 }
 
-function WriteBlogSection({ router }) {
+function WriteBlogSection({ router }: { router: any }) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Write a Blog</CardTitle>
+        <CardTitle className="text-2xl text-teal-800">Write a Blog</CardTitle>
         <CardDescription>Share your experiences and insights with the community</CardDescription>
       </CardHeader>
       <CardContent>
@@ -961,14 +1008,14 @@ function WriteBlogSection({ router }) {
             <Input
               id="blogTitle"
               placeholder="Enter blog title"
-              className="border-purple-200 focus-visible:ring-purple-500"
+              className="border-teal-200 focus-visible:ring-teal-500"
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="blogCategory">Category</Label>
             <Select>
-              <SelectTrigger className="border-purple-200 focus-visible:ring-purple-500">
+              <SelectTrigger className="border-teal-200 focus-visible:ring-teal-500">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -990,7 +1037,7 @@ function WriteBlogSection({ router }) {
               id="blogContent"
               placeholder="Write your blog content here..."
               rows={12}
-              className="min-h-[300px] border-purple-200 focus-visible:ring-purple-500"
+              className="min-h-[300px] border-teal-200 focus-visible:ring-teal-500"
             />
           </div>
 
@@ -999,19 +1046,19 @@ function WriteBlogSection({ router }) {
             <Input
               id="blogTags"
               placeholder="e.g., anxiety, coping strategies, personal story"
-              className="border-purple-200 focus-visible:ring-purple-500"
+              className="border-teal-200 focus-visible:ring-teal-500"
             />
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-purple-800">Privacy Settings</h4>
+            <h4 className="text-lg font-semibold text-teal-800">Privacy Settings</h4>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <input
                   type="radio"
                   id="public"
                   name="privacy"
-                  className="rounded-full border-purple-300 text-purple-600"
+                  className="rounded-full border-teal-300 text-teal-600"
                   defaultChecked
                 />
                 <Label htmlFor="public">Public - Share with the entire community</Label>
@@ -1021,7 +1068,7 @@ function WriteBlogSection({ router }) {
                   type="radio"
                   id="supportGroup"
                   name="privacy"
-                  className="rounded-full border-purple-300 text-purple-600"
+                  className="rounded-full border-teal-300 text-teal-600"
                 />
                 <Label htmlFor="supportGroup">Support Group Only - Share with your support group</Label>
               </div>
@@ -1030,7 +1077,7 @@ function WriteBlogSection({ router }) {
                   type="radio"
                   id="private"
                   name="privacy"
-                  className="rounded-full border-purple-300 text-purple-600"
+                  className="rounded-full border-teal-300 text-teal-600"
                 />
                 <Label htmlFor="private">Private - Only visible to you and your therapist</Label>
               </div>
@@ -1038,16 +1085,16 @@ function WriteBlogSection({ router }) {
           </div>
 
           <div className="flex items-center space-x-2">
-            <input type="checkbox" id="publishImmediately" className="rounded border-purple-300 text-purple-600" />
+            <input type="checkbox" id="publishImmediately" className="rounded border-teal-300 text-teal-600" />
             <Label htmlFor="publishImmediately">Publish immediately</Label>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+        <Button variant="outline" className="border-teal-200 text-teal-700 hover:bg-teal-50">
           Save as Draft
         </Button>
-        <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => router.push("/upload")}>
+        <Button className="bg-teal-600 hover:bg-teal-700" onClick={() => router.push("/upload")}>
           Continue to Editor
         </Button>
       </CardFooter>
@@ -1055,29 +1102,35 @@ function WriteBlogSection({ router }) {
   )
 }
 
-function ReadBlogsSection({ user, getExcerpt }) {
+function ReadBlogsSection({
+  user,
+  getExcerpt,
+}: {
+  user: any
+  getExcerpt: (content: string) => string
+}) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Read Blogs</CardTitle>
+        <CardTitle className="text-2xl text-teal-800">Read Blogs</CardTitle>
         <CardDescription>Explore stories and insights from our community</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <Input placeholder="Search blogs..." className="max-w-sm border-purple-200 focus-visible:ring-purple-500" />
+            <Input placeholder="Search blogs..." className="max-w-sm border-teal-200 focus-visible:ring-teal-500" />
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+              <Button variant="outline" size="sm" className="border-teal-200 text-teal-700 hover:bg-teal-50">
                 Latest
               </Button>
-              <Button variant="outline" size="sm" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+              <Button variant="outline" size="sm" className="border-teal-200 text-teal-700 hover:bg-teal-50">
                 Popular
               </Button>
-              <Button variant="outline" size="sm" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+              <Button variant="outline" size="sm" className="border-teal-200 text-teal-700 hover:bg-teal-50">
                 For You
               </Button>
               <Select>
-                <SelectTrigger className="w-[180px] h-9 text-sm border-purple-200 focus-visible:ring-purple-500">
+                <SelectTrigger className="w-[180px] h-9 text-sm border-teal-200 focus-visible:ring-teal-500">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1094,7 +1147,7 @@ function ReadBlogsSection({ user, getExcerpt }) {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {user.history && user.history.length > 0 ? (
-              user.history.map((post) => (
+              user.history.map((post: BlogPost) => (
                 <BlogCard
                   key={post._id}
                   heading={post.heading}
@@ -1108,7 +1161,7 @@ function ReadBlogsSection({ user, getExcerpt }) {
             ) : (
               <div className="col-span-3 text-center py-10">
                 <p className="text-muted-foreground mb-4">You haven't read any blogs yet</p>
-                <Button className="bg-purple-600 hover:bg-purple-700">Explore Blogs</Button>
+                <Button className="bg-teal-600 hover:bg-teal-700">Explore Blogs</Button>
               </div>
             )}
           </div>
@@ -1177,9 +1230,9 @@ function TakeAssessmentSection() {
   ]
 
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Take an Assessment</CardTitle>
+        <CardTitle className="text-2xl text-teal-800">Take an Assessment</CardTitle>
         <CardDescription>Track your mental health and measure your progress</CardDescription>
       </CardHeader>
       <CardContent>
@@ -1187,10 +1240,10 @@ function TakeAssessmentSection() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <Input
               placeholder="Search assessments..."
-              className="max-w-sm border-purple-200 focus-visible:ring-purple-500"
+              className="max-w-sm border-teal-200 focus-visible:ring-teal-500"
             />
             <Select>
-              <SelectTrigger className="w-[180px] border-purple-200 focus-visible:ring-purple-500">
+              <SelectTrigger className="w-[180px] border-teal-200 focus-visible:ring-teal-500">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
@@ -1208,28 +1261,28 @@ function TakeAssessmentSection() {
             {assessments.map((assessment) => (
               <Card key={assessment.id} className="overflow-hidden hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
-                  <Badge className="w-fit mb-2 bg-purple-100 text-purple-700">{assessment.category}</Badge>
+                  <Badge className="w-fit mb-2 bg-teal-100 text-teal-700">{assessment.category}</Badge>
                   <CardTitle className="text-lg">{assessment.title}</CardTitle>
                   <CardDescription>{assessment.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div className="flex items-center gap-1">
-                      <FileText className="h-4 w-4 text-purple-600" />
+                      <FileText className="h-4 w-4 text-teal-600" />
                       <span>{assessment.questions} questions</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4 text-purple-600" />
+                      <Clock className="h-4 w-4 text-teal-600" />
                       <span>{assessment.duration}</span>
                     </div>
                     <div className="flex items-center gap-1 col-span-2">
-                      <Calendar className="h-4 w-4 text-purple-600" />
+                      <Calendar className="h-4 w-4 text-teal-600" />
                       <span>Recommended: {assessment.frequency}</span>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="border-t pt-4">
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700">Start Assessment</Button>
+                  <Button className="w-full bg-teal-600 hover:bg-teal-700">Start Assessment</Button>
                 </CardFooter>
               </Card>
             ))}
@@ -1240,11 +1293,19 @@ function TakeAssessmentSection() {
   )
 }
 
-function AssessmentReportsSection({ user, router, setActiveTab }) {
+function AssessmentReportsSection({
+  user,
+  router,
+  setActiveTab,
+}: {
+  user: any
+  router: any
+  setActiveTab: (tab: string) => void
+}) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Assessment Reports</CardTitle>
+        <CardTitle className="text-2xl text-teal-800">Assessment Reports</CardTitle>
         <CardDescription>Review your assessment results and track your progress</CardDescription>
       </CardHeader>
       <CardContent>
@@ -1252,7 +1313,7 @@ function AssessmentReportsSection({ user, router, setActiveTab }) {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="flex items-center gap-2">
               <Select>
-                <SelectTrigger className="w-[180px] border-purple-200 focus-visible:ring-purple-500">
+                <SelectTrigger className="w-[180px] border-teal-200 focus-visible:ring-teal-500">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1264,7 +1325,7 @@ function AssessmentReportsSection({ user, router, setActiveTab }) {
                 </SelectContent>
               </Select>
               <Select>
-                <SelectTrigger className="w-[180px] border-purple-200 focus-visible:ring-purple-500">
+                <SelectTrigger className="w-[180px] border-teal-200 focus-visible:ring-teal-500">
                   <SelectValue placeholder="Last 3 Months" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1276,7 +1337,7 @@ function AssessmentReportsSection({ user, router, setActiveTab }) {
                 </SelectContent>
               </Select>
             </div>
-            <Button variant="outline" size="sm" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+            <Button variant="outline" size="sm" className="border-teal-200 text-teal-700 hover:bg-teal-50">
               Export Reports
             </Button>
           </div>
@@ -1284,13 +1345,13 @@ function AssessmentReportsSection({ user, router, setActiveTab }) {
           {user.assessment && user.assessment.length > 0 ? (
             <div className="space-y-6">
               {user.assessment
-                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                .map((assessment) => (
+                .sort((a: Assessment, b: Assessment) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .map((assessment: Assessment) => (
                   <Card key={assessment._id} className="overflow-hidden">
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-start">
                         <div>
-                          <Badge className="mb-2 bg-purple-100 text-purple-700">Assessment</Badge>
+                          <Badge className="mb-2 bg-teal-100 text-teal-700">Assessment</Badge>
                           <CardTitle>Mental Health Assessment</CardTitle>
                           <CardDescription className="flex items-center gap-2">
                             <Calendar className="h-4 w-4" />
@@ -1303,7 +1364,7 @@ function AssessmentReportsSection({ user, router, setActiveTab }) {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg">
                           <div className="text-sm text-muted-foreground mb-1">Assessment Completed</div>
-                          <div className="text-3xl font-bold text-purple-600">
+                          <div className="text-3xl font-bold text-teal-600">
                             {new Date(assessment.date).toLocaleDateString()}
                           </div>
                         </div>
@@ -1313,7 +1374,7 @@ function AssessmentReportsSection({ user, router, setActiveTab }) {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-purple-200 text-purple-700 hover:bg-purple-50"
+                        className="border-teal-200 text-teal-700 hover:bg-teal-50"
                         onClick={() => router.push(`/assessment-result?outcomeId=${assessment._id}`)}
                       >
                         View Detailed Report
@@ -1325,7 +1386,7 @@ function AssessmentReportsSection({ user, router, setActiveTab }) {
           ) : (
             <div className="text-center py-10">
               <p className="text-muted-foreground mb-4">You haven't taken any assessments yet</p>
-              <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => setActiveTab("take-assessment")}>
+              <Button className="bg-teal-600 hover:bg-teal-700" onClick={() => setActiveTab("take-assessment")}>
                 Take an Assessment
               </Button>
             </div>
@@ -1346,6 +1407,7 @@ function TherapySessionsSection() {
       time: "10:00 AM",
       duration: "50 minutes",
       location: "Video Call",
+
       notes: "Discuss progress with anxiety management techniques",
     },
     {
@@ -1419,9 +1481,9 @@ function TherapySessionsSection() {
   ]
 
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Therapy Sessions</CardTitle>
+        <CardTitle className="text-2xl text-teal-800">Therapy Sessions</CardTitle>
         <CardDescription>Manage your therapy appointments and sessions</CardDescription>
       </CardHeader>
       <CardContent>
@@ -1431,7 +1493,7 @@ function TherapySessionsSection() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-center">
-                    <CalendarIcon className="h-5 w-5 mr-2 text-purple-600" />
+                    <CalendarIcon className="h-5 w-5 mr-2 text-teal-600" />
                     Upcoming Sessions
                   </CardTitle>
                 </CardHeader>
@@ -1439,11 +1501,11 @@ function TherapySessionsSection() {
                   {upcomingSessions.length > 0 ? (
                     <div className="space-y-4">
                       {upcomingSessions.map((session) => (
-                        <div key={session.id} className="p-4 rounded-lg bg-white border border-purple-100">
+                        <div key={session.id} className="p-4 rounded-lg bg-white border border-teal-100">
                           <div className="flex flex-col md:flex-row justify-between md:items-center gap-2">
                             <div>
                               <div className="flex items-center">
-                                <Badge className="mr-2 bg-purple-100 text-purple-700">{session.type}</Badge>
+                                <Badge className="mr-2 bg-teal-100 text-teal-700">{session.type}</Badge>
                                 <h4 className="font-medium">{session.with}</h4>
                               </div>
                               <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
@@ -1465,7 +1527,7 @@ function TherapySessionsSection() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="border-purple-200 text-purple-700 hover:bg-purple-50"
+                                className="border-teal-200 text-teal-700 hover:bg-teal-50"
                               >
                                 Reschedule
                               </Button>
@@ -1484,7 +1546,7 @@ function TherapySessionsSection() {
                   ) : (
                     <div className="text-center py-8">
                       <p className="text-muted-foreground">No upcoming sessions scheduled</p>
-                      <Button className="mt-4 bg-purple-600 hover:bg-purple-700">Schedule a Session</Button>
+                      <Button className="mt-4 bg-teal-600 hover:bg-teal-700">Schedule a Session</Button>
                     </div>
                   )}
                 </CardContent>
@@ -1493,7 +1555,7 @@ function TherapySessionsSection() {
               <Card className="mt-6">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-center">
-                    <Clock3 className="h-5 w-5 mr-2 text-purple-600" />
+                    <Clock3 className="h-5 w-5 mr-2 text-teal-600" />
                     Past Sessions
                   </CardTitle>
                 </CardHeader>
@@ -1501,7 +1563,7 @@ function TherapySessionsSection() {
                   <ScrollArea className="h-[300px] pr-4">
                     <div className="space-y-4">
                       {pastSessions.map((session) => (
-                        <div key={session.id} className="p-4 rounded-lg bg-white border border-purple-100">
+                        <div key={session.id} className="p-4 rounded-lg bg-white border border-teal-100">
                           <div className="flex flex-col md:flex-row justify-between md:items-center gap-2">
                             <div>
                               <div className="flex items-center">
@@ -1524,7 +1586,7 @@ function TherapySessionsSection() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="border-purple-200 text-purple-700 hover:bg-purple-50"
+                                className="border-teal-200 text-teal-700 hover:bg-teal-50"
                               >
                                 View Details
                               </Button>
@@ -1542,7 +1604,7 @@ function TherapySessionsSection() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-center">
-                    <MessageSquare className="h-5 w-5 mr-2 text-purple-600" />
+                    <MessageSquare className="h-5 w-5 mr-2 text-teal-600" />
                     Available Therapists
                   </CardTitle>
                 </CardHeader>
@@ -1551,12 +1613,12 @@ function TherapySessionsSection() {
                     {therapists.map((therapist) => (
                       <div
                         key={therapist.id}
-                        className="flex items-start gap-3 p-3 rounded-lg bg-white hover:bg-purple-50 cursor-pointer"
+                        className="flex items-start gap-3 p-3 rounded-lg bg-white hover:bg-teal-50 cursor-pointer"
                       >
-                        <Avatar className="h-10 w-10 border border-purple-100">
+                        <Avatar className="h-10 w-10 border border-teal-100">
                           <AvatarImage src={therapist.image} alt={therapist.name} />
-                          <AvatarFallback className="bg-purple-100 text-purple-700">
-                            {therapist.name.split(" ").map((n) => n[0])}
+                          <AvatarFallback className="bg-teal-100 text-teal-700">
+                            {therapist.name.split(" ").map((n: string) => n[0])}
                           </AvatarFallback>
                         </Avatar>
                         <div>
@@ -1567,36 +1629,36 @@ function TherapySessionsSection() {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700">Schedule a Session</Button>
+                  <Button className="w-full mt-4 bg-teal-600 hover:bg-teal-700">Schedule a Session</Button>
                 </CardContent>
               </Card>
 
               <Card className="mt-4">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-center">
-                    <Users className="h-5 w-5 mr-2 text-purple-600" />
+                    <Users className="h-5 w-5 mr-2 text-teal-600" />
                     Support Groups
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="p-3 rounded-lg bg-white hover:bg-purple-50 cursor-pointer">
+                    <div className="p-3 rounded-lg bg-white hover:bg-teal-50 cursor-pointer">
                       <p className="font-medium">Anxiety Management</p>
                       <p className="text-xs text-muted-foreground">Fridays at 6:00 PM</p>
                       <p className="text-xs text-muted-foreground">Community Center, Room 204</p>
                     </div>
-                    <div className="p-3 rounded-lg bg-white hover:bg-purple-50 cursor-pointer">
+                    <div className="p-3 rounded-lg bg-white hover:bg-teal-50 cursor-pointer">
                       <p className="font-medium">Mindfulness Practice</p>
                       <p className="text-xs text-muted-foreground">Tuesdays at 7:00 PM</p>
                       <p className="text-xs text-muted-foreground">Online via Zoom</p>
                     </div>
-                    <div className="p-3 rounded-lg bg-white hover:bg-purple-50 cursor-pointer">
+                    <div className="p-3 rounded-lg bg-white hover:bg-teal-50 cursor-pointer">
                       <p className="font-medium">Sleep Improvement</p>
                       <p className="text-xs text-muted-foreground">Wednesdays at 5:30 PM</p>
                       <p className="text-xs text-muted-foreground">Health Center, Room 105</p>
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full mt-4 border-purple-200 text-purple-700 hover:bg-purple-50">
+                  <Button variant="outline" className="w-full mt-4 border-teal-200 text-teal-700 hover:bg-teal-50">
                     View All Groups
                   </Button>
                 </CardContent>
@@ -1672,9 +1734,9 @@ function CopingStrategiesSection() {
   ]
 
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-teal-50 to-blue-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Coping Strategies</CardTitle>
+        <CardTitle className="text-2xl text-teal-800">Coping Strategies</CardTitle>
         <CardDescription>Discover and save techniques to manage difficult emotions and situations</CardDescription>
       </CardHeader>
       <CardContent>
@@ -1683,10 +1745,10 @@ function CopingStrategiesSection() {
             <div className="flex items-center gap-2">
               <Input
                 placeholder="Search strategies..."
-                className="max-w-sm border-purple-200 focus-visible:ring-purple-500"
+                className="max-w-sm border-teal-200 focus-visible:ring-teal-500"
               />
               <Select>
-                <SelectTrigger className="w-[180px] border-purple-200 focus-visible:ring-purple-500">
+                <SelectTrigger className="w-[180px] border-teal-200 focus-visible:ring-teal-500">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1700,10 +1762,10 @@ function CopingStrategiesSection() {
               </Select>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+              <Button variant="outline" size="sm" className="border-teal-200 text-teal-700 hover:bg-teal-50">
                 Saved Strategies
               </Button>
-              <Button variant="outline" size="sm" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+              <Button variant="outline" size="sm" className="border-teal-200 text-teal-700 hover:bg-teal-50">
                 Recently Used
               </Button>
             </div>
@@ -1715,13 +1777,13 @@ function CopingStrategiesSection() {
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <Badge className="mb-2 bg-purple-100 text-purple-700">{strategy.category}</Badge>
+                      <Badge className="mb-2 bg-teal-100 text-teal-700">{strategy.category}</Badge>
                       <CardTitle className="text-lg">{strategy.title}</CardTitle>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className={strategy.saved ? "text-purple-600" : "text-muted-foreground"}
+                      className={strategy.saved ? "text-teal-600" : "text-muted-foreground"}
                     >
                       <Heart className="h-5 w-5" fill={strategy.saved ? "currentColor" : "none"} />
                       <span className="sr-only">{strategy.saved ? "Saved" : "Save"}</span>
@@ -1740,10 +1802,10 @@ function CopingStrategiesSection() {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between border-t pt-4">
-                  <Button variant="outline" size="sm" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+                  <Button variant="outline" size="sm" className="border-teal-200 text-teal-700 hover:bg-teal-50">
                     Learn More
                   </Button>
-                  <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+                  <Button size="sm" className="bg-teal-600 hover:bg-teal-700">
                     Start Now
                   </Button>
                 </CardFooter>
@@ -1754,7 +1816,7 @@ function CopingStrategiesSection() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center">
-                <Brain className="h-5 w-5 mr-2 text-purple-600" />
+                <Brain className="h-5 w-5 mr-2 text-teal-600" />
                 Create Your Personal Coping Plan
               </CardTitle>
               <CardDescription>Develop a personalized plan with strategies that work best for you</CardDescription>
@@ -1766,7 +1828,7 @@ function CopingStrategiesSection() {
                   <Input
                     id="planName"
                     placeholder="e.g., My Anxiety Management Plan"
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
 
@@ -1778,7 +1840,7 @@ function CopingStrategiesSection() {
                         <input
                           type="checkbox"
                           id={`strategy-${strategy.id}`}
-                          className="rounded border-purple-300 text-purple-600"
+                          className="rounded border-teal-300 text-teal-600"
                           defaultChecked={strategy.saved}
                         />
                         <Label htmlFor={`strategy-${strategy.id}`} className="text-sm">
@@ -1795,7 +1857,7 @@ function CopingStrategiesSection() {
                     id="triggers"
                     placeholder="List situations or thoughts that typically trigger difficult emotions for you..."
                     rows={3}
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
 
@@ -1805,7 +1867,7 @@ function CopingStrategiesSection() {
                     id="earlyWarning"
                     placeholder="List physical sensations, thoughts, or behaviors that indicate you're becoming distressed..."
                     rows={3}
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
 
@@ -1815,13 +1877,13 @@ function CopingStrategiesSection() {
                     id="supportPeople"
                     placeholder="List people you can reach out to when you need support..."
                     rows={2}
-                    className="border-purple-200 focus-visible:ring-purple-500"
+                    className="border-teal-200 focus-visible:ring-teal-500"
                   />
                 </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Button className="w-full bg-purple-600 hover:bg-purple-700">Create Coping Plan</Button>
+              <Button className="w-full bg-teal-600 hover:bg-teal-700">Create Coping Plan</Button>
             </CardFooter>
           </Card>
         </div>
@@ -1830,7 +1892,7 @@ function CopingStrategiesSection() {
   )
 }
 
-function Users({ className, ...props }) {
+function Users({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
