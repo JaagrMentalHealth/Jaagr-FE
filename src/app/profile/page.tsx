@@ -274,7 +274,7 @@ function DashboardSection({
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+      <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
         <CardHeader>
           <CardTitle className="text-2xl text-purple-800">Welcome back, {user.fullName.split(" ")[0]}</CardTitle>
           <CardDescription>Your wellness journey at a glance</CardDescription>
@@ -435,7 +435,7 @@ function ProfileSection({
   setIsEditModalOpen: (isOpen: boolean) => void
 }) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <div className="flex justify-between items-center">
           <div>
@@ -534,7 +534,7 @@ function ProfileSection({
 
           <div>
             <h4 className="text-lg font-semibold text-purple-800">Activity Summary</h4>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3">
               <div className="bg-white p-4 rounded-lg text-center">
                 <p className="text-3xl font-bold text-purple-600">{user.history?.length || 0}</p>
                 <p className="text-sm text-muted-foreground">Blogs Read</p>
@@ -547,10 +547,10 @@ function ProfileSection({
                 <p className="text-3xl font-bold text-purple-600">{user.assessment?.length || 0}</p>
                 <p className="text-sm text-muted-foreground">Assessments</p>
               </div>
-              <div className="bg-white p-4 rounded-lg text-center">
+              {/* <div className="bg-white p-4 rounded-lg text-center">
                 <p className="text-3xl font-bold text-purple-600">30</p>
                 <p className="text-sm text-muted-foreground">Journal Entries</p>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -570,7 +570,7 @@ function ProfileSection({
 
 function EditProfileSection({ user }: { user: any }) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Edit Profile</CardTitle>
         <CardDescription>Update your personal information and preferences</CardDescription>
@@ -802,7 +802,7 @@ function JournalSection() {
   ]
 
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Mood Journal</CardTitle>
         <CardDescription>Track your moods and reflect on your thoughts and feelings</CardDescription>
@@ -996,7 +996,7 @@ function JournalSection() {
 
 function WriteBlogSection({ router }: { router: any }) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Write a Blog</CardTitle>
         <CardDescription>Share your experiences and insights with the community</CardDescription>
@@ -1110,7 +1110,7 @@ function ReadBlogsSection({
   getExcerpt: (content: string) => string
 }) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Read Blogs</CardTitle>
         <CardDescription>Explore stories and insights from our community</CardDescription>
@@ -1230,7 +1230,7 @@ function TakeAssessmentSection() {
   ]
 
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Take an Assessment</CardTitle>
         <CardDescription>Track your mental health and measure your progress</CardDescription>
@@ -1303,7 +1303,7 @@ function AssessmentReportsSection({
   setActiveTab: (tab: string) => void
 }) {
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Assessment Reports</CardTitle>
         <CardDescription>Review your assessment results and track your progress</CardDescription>
@@ -1481,7 +1481,7 @@ function TherapySessionsSection() {
   ]
 
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Therapy Sessions</CardTitle>
         <CardDescription>Manage your therapy appointments and sessions</CardDescription>
@@ -1734,7 +1734,7 @@ function CopingStrategiesSection() {
   ]
 
   return (
-    <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+    <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Coping Strategies</CardTitle>
         <CardDescription>Discover and save techniques to manage difficult emotions and situations</CardDescription>
