@@ -106,6 +106,10 @@ export default function ProfilePage() {
   const [pendingUpdates, setPendingUpdates] = useState<Partial<UserProfile>>(
     {}
   );
+  useEffect(()=>{
+    
+    fetchUser();
+  },[])
 
   useEffect(() => {
     if (user) {
