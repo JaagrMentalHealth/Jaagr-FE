@@ -61,7 +61,7 @@ interface Assessment {
 }
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState("dashboard")
+  const [activeTab, setActiveTab] = useState("profile")
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const { user, isLoading, fetchUser } = useUser()
   const router = useRouter()
