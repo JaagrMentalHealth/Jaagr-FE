@@ -104,7 +104,7 @@ export default function ProfilePage() {
     }
   }
 
-  const mentalHealthProgress = 65 // This would come from user data in a real app
+  // const mentalHealthProgress = 65 // This would come from user data in a real app
 
   const moodData = [
     { day: "Mon", mood: 3 },
@@ -136,7 +136,7 @@ export default function ProfilePage() {
                 <TabsContent value="dashboard">
                   <DashboardSection
                     user={user}
-                    mentalHealthProgress={mentalHealthProgress}
+                    // mentalHealthProgress={mentalHealthProgress}
                     moodData={moodData}
                     getMoodIcon={getMoodIcon}
                     router={router}
@@ -145,12 +145,12 @@ export default function ProfilePage() {
                 <TabsContent value="profile">
                   <ProfileSection user={user} setActiveTab={setActiveTab} setIsEditModalOpen={setIsEditModalOpen} />
                 </TabsContent>
-                <TabsContent value="edit-profile">
+                {/* <TabsContent value="edit-profile">
                   <EditProfileSection user={user} />
-                </TabsContent>
-                <TabsContent value="journal">
+                </TabsContent> */}
+                {/* <TabsContent value="journal">
                   <JournalSection />
-                </TabsContent>
+                </TabsContent> */}
                 <TabsContent value="write-blog">
                   <WriteBlogSection router={router} />
                 </TabsContent>
@@ -163,9 +163,9 @@ export default function ProfilePage() {
                 <TabsContent value="assessment-reports">
                   <AssessmentReportsSection user={user} router={router} setActiveTab={setActiveTab} />
                 </TabsContent>
-                <TabsContent value="therapy-sessions">
+                {/* <TabsContent value="therapy-sessions">
                   <TherapySessionsSection />
-                </TabsContent>
+                </TabsContent> */}
                 <TabsContent value="coping-strategies">
                   <CopingStrategiesSection />
                 </TabsContent>
@@ -190,15 +190,15 @@ function ProfileSidebar({
   user: any
 }) {
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: <Activity className="h-5 w-5 mr-2" /> },
+    // { id: "dashboard", label: "Dashboard", icon: <Activity className="h-5 w-5 mr-2" /> },
     { id: "profile", label: "Profile", icon: <User className="h-5 w-5 mr-2" /> },
-    { id: "edit-profile", label: "Edit Profile", icon: <PenSquare className="h-5 w-5 mr-2" /> },
-    { id: "journal", label: "Mood Journal", icon: <BookMarked className="h-5 w-5 mr-2" /> },
+    // { id: "edit-profile", label: "Edit Profile", icon: <PenSquare className="h-5 w-5 mr-2" /> },
+    // { id: "journal", label: "Mood Journal", icon: <BookMarked className="h-5 w-5 mr-2" /> },
     { id: "write-blog", label: "Write Blog", icon: <FileText className="h-5 w-5 mr-2" /> },
     { id: "read-blogs", label: "Read Blogs", icon: <BookOpen className="h-5 w-5 mr-2" /> },
     { id: "take-assessment", label: "Take Assessment", icon: <FileText className="h-5 w-5 mr-2" /> },
     { id: "assessment-reports", label: "Assessment Reports", icon: <BarChart3 className="h-5 w-5 mr-2" /> },
-    { id: "therapy-sessions", label: "Therapy Sessions", icon: <MessageSquare className="h-5 w-5 mr-2" /> },
+    // { id: "therapy-sessions", label: "Therapy Sessions", icon: <MessageSquare className="h-5 w-5 mr-2" /> },
     { id: "coping-strategies", label: "Coping Strategies", icon: <Heart className="h-5 w-5 mr-2" /> },
   ]
 
@@ -240,7 +240,7 @@ function ProfileSidebar({
       <CardFooter className="flex justify-center">
         <Button variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50">
           <MessageSquare className="h-4 w-4 mr-2" />
-          Get Help Now
+          Take Assessment Now
         </Button>
       </CardFooter>
     </Card>
@@ -249,13 +249,13 @@ function ProfileSidebar({
 
 function DashboardSection({
   user,
-  mentalHealthProgress,
+  // mentalHealthProgress,
   moodData,
   getMoodIcon,
   router,
 }: {
   user: any
-  mentalHealthProgress: number
+  // mentalHealthProgress: number
   moodData: Array<{ day: string; mood: number }>
   getMoodIcon: (mood: number) => React.ReactNode
   router: any
@@ -401,7 +401,7 @@ function DashboardSection({
             </Card>
           </div>
 
-          <Card className="mt-6">
+          {/* <Card className="mt-6">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center">
                 <Activity className="h-5 w-5 mr-2 text-purple-600" />
@@ -415,7 +415,7 @@ function DashboardSection({
                 Continue Exercises
               </Button>
             </CardContent>
-          </Card>
+          </Card> */}
         </CardContent>
         <CardFooter>
           <Button className="w-full bg-purple-600 hover:bg-purple-700">Take Today's Check-in Assessment</Button>
