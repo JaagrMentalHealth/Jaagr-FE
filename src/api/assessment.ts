@@ -17,10 +17,15 @@ export const submitWarmup = async (data: {
   assessmentId?: string | null
 }) => {
   const token = Cookies.get("token")
+
+  const headers: Record<string, string> = {};
+
+  // Add JWT auth only for regular users (not org users)
+  if (token && !data.orgUserId) {
+    headers.Authorization = `Bearer ${token}`;
+  }
   return await baseAxiosInstance.post("/assessment/assessment/submit-warmup", data, {
-    headers: {
-      Authorization: token ? `Bearer ${token}` : "",
-    },
+    headers
   })
 }
 
