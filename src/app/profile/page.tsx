@@ -74,6 +74,11 @@ export default function ProfilePage() {
     fetchUser();
   },[])
 
+  useEffect(()=>{
+    
+    fetchUser();
+  },[])
+
   useEffect(() => {
     if (user) {
       // Initialize any user-specific data here
