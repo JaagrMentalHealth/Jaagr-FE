@@ -113,6 +113,7 @@ export default function DiagnoseForm({
           organizationId,
           assessmentId,
         })
+        // console.log(response.data)
   
         setScreeningQuestions(response.data.screeningQuestions)
         setOutcomeId(response.data.outcomeId)
