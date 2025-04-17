@@ -92,9 +92,9 @@ function SelfAssessmentFlow() {
                       Before You Begin
                     </h3>
                     <ul className="text-sm text-purple-800 space-y-2">
-                      <li>This assessment takes approximately 5 minutes to complete</li>
+                      <li>This assessment takes approximately 10 minutes to complete</li>
                       <li>Answer questions honestly for the most accurate results</li>
-                      <li>You can skip any question you're not comfortable answering</li>
+                      <li>You can skip any question you&apos;re not comfortable answering</li>
                       <li>Your responses are confidential and protected</li>
                     </ul>
                   </div>
