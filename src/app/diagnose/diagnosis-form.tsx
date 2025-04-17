@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { getWarmupQuestions, submitWarmup, submitScreening, submitSeverity } from "@/api/assessment"
+import ExpiredLink from "@/components/expired-link" // adjust path as per your structure
+
 
 // Question type definition based on the actual data structure
 type Question = {
@@ -51,6 +53,9 @@ export default function DiagnoseForm({
   const [diagnosisResult, setDiagnosisResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
+  const [linkExpired, setLinkExpired] = useState(false)
+
+
   // Get current questions based on phase
   const currentQuestions =
     currentPhase === 0 ? warmupQuestions : currentPhase === 1 ? screeningQuestions : severityQuestions
@@ -63,19 +68,24 @@ export default function DiagnoseForm({
   useEffect(() => {
     const fetchWarmupQuestions = async () => {
       try {
-        setIsLoading(true)
-        const response = await getWarmupQuestions()
-        setWarmupQuestions(response.data)
-      } catch (err) {
-        setError("Failed to load questions. Please try again.")
-        console.error(err)
+        setIsLoading(true);
+        const response = await getWarmupQuestions({ assessmentId: assessmentId || undefined });
+        setWarmupQuestions(response.data);
+      } catch (err: any) {
+        if (err?.response?.status === 410) {
+          setLinkExpired(true);
+        } else {
+          setError("Failed to load questions. Please try again.");
+        }
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-
-    fetchWarmupQuestions()
-  }, [])
+    };
+  
+    fetchWarmupQuestions();
+  }, [assessmentId]);
+  
+  
 
   // Set an answer for the current question
   const setAnswer = (questionId: string, answer: string) => {
@@ -168,6 +178,10 @@ export default function DiagnoseForm({
   // Handle previous question
   const handlePrevious = () => {
     setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))
+  }
+
+  if (linkExpired) {
+    return <ExpiredLink />;
   }
 
   // Show loading state

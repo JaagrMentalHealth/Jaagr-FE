@@ -19,6 +19,8 @@ import { Label } from "@/components/ui/label";
 import { useUser } from "@/contexts/userContext";
 import axios from "axios";
 import { fetchOrgUser } from "@/api/assessment";
+import ExpiredLink from "@/components/expired-link";
+import { getWarmupQuestions } from "@/api/assessment"; // already used in diagnosis-form
 
 export default function DiagnosePage() {
   return (
@@ -41,10 +43,27 @@ function SelfAssessmentFlow() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [orgUserData, setOrgUserData] = useState<any>(null);
   const [loadingUserData, setLoadingUserData] = useState(false);
+  const [linkExpired, setLinkExpired] = useState(false);
+  const [checkingAssessment, setCheckingAssessment] = useState(true);
 
   const { user } = useUser();
 
   useEffect(() => {
+    const checkAssessmentValidity = async () => {
+      if (assessmentId) {
+        try {
+          await getWarmupQuestions({ assessmentId }); // Will throw error if expired
+        } catch (err: any) {
+          if (err?.response?.status === 410) {
+            setLinkExpired(true);
+          } else {
+            console.error("Error validating assessment link", err);
+          }
+        }
+      }
+      setCheckingAssessment(false);
+    };
+
     if (token || (orgUserId && organizationId)) {
       setAllowed(true);
       if (orgUserId) {
@@ -54,11 +73,15 @@ function SelfAssessmentFlow() {
           .catch((err) => console.error("Error fetching org user", err))
           .finally(() => setLoadingUserData(false));
       }
+      checkAssessmentValidity();
     } else {
       router.replace("/login");
     }
-  }, [token, orgUserId, organizationId, router]);
+  }, [token, orgUserId, organizationId, router, assessmentId]);
 
+  if (linkExpired) {
+    return <ExpiredLink />;
+  }
   if (!allowed || (orgUserId && loadingUserData)) return <LoadingScreen />;
 
   if (showInstructions) {
@@ -92,9 +115,17 @@ function SelfAssessmentFlow() {
                       Before You Begin
                     </h3>
                     <ul className="text-sm text-purple-800 space-y-2">
-                      <li>This assessment takes approximately 10 minutes to complete</li>
-                      <li>Answer questions honestly for the most accurate results</li>
-                      <li>You can skip any question you&apos;re not comfortable answering</li>
+                      <li>
+                        This assessment takes approximately 10 minutes to
+                        complete
+                      </li>
+                      <li>
+                        Answer questions honestly for the most accurate results
+                      </li>
+                      <li>
+                        You can skip any question you&apos;re not comfortable
+                        answering
+                      </li>
                       <li>Your responses are confidential and protected</li>
                     </ul>
                   </div>
@@ -111,7 +142,12 @@ function SelfAssessmentFlow() {
                 <InputField
                   label="Last Name"
                   name="lastName"
-                  value={data?.fullName?.split(" ").slice(-1)[0] ==data?.fullName?.split(" ")[0]? "":data?.fullName?.split(" ").slice(-1)[0]}
+                  value={
+                    data?.fullName?.split(" ").slice(-1)[0] ==
+                    data?.fullName?.split(" ")[0]
+                      ? ""
+                      : data?.fullName?.split(" ").slice(-1)[0]
+                  }
                   disabled
                 />
                 <InputField
@@ -142,7 +178,9 @@ function SelfAssessmentFlow() {
               <Checkbox
                 id="terms"
                 checked={acceptedTerms}
-                onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                onCheckedChange={(checked) =>
+                  setAcceptedTerms(checked === true)
+                }
                 className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600 mt-1"
               />
               <div className="space-y-1">
@@ -153,11 +191,11 @@ function SelfAssessmentFlow() {
                   I agree to the terms and conditions
                 </Label>
                 <p className="text-xs text-purple-600">
-                  By checking this box, you agree to our {" "}
+                  By checking this box, you agree to our{" "}
                   <a href="#" className="underline hover:text-purple-800">
                     Terms of Service
                   </a>{" "}
-                  and {" "}
+                  and{" "}
                   <a href="#" className="underline hover:text-purple-800">
                     Privacy Policy
                   </a>
@@ -172,7 +210,9 @@ function SelfAssessmentFlow() {
               onClick={() => setShowInstructions(false)}
               disabled={!acceptedTerms}
               className={`w-full sm:w-auto rounded-lg ${
-                acceptedTerms ? "bg-purple-600 hover:bg-purple-700" : "bg-purple-300"
+                acceptedTerms
+                  ? "bg-purple-600 hover:bg-purple-700"
+                  : "bg-purple-300"
               }`}
             >
               Begin Assessment
@@ -193,7 +233,14 @@ function SelfAssessmentFlow() {
   );
 }
 
-function InputField({ label, name, value, onChange, type = "text", disabled = false }: any) {
+function InputField({
+  label,
+  name,
+  value,
+  onChange,
+  type = "text",
+  disabled = false,
+}: any) {
   return (
     <div className="space-y-3">
       <Label htmlFor={name} className="text-purple-900">
@@ -217,9 +264,12 @@ function PrivacySection() {
     <div className="flex items-start space-x-3 mb-4">
       <Lock className="h-5 w-5 text-purple-600 mt-0.5" />
       <div>
-        <h3 className="font-medium text-purple-900">Privacy & Confidentiality</h3>
+        <h3 className="font-medium text-purple-900">
+          Privacy & Confidentiality
+        </h3>
         <p className="text-sm text-purple-700 mt-1">
-          Your data is encrypted and stored securely. We follow HIPAA guidelines and industry best practices.
+          Your data is encrypted and stored securely. We follow HIPAA guidelines
+          and industry best practices.
         </p>
       </div>
     </div>
@@ -233,7 +283,8 @@ function UsageSection() {
       <div>
         <h3 className="font-medium text-purple-900">How We Use Your Data</h3>
         <p className="text-sm text-purple-700 mt-1">
-          Your responses help us provide personalized recommendations and resources.
+          Your responses help us provide personalized recommendations and
+          resources.
         </p>
       </div>
     </div>

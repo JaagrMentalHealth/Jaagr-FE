@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertTriangle, RefreshCw, ArrowRight } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function ExpiredLink() {
+  const router=useRouter()
   // Function to handle requesting a new link
   const handleRequestNewLink = () => {
     // This would typically send a request to your backend
@@ -56,7 +58,7 @@ export default function ExpiredLink() {
             <div className="text-center text-sm text-purple-700">
               <p>Need immediate assistance?</p>
               <p className="mt-1">
-                <a href="#" className="text-purple-600 hover:text-purple-800 underline font-medium">
+                <a href="/contact " className="text-purple-600 hover:text-purple-800 underline font-medium">
                   Contact our support team
                 </a>
               </p>
@@ -76,6 +78,7 @@ export default function ExpiredLink() {
           <Button
             variant="outline"
             className="w-full sm:w-auto rounded-lg border-purple-200 text-purple-700 hover:bg-purple-100"
+            onClick={()=>router.push('/')}
           >
             Return to Homepage
           </Button>

@@ -6,9 +6,11 @@ const baseAxiosInstance = axios.create({
   baseURL: `${URL}`,
 })
 
-export const getWarmupQuestions = async () => {
-  return await baseAxiosInstance.get("/assessment/assessment/warmup")
-}
+export const getWarmupQuestions = async (params?: { assessmentId?: string | null }) => {
+  return await baseAxiosInstance.get("/assessment/assessment/warmup", {
+    params,
+  });
+};
 
 export const submitWarmup = async (data: {
   warmupAnswers: { questionId: string; answer: string }[]
