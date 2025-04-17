@@ -111,7 +111,7 @@ function SelfAssessmentFlow() {
                 <InputField
                   label="Last Name"
                   name="lastName"
-                  value={data?.fullName?.split(" ").slice(-1)[0] || ""}
+                  value={data?.fullName?.split(" ").slice(-1)[0] ==data?.fullName?.split(" ")[0]? "":data?.fullName?.split(" ").slice(-1)[0]}
                   disabled
                 />
                 <InputField
