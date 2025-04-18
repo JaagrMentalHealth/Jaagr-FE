@@ -170,18 +170,18 @@ export default function ProfilePage() {
                 <TabsContent value="read-blogs">
                   <ReadBlogsSection user={user} getExcerpt={getExcerpt} />
                 </TabsContent>
-                <TabsContent value="take-assessment">
+                {/* <TabsContent value="take-assessment">
                   <TakeAssessmentSection />
-                </TabsContent>
+                </TabsContent> */}
                 <TabsContent value="assessment-reports">
                   <AssessmentReportsSection user={user} router={router} setActiveTab={setActiveTab} />
                 </TabsContent>
                 {/* <TabsContent value="therapy-sessions">
                   <TherapySessionsSection />
                 </TabsContent> */}
-                <TabsContent value="coping-strategies">
+                {/* <TabsContent value="coping-strategies">
                   <CopingStrategiesSection />
-                </TabsContent>
+                </TabsContent> */}
               </Tabs>
             </div>
           </div>
@@ -209,10 +209,10 @@ function ProfileSidebar({
     // { id: "journal", label: "Mood Journal", icon: <BookMarked className="h-5 w-5 mr-2" /> },
     { id: "write-blog", label: "Write Blog", icon: <FileText className="h-5 w-5 mr-2" /> },
     { id: "read-blogs", label: "Read Blogs", icon: <BookOpen className="h-5 w-5 mr-2" /> },
-    { id: "take-assessment", label: "Take Assessment", icon: <FileText className="h-5 w-5 mr-2" /> },
+    // { id: "take-assessment", label: "Take Emotional Well-being check in", icon: <FileText className="h-5 w-5 mr-2" /> },
     { id: "assessment-reports", label: "Assessment Reports", icon: <BarChart3 className="h-5 w-5 mr-2" /> },
     // { id: "therapy-sessions", label: "Therapy Sessions", icon: <MessageSquare className="h-5 w-5 mr-2" /> },
-    { id: "coping-strategies", label: "Coping Strategies", icon: <Heart className="h-5 w-5 mr-2" /> },
+    // { id: "coping-strategies", label: "Coping Strategies", icon: <Heart className="h-5 w-5 mr-2" /> },
   ]
 
   return (
@@ -231,9 +231,9 @@ function ProfileSidebar({
             </AvatarFallback>
           </Avatar>
         </div>
-        <div className="mt-2 text-center">
+        {/* <div className="mt-2 text-center">
           <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200">30 Day Streak</Badge>
-        </div>
+        </div> */}
       </CardHeader>
       <CardContent>
         <div className="flex flex-col space-y-1">
@@ -252,8 +252,8 @@ function ProfileSidebar({
       </CardContent>
       <CardFooter className="flex justify-center">
         <Button variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50">
-          <MessageSquare className="h-4 w-4 mr-2" />
-          Take Assessment Now
+          <FileText className="h-4 w-4 mr-2" />
+          Take a Emotional Well-being Checkin Now
         </Button>
       </CardFooter>
     </Card>
@@ -431,7 +431,7 @@ function DashboardSection({
           </Card> */}
         </CardContent>
         <CardFooter>
-          <Button className="w-full bg-purple-600 hover:bg-purple-700">Take Today's Check-in Assessment</Button>
+          <Button className="w-full bg-purple-600 hover:bg-purple-700">Take Today&apos;s Emotional Well-being Check-in Assessment</Button>
         </CardFooter>
       </Card>
     </div>
@@ -827,7 +827,7 @@ function JournalSection() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center">
                   <BookMarked className="h-5 w-5 mr-2 text-purple-600" />
-                  Today's Journal Entry
+                  Today&apos;s Journal Entry
                 </CardTitle>
                 <CardDescription>
                   {new Date().toLocaleDateString("en-US", {
@@ -865,7 +865,7 @@ function JournalSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="journalContent">What's on your mind?</Label>
+                  <Label htmlFor="journalContent">What&apos;s on your mind?</Label>
                   <Textarea
                     id="journalContent"
                     placeholder="Write about your thoughts, feelings, and experiences today..."
@@ -1245,7 +1245,7 @@ function TakeAssessmentSection() {
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Take an Assessment</CardTitle>
+        <CardTitle className="text-2xl text-purple-800">Take a Emotional Well-being Checkin</CardTitle>
         <CardDescription>Track your mental health and measure your progress</CardDescription>
       </CardHeader>
       <CardContent>
@@ -1400,7 +1400,7 @@ function AssessmentReportsSection({
             <div className="text-center py-10">
               <p className="text-muted-foreground mb-4">You haven't taken any assessments yet</p>
               <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => setActiveTab("take-assessment")}>
-                Take an Assessment
+                 Take a Emotional Well-being Checkin
               </Button>
             </div>
           )}
