@@ -99,7 +99,7 @@ export default function SelfAssessmentPage() {
 
     if (isLoggedIn) {
       // User is logged in, show the assessment info modal
-      router.push('/diagnose')
+      router.push('/test')
     } else {
       // User is not logged in, show the login required modal
       setIsLoginModalOpen(true)
