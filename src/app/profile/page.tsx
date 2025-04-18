@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState,useMemo } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   Card,
@@ -199,7 +199,11 @@ export default function ProfilePage() {
                   />
                 </TabsContent>
                 <TabsContent value="read-blogs">
-                  <ReadBlogsSection user={user} getExcerpt={getExcerpt} router={router} />
+                  <ReadBlogsSection
+                    user={user}
+                    getExcerpt={getExcerpt}
+                    router={router}
+                  />
                 </TabsContent>
                 {/* <TabsContent value="take-assessment">
                   <TakeAssessmentSection />
@@ -274,9 +278,7 @@ function ProfileSidebar({
   return (
     <Card className="h-full bg-gradient-to-b from-purple-50 to-white">
       <CardHeader>
-        <CardTitle>{user.fullName}</CardTitle>
-        <CardDescription>{user.email}</CardDescription>
-        <div className="flex justify-center mt-4">
+         <div className="flex justify-center mt-4">
           <Avatar className="h-24 w-24 border-4 border-purple-100">
             <AvatarImage
               src={user.profilePhoto || "/placeholder.svg?height=96&width=96"}
@@ -290,6 +292,9 @@ function ProfileSidebar({
             </AvatarFallback>
           </Avatar>
         </div>
+        <CardTitle>{user.fullName}</CardTitle>
+        <CardDescription>{user.email}</CardDescription>
+       
         {/* <div className="mt-2 text-center">
           <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200">30 Day Streak</Badge>
         </div> */}
@@ -595,7 +600,7 @@ function ProfileSection({
                   Member since {new Date(user.createdAt).toLocaleDateString()}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
+              {/* <div className="flex flex-wrap gap-2">
                 <Badge className="bg-purple-100 text-purple-700">
                   Mindfulness
                 </Badge>
@@ -608,7 +613,7 @@ function ProfileSection({
                 <Badge className="bg-purple-100 text-purple-700">
                   Journaling
                 </Badge>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -624,29 +629,6 @@ function ProfileSection({
           <Separator />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="text-lg font-semibold text-purple-800">
-                Wellness Goals
-              </h4>
-              <ul className="space-y-2 mt-2">
-                <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                  <span>Reduce anxiety through daily mindfulness</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                  <span>Improve sleep quality and duration</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                  <span>Build a consistent journaling habit</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                  <span>Develop healthy coping mechanisms</span>
-                </li>
-              </ul>
-            </div>
             <div>
               <h4 className="text-lg font-semibold text-purple-800">
                 Personal Information
@@ -689,7 +671,9 @@ function ProfileSection({
                 <p className="text-3xl font-bold text-purple-600">
                   {user.blogs?.length || 0}
                 </p>
-                <p className="text-sm text-muted-foreground">Articles Written</p>
+                <p className="text-sm text-muted-foreground">
+                  Articles Written
+                </p>
               </div>
               <div className="bg-white p-4 rounded-lg text-center">
                 <p className="text-3xl font-bold text-purple-600">
@@ -705,7 +689,7 @@ function ProfileSection({
           </div>
         </div>
       </CardContent>
-      <CardFooter>
+      {/* <CardFooter>
         <Button
           variant="outline"
           className="w-full border-purple-200 text-purple-700 hover:bg-purple-50"
@@ -713,7 +697,7 @@ function ProfileSection({
         >
           Edit Profile
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
@@ -1264,7 +1248,9 @@ function WriteBlogSection({
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Your Articles</CardTitle>
+        <CardTitle className="text-2xl text-purple-800">
+          Your Articles
+        </CardTitle>
         <CardDescription>
           View and manage articles you have written.
         </CardDescription>
@@ -1318,28 +1304,39 @@ function WriteBlogSection({
   );
 }
 
-function ReadBlogsSection({
+ function ReadBlogsSection({
   user,
   getExcerpt,
-  router
+  router,
 }: {
   user: any;
   getExcerpt: (content: string) => string;
-  router:any;
+  router: any;
 }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredBlogs = useMemo(() => {
+    if (!user?.history || user.history.length === 0) return [];
+
+    return user.history.filter((post: BlogPost) =>
+      post.heading.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, user?.history]);
+
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
         <CardTitle className="text-2xl text-purple-800">Read Articles</CardTitle>
-        <CardDescription>
-          Explore stories and insights from our community
-        </CardDescription>
+        <CardDescription>Explore stories and insights from our community</CardDescription>
       </CardHeader>
+
       <CardContent>
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <Input
               placeholder="Search articles..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm border-purple-200 focus-visible:ring-purple-500"
             />
             <div className="flex flex-wrap gap-2">
@@ -1381,30 +1378,26 @@ function ReadBlogsSection({
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {user.history && user.history.length > 0 ? (
-              user.history.map((post: BlogPost) => (
+            {filteredBlogs.length > 0 ? (
+              filteredBlogs.map((post: BlogPost) => (
                 <BlogCard
                   key={post._id}
                   heading={post.heading}
                   excerpt={getExcerpt(post.content)}
                   author={post.author}
                   date={new Date(post.createdAt).toLocaleDateString()}
-                  coverPhoto={
-                    post.coverPhoto || "/placeholder.svg?height=200&width=300"
-                  }
+                  coverPhoto={post.coverPhoto || "/placeholder.svg?height=200&width=300"}
                   slug={post.slug}
                 />
               ))
             ) : (
               <div className="col-span-3 text-center py-10">
                 <p className="text-muted-foreground mb-4">
-                  You haven&apos;t read any articles yet.
+                  {searchTerm ? "No articles match your search." : "You haven't read any articles yet."}
                 </p>
                 <Button
                   className="bg-purple-600 hover:bg-purple-700"
-                  onClick={() =>
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                  }
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 >
                   Explore Articles
                 </Button>
@@ -1413,17 +1406,13 @@ function ReadBlogsSection({
           </div>
         </div>
       </CardContent>
-      {user.blogs && user.blogs.length > 0 ? (
+
+      {user.blogs && user.blogs.length > 0 && (
         <CardFooter className="flex justify-center border-t pt-6">
-          <Button
-            className="bg-purple-600 hover:bg-purple-700"
-            onClick={() => router.push("/blogs")}
-          >
+          <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => router.push("/blogs")}>
             Read a New Article
           </Button>
         </CardFooter>
-      ) : (
-        <></>
       )}
     </Card>
   );
