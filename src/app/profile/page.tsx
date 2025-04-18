@@ -253,12 +253,12 @@ function ProfileSidebar({
     // { id: "journal", label: "Mood Journal", icon: <BookMarked className="h-5 w-5 mr-2" /> },
     {
       id: "write-blog",
-      label: "Write Blog",
+      label: "Write Article",
       icon: <FileText className="h-5 w-5 mr-2" />,
     },
     {
       id: "read-blogs",
-      label: "Read Blogs",
+      label: "Read Articles",
       icon: <BookOpen className="h-5 w-5 mr-2" />,
     },
     // { id: "take-assessment", label: "Take Emotional Well-being check in", icon: <FileText className="h-5 w-5 mr-2" /> },
@@ -683,13 +683,13 @@ function ProfileSection({
                 <p className="text-3xl font-bold text-purple-600">
                   {user.history?.length || 0}
                 </p>
-                <p className="text-sm text-muted-foreground">Blogs Read</p>
+                <p className="text-sm text-muted-foreground">Articles Read</p>
               </div>
               <div className="bg-white p-4 rounded-lg text-center">
                 <p className="text-3xl font-bold text-purple-600">
                   {user.blogs?.length || 0}
                 </p>
-                <p className="text-sm text-muted-foreground">Blogs Written</p>
+                <p className="text-sm text-muted-foreground">Articles Written</p>
               </div>
               <div className="bg-white p-4 rounded-lg text-center">
                 <p className="text-3xl font-bold text-purple-600">
@@ -1264,9 +1264,9 @@ function WriteBlogSection({
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Your Blogs</CardTitle>
+        <CardTitle className="text-2xl text-purple-800">Your Articles</CardTitle>
         <CardDescription>
-          View and manage blogs you have written.
+          View and manage articles you have written.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -1289,13 +1289,13 @@ function WriteBlogSection({
             ) : (
               <div className="col-span-3 text-center py-10">
                 <p className="text-muted-foreground mb-4">
-                  You haven't written any blogs yet.
+                  You haven't written any articles yet.
                 </p>
                 <Button
                   className="bg-purple-600 hover:bg-purple-700"
                   onClick={() => router.push("/upload")}
                 >
-                  Write Your First Blog
+                  Write Your First Article
                 </Button>
               </div>
             )}
@@ -1308,7 +1308,7 @@ function WriteBlogSection({
             className="bg-purple-600 hover:bg-purple-700"
             onClick={() => router.push("/upload")}
           >
-            Write a New Blog
+            Write a New Article
           </Button>
         </CardFooter>
       ) : (
@@ -1330,7 +1330,7 @@ function ReadBlogsSection({
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Read Blogs</CardTitle>
+        <CardTitle className="text-2xl text-purple-800">Read Articles</CardTitle>
         <CardDescription>
           Explore stories and insights from our community
         </CardDescription>
@@ -1339,7 +1339,7 @@ function ReadBlogsSection({
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <Input
-              placeholder="Search blogs..."
+              placeholder="Search articles..."
               className="max-w-sm border-purple-200 focus-visible:ring-purple-500"
             />
             <div className="flex flex-wrap gap-2">
@@ -1398,7 +1398,7 @@ function ReadBlogsSection({
             ) : (
               <div className="col-span-3 text-center py-10">
                 <p className="text-muted-foreground mb-4">
-                  You haven't read any blogs yet.
+                  You haven&apos;t read any articles yet.
                 </p>
                 <Button
                   className="bg-purple-600 hover:bg-purple-700"
@@ -1406,7 +1406,7 @@ function ReadBlogsSection({
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
                 >
-                  Explore Blogs
+                  Explore Articles
                 </Button>
               </div>
             )}
@@ -1419,7 +1419,7 @@ function ReadBlogsSection({
             className="bg-purple-600 hover:bg-purple-700"
             onClick={() => router.push("/blogs")}
           >
-            Read a New Blog
+            Read a New Article
           </Button>
         </CardFooter>
       ) : (
