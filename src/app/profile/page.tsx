@@ -506,8 +506,8 @@ function DashboardSection({
               <CardContent>
                 <div className="flex flex-col items-center justify-center h-full py-4 text-center px-2">
                   <p className="italic text-purple-800">
-                    "I am growing and healing at my own pace. Every step forward
-                    is progress."
+                    I am growing and healing at my own pace. Every step forward
+                    is progress.
                   </p>
                   <Button
                     variant="ghost"
@@ -1132,7 +1132,7 @@ function JournalSection() {
 
                 <div className="space-y-2">
                   <Label htmlFor="gratitude">
-                    Three things you're grateful for today
+                    Three things you&apos;re grateful for today
                   </Label>
                   <Textarea
                     id="gratitude"
@@ -1216,7 +1216,7 @@ function JournalSection() {
                   </div>
                   <div className="p-3 rounded-lg bg-purple-50">
                     <p className="text-sm font-medium text-purple-800">
-                      What's one thing you'd like to improve about tomorrow?
+                      What&apos;s one thing you&apos;d like to improve about tomorrow?
                     </p>
                   </div>
                 </div>
@@ -1275,7 +1275,7 @@ function WriteBlogSection({
             ) : (
               <div className="col-span-3 text-center py-10">
                 <p className="text-muted-foreground mb-4">
-                  You haven't written any articles yet.
+                  You haven&apos;t written any articles yet.
                 </p>
                 <Button
                   className="bg-purple-600 hover:bg-purple-700"
