@@ -27,7 +27,7 @@ export default function Home() {
               <Link href="/self-assessment">
                 <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">Take a Emotional Well-being Checkin Today</Button>
               </Link>
-              <Link href="/resources">
+              <Link href="/blogs">
               <Button className="bg-white-600 text-black hover:bg-purple-100 border rounded-full">
                 Explore Resources
                 </Button>

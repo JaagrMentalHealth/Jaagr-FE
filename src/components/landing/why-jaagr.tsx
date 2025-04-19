@@ -38,7 +38,7 @@ export function WhyJaagr() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold mb-4">WHY जाग्र?</h2>
+          <h2 className="text-3xl font-bold mb-4">WHY जाग्र ?</h2>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
