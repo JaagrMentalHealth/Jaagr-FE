@@ -785,9 +785,9 @@ function EditProfileSection({ user }: { user: any }) {
                     <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="non-binary">Non-binary</SelectItem>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="Non-Binary">Non-binary</SelectItem>
                     <SelectItem value="prefer-not-to-say">
                       Prefer not to say
                     </SelectItem>
