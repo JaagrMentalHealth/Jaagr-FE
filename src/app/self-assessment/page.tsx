@@ -130,51 +130,60 @@ export default function SelfAssessmentPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-white-50 to-white">
-        <section className="py-20 text-center relative overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <path d="M0,0 C40,20 60,20 100,0 L100,100 0,100 Z" fill="rgba(250,245,255,0.3)" />
-            </svg>
-          </div>
-          <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
-            {/* Left Content */}
-            <div className="md:w-1/2 text-left mb-12 md:mb-0">
-              <h1 className="text-6xl font-bold leading-tight">Emotional Wellbeing Check</h1>
-              <h2 className="text-4xl font-semibold mb-4 text-purple-600">Hi there,</h2>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Welcome to your emotional wellbeing check. This assessment is designed to help you understand and
-                reflect on your current emotional state. Take a moment for yourself and let&apos;s explore your mental
-                landscape together.
-              </p>
-              <motion.div
-                ref={ref}
-                initial="hidden"
-                animate="visible"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-                className="mt-8"
-              >
-                <Button
-                  size="lg"
-                  className="bg-purple-600 hover:bg-purple-600 text-white text-lg px-8 py-6 rounded-full shadow-lg"
-                  onClick={handleStartAssessment}
-                >
-                  Start Your Emotion Well-being Checkin
-                </Button>
-              </motion.div>
-            </div>
-            <div className="inlineblock relative">
-              <Image
-                src="/images/lighthouse.svg"
-                alt="Emotional Wellbeing"
-                width={700}
-                height={400}
-                className="object-contain drop-shadow-2xl animate-float"
-              />
-            </div>
-          </div>
-        </section>
+      <section className="py-16 sm:py-20 text-center relative overflow-hidden">
+  {/* Background SVG Decoration */}
+  <div className="absolute inset-0 z-0">
+    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path d="M0,0 C40,20 60,20 100,0 L100,100 0,100 Z" fill="rgba(250,245,255,0.3)" />
+    </svg>
+  </div>
+
+  <div className="container mx-auto px-4 relative z-10 flex flex-col-reverse lg:flex-row items-center gap-12">
+    {/* Left Content */}
+    <div className="w-full lg:w-1/2 text-left">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+        Emotional Wellbeing Check
+      </h1>
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-4 text-purple-600">
+        Hi there,
+      </h2>
+      <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+        Welcome to your emotional wellbeing check. This assessment is designed to help you understand and reflect on your current emotional state.
+        Take a moment for yourself and let&apos;s explore your mental landscape together.
+      </p>
+
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate="visible"
+        variants={buttonVariants}
+        whileHover="hover"
+        whileTap="tap"
+        className="mt-6 sm:mt-8"
+      >
+        <Button
+          size="lg"
+          className="bg-purple-600 hover:bg-purple-700 text-white text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-full shadow-lg"
+          onClick={handleStartAssessment}
+        >
+          Start Your Emotional Well-being Check-in
+        </Button>
+      </motion.div>
+    </div>
+
+    {/* Right Image */}
+    <div className="w-full lg:w-1/2 flex justify-center">
+      <Image
+        src="/images/lighthouse.svg"
+        alt="Emotional Wellbeing"
+        width={600}
+        height={400}
+        className="object-contain max-w-full drop-shadow-2xl animate-float"
+      />
+    </div>
+  </div>
+</section>
+
 
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-6">
