@@ -22,11 +22,11 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import Loader from "@/components/Loader";
 
-function LoginForm() {
+function LoginForm({ setIsLoading }: { setIsLoading: (val: boolean) => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { fetchUser, user, setUser } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -60,6 +60,7 @@ function LoginForm() {
         throw new Error("No credential received from Google");
       }
 
+      setIsLoading(true);
       const res: any = await googleLogin(credentialResponse.credential);
       console.log(res);
       if (res.status === "success" && res.token) {
@@ -73,6 +74,8 @@ function LoginForm() {
     } catch (error: any) {
       console.error("Google login error:", error);
       toast.error(`Google login failed: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,15 +112,9 @@ function LoginForm() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full bg-purple-600" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging In...
-                </>
-              ) : (
-                "Login"
-              )}
+            <Button type="submit" className="w-full bg-purple-600">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin hidden" />
+              Login
             </Button>
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
@@ -140,12 +137,15 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col relative">
+      {isLoading && <Loader />}
       <Navbar />
       <main className="flex-1 bg-gradient-to-b from-purple-50 to-white flex items-center justify-center">
         <Suspense fallback={<div>Loading...</div>}>
-          <LoginForm />
+          <LoginForm setIsLoading={setIsLoading} />
         </Suspense>
       </main>
       <Footer />
