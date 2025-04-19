@@ -52,13 +52,18 @@
     "clsx": "^2.1.1",
     "countries-list": "^3.1.1",
     "date-fns": "^4.1.0",
+    "deps": "^1.0.0",
     "editorjs-react-renderer": "^3.5.1",
+    "html2canvas": "^1.4.1",
     "jaagr-fe": "file:",
     "js-cookie": "^3.0.5",
+    "jspdf": "^3.0.1",
+    "legacy": "^0.0.3",
     "lucide-react": "^0.469.0",
     "motion": "^12.0.5",
     "next": "15.1.4",
     "ngrok": "^5.0.0-beta.2",
+    "peer": "^1.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.1",
@@ -68,7 +73,7 @@
     "remix": "^2.15.3",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "world-countries": "^5.0.0"
+    "world-countries": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
