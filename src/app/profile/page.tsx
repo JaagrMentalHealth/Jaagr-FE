@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useEffect, useState,useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   Card,
@@ -278,7 +278,7 @@ function ProfileSidebar({
   return (
     <Card className="h-full bg-gradient-to-b from-purple-50 to-white">
       <CardHeader>
-         <div className="flex justify-center mt-4">
+        <div className="flex justify-center mt-4">
           <Avatar className="h-24 w-24 border-4 border-purple-100">
             <AvatarImage
               src={user.profilePhoto || "/placeholder.svg?height=96&width=96"}
@@ -294,7 +294,7 @@ function ProfileSidebar({
         </div>
         <CardTitle>{user.fullName}</CardTitle>
         <CardDescription>{user.email}</CardDescription>
-       
+
         {/* <div className="mt-2 text-center">
           <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200">30 Day Streak</Badge>
         </div> */}
@@ -1216,7 +1216,8 @@ function JournalSection() {
                   </div>
                   <div className="p-3 rounded-lg bg-purple-50">
                     <p className="text-sm font-medium text-purple-800">
-                      What&apos;s one thing you&apos;d like to improve about tomorrow?
+                      What&apos;s one thing you&apos;d like to improve about
+                      tomorrow?
                     </p>
                   </div>
                 </div>
@@ -1304,7 +1305,7 @@ function WriteBlogSection({
   );
 }
 
- function ReadBlogsSection({
+function ReadBlogsSection({
   user,
   getExcerpt,
   router,
@@ -1326,8 +1327,12 @@ function WriteBlogSection({
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Read Articles</CardTitle>
-        <CardDescription>Explore stories and insights from our community</CardDescription>
+        <CardTitle className="text-2xl text-purple-800">
+          Read Articles
+        </CardTitle>
+        <CardDescription>
+          Explore stories and insights from our community
+        </CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -1386,18 +1391,24 @@ function WriteBlogSection({
                   excerpt={getExcerpt(post.content)}
                   author={post.author}
                   date={new Date(post.createdAt).toLocaleDateString()}
-                  coverPhoto={post.coverPhoto || "/placeholder.svg?height=200&width=300"}
+                  coverPhoto={
+                    post.coverPhoto || "/placeholder.svg?height=200&width=300"
+                  }
                   slug={post.slug}
                 />
               ))
             ) : (
               <div className="col-span-3 text-center py-10">
                 <p className="text-muted-foreground mb-4">
-                  {searchTerm ? "No articles match your search." : "You haven't read any articles yet."}
+                  {searchTerm
+                    ? "No articles match your search."
+                    : "You haven't read any articles yet."}
                 </p>
                 <Button
                   className="bg-purple-600 hover:bg-purple-700"
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
                 >
                   Explore Articles
                 </Button>
@@ -1409,7 +1420,10 @@ function WriteBlogSection({
 
       {user.blogs && user.blogs.length > 0 && (
         <CardFooter className="flex justify-center border-t pt-6">
-          <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => router.push("/blogs")}>
+          <Button
+            className="bg-purple-600 hover:bg-purple-700"
+            onClick={() => router.push("/blogs")}
+          >
             Read a New Article
           </Button>
         </CardFooter>
@@ -1659,8 +1673,9 @@ function AssessmentReportsSection({
                         size="sm"
                         className="border-purple-200 text-purple-700 hover:bg-purple-50"
                         onClick={() =>
-                          router.push(
-                            `/assessment-result?outcomeId=${assessment._id}`
+                          window.open(
+                            `/assessment-result?outcomeId=${assessment._id}`,
+                            "_blank"
                           )
                         }
                       >
@@ -1679,7 +1694,8 @@ function AssessmentReportsSection({
                 className="bg-purple-600 hover:bg-purple-700"
                 onClick={() => {
                   router.push("/self-assessment");
-                }}>
+                }}
+              >
                 Take a Emotional Well-being Checkin
               </Button>
             </div>
