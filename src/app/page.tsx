@@ -30,7 +30,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/blogs">
-                <Button className="bg-white text-black hover:bg-purple-100 border border-black rounded-full px-6 py-3 text-sm sm:text-base">
+                <Button className="bg-white text-black hover:bg-purple-100 border border-grey rounded-full px-6 py-3 text-sm sm:text-base">
                   Explore Resources
                 </Button>
               </Link>
