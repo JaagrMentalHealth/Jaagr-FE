@@ -1639,7 +1639,10 @@ function AssessmentReportsSection({
                   (a: Assessment, b: Assessment) =>
                     new Date(b.date).getTime() - new Date(a.date).getTime()
                 )
-                .map((assessment: Assessment) => (
+                .map((assessment: Assessment) =>{ 
+                  console.log(assessment)
+                  
+                  return (
                   <Card key={assessment._id} className="overflow-hidden">
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-start">
@@ -1647,7 +1650,7 @@ function AssessmentReportsSection({
                           <Badge className="mb-2 bg-purple-100 text-purple-700">
                             Assessment
                           </Badge>
-                          <CardTitle>Mental Health Assessment</CardTitle>
+                          <CardTitle> {assessment.assessmentType?.title || assessment.type} </CardTitle>
                           <CardDescription className="flex items-center gap-2">
                             <Calendar className="h-4 w-4" />
                             {new Date(assessment.date).toLocaleDateString()}
@@ -1683,7 +1686,7 @@ function AssessmentReportsSection({
                       </Button>
                     </CardFooter>
                   </Card>
-                ))}
+                )})}
             </div>
           ) : (
             <div className="text-center py-10">
