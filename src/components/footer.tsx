@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Phone, Mail, MapPin, Instagram, Linkedin, } from "lucide-react";
 
 export function Footer() {
   return (
@@ -45,14 +46,30 @@ export function Footer() {
 
         {/* Contact Details */}
         <div>
-          <h3 className="mb-4 text-lg font-semibold">Contact</h3>
-          <ul className="space-y-2 text-sm text-white-400">
-            <li>📞 +91 7820001282</li>
-            <li>📧 hello@jaagr.com</li>
-            <li>📍 Dehradun</li>
-            <li>🔗 Social Media</li>
-          </ul>
-        </div>
+        <h3 className="mb-4 text-lg font-semibold">Contact</h3>
+        <ul className="space-y-2 text-sm text-white/70">
+          <li className="flex items-center gap-2">
+            <Phone className="w-4 h-4" /> +91 7820001282
+          </li>
+          <li className="flex items-center gap-2">
+            <Mail className="w-4 h-4" /> hello@jaagr.com
+          </li>
+          <li className="flex items-center gap-2">
+            <MapPin className="w-4 h-4" /> Dehradun
+          </li>
+          <li className="flex items-center gap-2">
+          <a href="https://www.instagram.com/jaagr.mind/" target="_blank" rel="noopener noreferrer">
+            <Instagram className="w-5 h-5 hover:text-white transition-colors duration-200" />
+            </a>
+            {/* <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+            <Twitter className="w-5 h-5 hover:text-white transition-colors duration-200" />
+            </a> */}
+            <a href="https://www.linkedin.com/company/jaagr/" target="_blank" rel="noopener noreferrer">
+            <Linkedin className="w-5 h-5 hover:text-white transition-colors duration-200" />
+            </a>
+          </li>
+        </ul>
+      </div>
       </div>
     </footer>
   );

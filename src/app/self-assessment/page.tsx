@@ -160,7 +160,7 @@ export default function SelfAssessmentPage() {
                   className="bg-purple-600 hover:bg-purple-600 text-white text-lg px-8 py-6 rounded-full shadow-lg"
                   onClick={handleStartAssessment}
                 >
-                  Start Your Assessment
+                  Start Your Emotion Well-being Checkin
                 </Button>
               </motion.div>
             </div>

@@ -55,7 +55,7 @@ export function BlogPreview() {
                   <p className="text-white/90 mb-4">{blog.description}</p>
                   <Link href="/blogs">
                     <Button variant="secondary" size="sm">
-                      Read Blog
+                      Read Articles
                     </Button>
                   </Link>
                 </div>

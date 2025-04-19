@@ -25,7 +25,7 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-8">GET STARTED TODAY</h2>
             <div className="flex justify-center gap-4">
               <Link href="/self-assessment">
-                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">Take the Depression Analysis Test</Button>
+                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">Take a Emotional Well-being Checkin Today</Button>
               </Link>
               <Link href="/resources">
               <Button className="bg-white-600 text-black hover:bg-purple-100 border rounded-full">
