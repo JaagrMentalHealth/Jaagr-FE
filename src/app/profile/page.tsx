@@ -1418,13 +1418,13 @@ function ReadBlogsSection({
         </div>
       </CardContent>
 
-      {user.blogs && user.blogs.length > 0 && (
+      {filteredBlogs.length > 0 && (
         <CardFooter className="flex justify-center border-t pt-6">
           <Button
             className="bg-purple-600 hover:bg-purple-700"
             onClick={() => router.push("/blogs")}
           >
-            Read a New Article
+            Read More Articles
           </Button>
         </CardFooter>
       )}
@@ -1639,54 +1639,59 @@ function AssessmentReportsSection({
                   (a: Assessment, b: Assessment) =>
                     new Date(b.date).getTime() - new Date(a.date).getTime()
                 )
-                .map((assessment: Assessment) =>{ 
-                  console.log(assessment)
-                  
+                .map((assessment: Assessment) => {
+                  console.log(assessment);
+
                   return (
-                  <Card key={assessment._id} className="overflow-hidden">
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <Badge className="mb-2 bg-purple-100 text-purple-700">
-                            Assessment
-                          </Badge>
-                          <CardTitle> {assessment.assessmentType?.title || assessment.type} </CardTitle>
-                          <CardDescription className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4" />
-                            {new Date(assessment.date).toLocaleDateString()}
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg">
-                          <div className="text-sm text-muted-foreground mb-1">
-                            Assessment Completed
-                          </div>
-                          <div className="text-3xl font-bold text-purple-600">
-                            {new Date(assessment.date).toLocaleDateString()}
+                    <Card key={assessment._id} className="overflow-hidden">
+                      <CardHeader className="pb-2">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <Badge className="mb-2 bg-purple-100 text-purple-700">
+                              Assessment
+                            </Badge>
+                            <CardTitle>
+                              {" "}
+                              {assessment.assessmentType?.title ||
+                                assessment.type}{" "}
+                            </CardTitle>
+                            <CardDescription className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4" />
+                              {new Date(assessment.date).toLocaleDateString()}
+                            </CardDescription>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between border-t pt-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-purple-200 text-purple-700 hover:bg-purple-50"
-                        onClick={() =>
-                          window.open(
-                            `/assessment-result?outcomeId=${assessment._id}`,
-                            "_blank"
-                          )
-                        }
-                      >
-                        View Detailed Report
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                )})}
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg">
+                            <div className="text-sm text-muted-foreground mb-1">
+                              Assessment Completed
+                            </div>
+                            <div className="text-3xl font-bold text-purple-600">
+                              {new Date(assessment.date).toLocaleDateString()}
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="flex justify-between border-t pt-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-purple-200 text-purple-700 hover:bg-purple-50"
+                          onClick={() =>
+                            window.open(
+                              `/assessment-result?outcomeId=${assessment._id}`,
+                              "_blank"
+                            )
+                          }
+                        >
+                          View Detailed Report
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  );
+                })}
             </div>
           ) : (
             <div className="text-center py-10">
