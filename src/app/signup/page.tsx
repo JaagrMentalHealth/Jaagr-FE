@@ -1,13 +1,13 @@
 "use client";
 
 import { signup, verifyUsername, googleLogin } from "@/api/authAPI";
+import { sendOTP } from "@/api/otpAPI";
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { sendOTP } from "@/api/otpAPI";
 import {
   Card,
   CardHeader,
@@ -17,13 +17,14 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
+import { OTPModal } from "@/components/ui/otpModal";
 import { useUser } from "@/contexts/userContext";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { OTPModal } from "@/components/ui/otpModal";
+import Loader from "@/components/Loader";
+import Link from "next/link";
 
 interface SignupData {
   userName: string;
@@ -46,7 +47,7 @@ export default function SignUpPage() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [isEmailVerifyin, setEmailVerifying] = useState(false);
+  const [isEmailVerifying, setIsEmailVerifying] = useState(false);
   const { setUser } = useUser();
   const router = useRouter();
 
@@ -64,55 +65,46 @@ export default function SignUpPage() {
   };
 
   const initiateOTP = async () => {
-    setEmailVerifying(true);
+    setIsEmailVerifying(true);
     try {
-      // console.log(email)
       const res: any = await sendOTP(email);
-      // console.log(res)
-      if (res.status == 200) {
-        setEmailVerifying(false);
-
+      if (res.status === 200) {
         setIsOTPModalOpen(true);
-      } else if (res.status == 403) {
-        setEmailVerifying(false);
-
+      } else if (res.status === 403) {
         toast.error(res.response.data.message);
       } else {
-        setEmailVerifying(false);
-        toast.error("Unknown Error Occured")
-        console.log(res);
+        toast.error("Unknown Error Occurred");
       }
     } catch (err) {
-      setEmailVerifying(false);
-      toast.error("Unknwon Error Occured")
-      console.log(err);
+      console.error(err);
+      toast.error("Unknown Error Occurred");
+    } finally {
+      setIsEmailVerifying(false);
     }
   };
 
-  const handleOTPVerification = () => {
-    setIsEmailVerified(true);
-  };
   const handleGoogleSuccess = async (credentialResponse: any) => {
-      try {
-        if (!credentialResponse.credential) {
-          throw new Error("No credential received from Google");
-        }
-  
-        const res: any = await googleLogin(credentialResponse.credential);
-        console.log(res);
-        if (res.status === "success" && res.token) {
-          Cookies.set("token", res.token, { expires: 7 });
-          setUser(res.data.user);
-          toast.success("Google login successful!");
-          router.push("/");
-        } else {
-          throw new Error(res.message || "Google login failed");
-        }
-      } catch (error: any) {
-        console.error("Google login error:", error);
-        toast.error(`Google login failed: ${error.message}`);
+    try {
+      if (!credentialResponse.credential) {
+        throw new Error("No credential received from Google");
       }
-    };
+      setIsLoading(true);
+      const res: any = await googleLogin(credentialResponse.credential);
+      if (res.status === "success" && res.token) {
+        Cookies.set("token", res.token, { expires: 7 });
+        setUser(res.data.user);
+        toast.success("Google login successful!");
+        router.push("/");
+      } else {
+        throw new Error(res.message || "Google login failed");
+      }
+    } catch (error: any) {
+      console.error("Google login error:", error);
+      toast.error(`Google login failed: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -141,6 +133,7 @@ export default function SignUpPage() {
         toast.error(`Signup failed: ${res}`);
       }
     } catch (error: any) {
+      console.error(error);
       toast.error(`Signup failed: ${error.message}`);
     } finally {
       setIsLoading(false);
@@ -148,9 +141,9 @@ export default function SignUpPage() {
   };
 
   return (
-    <>
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!} >
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
       <div className="flex min-h-screen flex-col">
+        {isLoading && <Loader />}
         <Navbar />
         <main className="flex-1 bg-gradient-to-b from-purple-50 to-white flex items-center justify-center py-12">
           <Card className="w-full max-w-md">
@@ -162,6 +155,7 @@ export default function SignUpPage() {
             </CardHeader>
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
+                {/* Full Name */}
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
                   <Input
@@ -170,9 +164,10 @@ export default function SignUpPage() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Name"
+                    placeholder="Full Name"
                   />
                 </div>
+                {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <div className="flex gap-2 items-center">
@@ -182,22 +177,25 @@ export default function SignUpPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="E-mail"
+                      placeholder="Email Address"
                       className={isEmailVerified ? "border-green-500" : ""}
                     />
                     <Button
                       type="button"
                       onClick={initiateOTP}
                       size="sm"
-                      disabled={!email || isEmailVerified}
+                      disabled={!email || isEmailVerified || isEmailVerifying}
                       className="w bg-purple-600"
-
                     >
-                      {isEmailVerifyin?<Loader2 className="h-4 w-4 animate-spin" />:
-                      <>{isEmailVerified ? "Verified" : "Verify"}</>}
+                      {isEmailVerifying ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>{isEmailVerified ? "Verified" : "Verify"}</>
+                      )}
                     </Button>
                   </div>
                 </div>
+                {/* Username */}
                 <div className="space-y-2">
                   <Label htmlFor="username">Username</Label>
                   <div className="flex gap-2 items-center">
@@ -218,8 +216,8 @@ export default function SignUpPage() {
                     <Button
                       type="button"
                       onClick={checkUsername}
-                      disabled={!username || isVerifying}
                       size="sm"
+                      disabled={!username || isVerifying}
                       className="w bg-purple-600"
                     >
                       {isVerifying ? (
@@ -230,6 +228,7 @@ export default function SignUpPage() {
                     </Button>
                   </div>
                 </div>
+                {/* Password */}
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
@@ -238,19 +237,27 @@ export default function SignUpPage() {
                       type={showPassword ? "text" : "password"}
                       required
                       value={password}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setPassword(e.target.value)
+                      }
                       minLength={8}
+                      placeholder="Password (min 8 characters)"
                     />
                     <button
                       type="button"
                       className="absolute inset-y-0 right-3 flex items-center text-gray-500"
                       onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
                     </button>
                   </div>
                 </div>
               </CardContent>
+
               <CardFooter className="flex flex-col space-y-4">
                 <Button
                   type="submit"
@@ -268,19 +275,32 @@ export default function SignUpPage() {
                     "Sign Up"
                   )}
                 </Button>
+
                 <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => {
-                console.log("Login Failed");
-                toast.error("Google sign-in failed. Please try again.");
-              }}
-            />
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => {
+                    console.log("Google login failed");
+                    toast.error("Google sign-in failed. Please try again.");
+                  }}
+                />
+
+                <p className="text-sm text-center">
+                  Already have an account?{" "}
+                  <Link
+                    href="/login"
+                    className="text-purple-500 hover:underline"
+                  >
+                    Log in
+                  </Link>
+                </p>
               </CardFooter>
             </form>
           </Card>
         </main>
         <Footer />
       </div>
+
+      {/* OTP Modal outside the Provider */}
       <OTPModal
         isOpen={isOTPModalOpen}
         onClose={() => setIsOTPModalOpen(false)}
@@ -288,6 +308,5 @@ export default function SignUpPage() {
         email={email}
       />
     </GoogleOAuthProvider>
-    </>
   );
 }
