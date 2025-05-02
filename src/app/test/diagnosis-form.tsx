@@ -2,6 +2,8 @@
 
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
+// import { useEffect, useState } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -52,6 +54,7 @@ export default function DiagnoseForm({
   const [diagnosisResult, setDiagnosisResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const [linkExpired, setLinkExpired] = useState(false)
+  const [showExitWarning, setShowExitWarning] = useState(false)
 
   // Get current questions based on phase
   const currentQuestions =
@@ -66,10 +69,17 @@ export default function DiagnoseForm({
     const fetchWarmupQuestions = async () => {
       try {
         setIsLoading(true)
-        const response = await getWarmupQuestions({ assessmentId: assessmentId || undefined })
+        const response = await getWarmupQuestions({
+          assessmentId: assessmentId || undefined,
+          orgUserId: orgUserId || undefined,
+          organizationId: organizationId || undefined,
+        })
         setWarmupQuestions(response.data)
       } catch (err: any) {
-        if (err?.response?.status === 410) {
+        if (err?.response?.status === 409) {
+          // Show custom message if test already taken
+          setError("You’ve already completed this assessment. Please contact your organization administrator for further assistance.")
+        } else if (err?.response?.status === 410) {
           setLinkExpired(true)
         } else {
           setError("Failed to load questions. Please try again.")
@@ -81,6 +91,20 @@ export default function DiagnoseForm({
 
     fetchWarmupQuestions()
   }, [assessmentId])
+
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (currentPhase < 3) { // assuming assessment is in progress
+        event.preventDefault()
+        event.returnValue = "" // triggers browser warning
+        setShowExitWarning(true) // show custom modal
+      }
+    }
+  
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload)
+  }, [currentPhase])
 
   // Set an answer for the current question
   const setAnswer = (questionId: string, answer: string) => {
@@ -159,6 +183,12 @@ export default function DiagnoseForm({
       setIsSubmitting(false)
     }
   }
+
+  {!isLoading && !diagnosisResult && (
+    <div className="bg-yellow-100 text-yellow-800 text-sm px-4 py-2 rounded mb-4 shadow-sm">
+      ⚠️ Please don’t refresh or close this tab during the assessment. If you do, your test will be auto-submitted.
+    </div>
+  )}
 
   // Handle next question
   const handleNext = () => {
@@ -454,6 +484,30 @@ export default function DiagnoseForm({
           </CardContent>
         </Card>
       </div>
+      <Dialog open={showExitWarning} onOpenChange={setShowExitWarning}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Don't leave yet!</DialogTitle>
+    </DialogHeader>
+    <p className="text-muted-foreground">
+      If you reload or close this tab now, your assessment will be submitted automatically. Are you sure?
+    </p>
+    <DialogFooter className="flex justify-end gap-2">
+      <Button variant="outline" onClick={() => setShowExitWarning(false)}>Cancel</Button>
+      <Button
+        variant="destructive"
+        onClick={() => {
+          setShowExitWarning(false)
+          window.removeEventListener("beforeunload", () => {})
+          window.location.reload() // OR: window.close()
+        }}
+      >
+        Leave Anyway
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
     </div>
   )
 }
