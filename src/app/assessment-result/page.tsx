@@ -50,6 +50,7 @@ function WellBeingReport() {
 
           // Dynamically check outcome for organizationId
           const isOrgUser = !!data.organizationId
+          console.log(isOrgUser)
 
           let name = "Child"
 

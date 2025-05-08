@@ -41,15 +41,15 @@ export function Hero() {
             className="space-y-6"
           >
             <div className="text-sm text-gray-600">Enhancement and Support for Mental Health</div>
-            <h1 className="text-5xl font-bold leading-tight">
+            <h1 className="text-7xl font-bold leading-tight">
               BE MORE <br />
               AWARE{" "}
               <span className="inline-block relative">
                 <Image
                   src="/logoHero.svg"
                   alt="Jaagr Logo"
-                  width={120}
-                  height={45}
+                  width={180}
+                  height={67.5}
                   className="object-contain mt-2 animate-float"
                   priority
                 />
@@ -58,7 +58,7 @@ export function Hero() {
               ABOUT YOUR <br />
               THOUGHTS
             </h1>
-            <p className="text-lg text-gray-600 max-w-lg">
+            <p className="text-xl text-gray-600 max-w-lg">
               Bringing mental health experts to your palm. Discover a supportive community and valuable resources for
               your well-being journey.
             </p>

@@ -20,6 +20,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import countries from "world-countries";
+
+const countryList = countries.map((country) => ({
+  name: country.name.common,
+  code: country.cca2,
+}));
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -28,10 +34,33 @@ interface EditProfileModalProps {
 
 export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
   const { user, setUser, fetchUser } = useUser();
+  const countries = [
+    "India",
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "Germany",
+    "France",
+    "Brazil",
+    "South Africa",
+    "Japan",
+    "China",
+    "Russia",
+    "Italy",
+    "Mexico",
+    "Netherlands",
+    "Spain",
+    "New Zealand",
+    "Singapore",
+    "UAE",
+    "Sweden",
+  ];
   const [formData, setFormData] = useState({
     fullName: user?.fullName || "",
     bio: user?.bio || "",
     gender: user?.gender || "",
+    country: user?.country || "",
     dateOfBirth: user?.dateOfBirth
       ? new Date(user.dateOfBirth).toISOString().split("T")[0]
       : "",
@@ -122,6 +151,26 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
               value={formData.dateOfBirth}
               onChange={handleChange}
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="country">Country</Label>
+            <Select
+              onValueChange={(value) =>
+                setFormData({ ...formData, country: value })
+              }
+              value={formData.country}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select country" />
+              </SelectTrigger>
+              <SelectContent>
+                {countryList.map((c) => (
+                  <SelectItem key={c.code} value={c.name}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (

@@ -22,19 +22,22 @@ export default function Home() {
         <Testimonial />
         <section className="py-20 text-center">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8">GET STARTED TODAY</h2>
-            <div className="flex justify-center gap-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8">GET STARTED TODAY</h2>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link href="/self-assessment">
-                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">Take the Depression Analysis Test</Button>
+                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full px-6 py-3 text-sm sm:text-base">
+                  Take an Emotional Well-being Check-in Today
+                </Button>
               </Link>
-              <Link href="/resources">
-              <Button className="bg-white-600 text-black hover:bg-purple-100 border rounded-full">
-                Explore Resources
+              <Link href="/blogs">
+                <Button className="bg-white text-black hover:bg-purple-100 border border-grey rounded-full px-6 py-3 text-sm sm:text-base">
+                  Explore Resources
                 </Button>
               </Link>
             </div>
           </div>
         </section>
+
       </main>
       <Footer />
     </div>

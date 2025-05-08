@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   Card,
@@ -199,7 +199,11 @@ export default function ProfilePage() {
                   />
                 </TabsContent>
                 <TabsContent value="read-blogs">
-                  <ReadBlogsSection user={user} getExcerpt={getExcerpt} router={router} />
+                  <ReadBlogsSection
+                    user={user}
+                    getExcerpt={getExcerpt}
+                    router={router}
+                  />
                 </TabsContent>
                 {/* <TabsContent value="take-assessment">
                   <TakeAssessmentSection />
@@ -253,12 +257,12 @@ function ProfileSidebar({
     // { id: "journal", label: "Mood Journal", icon: <BookMarked className="h-5 w-5 mr-2" /> },
     {
       id: "write-blog",
-      label: "Write Blog",
+      label: "Write Article",
       icon: <FileText className="h-5 w-5 mr-2" />,
     },
     {
       id: "read-blogs",
-      label: "Read Blogs",
+      label: "Read Articles",
       icon: <BookOpen className="h-5 w-5 mr-2" />,
     },
     // { id: "take-assessment", label: "Take Emotional Well-being check in", icon: <FileText className="h-5 w-5 mr-2" /> },
@@ -274,8 +278,6 @@ function ProfileSidebar({
   return (
     <Card className="h-full bg-gradient-to-b from-purple-50 to-white">
       <CardHeader>
-        <CardTitle>{user.fullName}</CardTitle>
-        <CardDescription>{user.email}</CardDescription>
         <div className="flex justify-center mt-4">
           <Avatar className="h-24 w-24 border-4 border-purple-100">
             <AvatarImage
@@ -290,6 +292,9 @@ function ProfileSidebar({
             </AvatarFallback>
           </Avatar>
         </div>
+        <CardTitle>{user.fullName}</CardTitle>
+        <CardDescription>{user.email}</CardDescription>
+
         {/* <div className="mt-2 text-center">
           <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200">30 Day Streak</Badge>
         </div> */}
@@ -501,8 +506,8 @@ function DashboardSection({
               <CardContent>
                 <div className="flex flex-col items-center justify-center h-full py-4 text-center px-2">
                   <p className="italic text-purple-800">
-                    "I am growing and healing at my own pace. Every step forward
-                    is progress."
+                    I am growing and healing at my own pace. Every step forward
+                    is progress.
                   </p>
                   <Button
                     variant="ghost"
@@ -595,7 +600,7 @@ function ProfileSection({
                   Member since {new Date(user.createdAt).toLocaleDateString()}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
+              {/* <div className="flex flex-wrap gap-2">
                 <Badge className="bg-purple-100 text-purple-700">
                   Mindfulness
                 </Badge>
@@ -608,7 +613,7 @@ function ProfileSection({
                 <Badge className="bg-purple-100 text-purple-700">
                   Journaling
                 </Badge>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -624,29 +629,6 @@ function ProfileSection({
           <Separator />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="text-lg font-semibold text-purple-800">
-                Wellness Goals
-              </h4>
-              <ul className="space-y-2 mt-2">
-                <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                  <span>Reduce anxiety through daily mindfulness</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                  <span>Improve sleep quality and duration</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                  <span>Build a consistent journaling habit</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                  <span>Develop healthy coping mechanisms</span>
-                </li>
-              </ul>
-            </div>
             <div>
               <h4 className="text-lg font-semibold text-purple-800">
                 Personal Information
@@ -683,13 +665,15 @@ function ProfileSection({
                 <p className="text-3xl font-bold text-purple-600">
                   {user.history?.length || 0}
                 </p>
-                <p className="text-sm text-muted-foreground">Blogs Read</p>
+                <p className="text-sm text-muted-foreground">Articles Read</p>
               </div>
               <div className="bg-white p-4 rounded-lg text-center">
                 <p className="text-3xl font-bold text-purple-600">
                   {user.blogs?.length || 0}
                 </p>
-                <p className="text-sm text-muted-foreground">Blogs Written</p>
+                <p className="text-sm text-muted-foreground">
+                  Articles Written
+                </p>
               </div>
               <div className="bg-white p-4 rounded-lg text-center">
                 <p className="text-3xl font-bold text-purple-600">
@@ -705,7 +689,7 @@ function ProfileSection({
           </div>
         </div>
       </CardContent>
-      <CardFooter>
+      {/* <CardFooter>
         <Button
           variant="outline"
           className="w-full border-purple-200 text-purple-700 hover:bg-purple-50"
@@ -713,7 +697,7 @@ function ProfileSection({
         >
           Edit Profile
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
@@ -801,9 +785,9 @@ function EditProfileSection({ user }: { user: any }) {
                     <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="non-binary">Non-binary</SelectItem>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="Non-Binary">Non-binary</SelectItem>
                     <SelectItem value="prefer-not-to-say">
                       Prefer not to say
                     </SelectItem>
@@ -1148,7 +1132,7 @@ function JournalSection() {
 
                 <div className="space-y-2">
                   <Label htmlFor="gratitude">
-                    Three things you're grateful for today
+                    Three things you&apos;re grateful for today
                   </Label>
                   <Textarea
                     id="gratitude"
@@ -1232,7 +1216,8 @@ function JournalSection() {
                   </div>
                   <div className="p-3 rounded-lg bg-purple-50">
                     <p className="text-sm font-medium text-purple-800">
-                      What's one thing you'd like to improve about tomorrow?
+                      What&apos;s one thing you&apos;d like to improve about
+                      tomorrow?
                     </p>
                   </div>
                 </div>
@@ -1264,9 +1249,11 @@ function WriteBlogSection({
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Your Blogs</CardTitle>
+        <CardTitle className="text-2xl text-purple-800">
+          Your Articles
+        </CardTitle>
         <CardDescription>
-          View and manage blogs you have written.
+          View and manage articles you have written.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -1289,13 +1276,13 @@ function WriteBlogSection({
             ) : (
               <div className="col-span-3 text-center py-10">
                 <p className="text-muted-foreground mb-4">
-                  You haven't written any blogs yet.
+                  You haven&apos;t written any articles yet.
                 </p>
                 <Button
                   className="bg-purple-600 hover:bg-purple-700"
                   onClick={() => router.push("/upload")}
                 >
-                  Write Your First Blog
+                  Write Your First Article
                 </Button>
               </div>
             )}
@@ -1308,7 +1295,7 @@ function WriteBlogSection({
             className="bg-purple-600 hover:bg-purple-700"
             onClick={() => router.push("/upload")}
           >
-            Write a New Blog
+            Write a New Article
           </Button>
         </CardFooter>
       ) : (
@@ -1321,25 +1308,40 @@ function WriteBlogSection({
 function ReadBlogsSection({
   user,
   getExcerpt,
-  router
+  router,
 }: {
   user: any;
   getExcerpt: (content: string) => string;
-  router:any;
+  router: any;
 }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredBlogs = useMemo(() => {
+    if (!user?.history || user.history.length === 0) return [];
+
+    return user.history.filter((post: BlogPost) =>
+      post.heading.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, user?.history]);
+
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-purple-50">
       <CardHeader>
-        <CardTitle className="text-2xl text-purple-800">Read Blogs</CardTitle>
+        <CardTitle className="text-2xl text-purple-800">
+          Read Articles
+        </CardTitle>
         <CardDescription>
           Explore stories and insights from our community
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <Input
-              placeholder="Search blogs..."
+              placeholder="Search articles..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm border-purple-200 focus-visible:ring-purple-500"
             />
             <div className="flex flex-wrap gap-2">
@@ -1381,8 +1383,8 @@ function ReadBlogsSection({
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {user.history && user.history.length > 0 ? (
-              user.history.map((post: BlogPost) => (
+            {filteredBlogs.length > 0 ? (
+              filteredBlogs.map((post: BlogPost) => (
                 <BlogCard
                   key={post._id}
                   heading={post.heading}
@@ -1398,7 +1400,9 @@ function ReadBlogsSection({
             ) : (
               <div className="col-span-3 text-center py-10">
                 <p className="text-muted-foreground mb-4">
-                  You haven't read any blogs yet.
+                  {searchTerm
+                    ? "No articles match your search."
+                    : "You haven't read any articles yet."}
                 </p>
                 <Button
                   className="bg-purple-600 hover:bg-purple-700"
@@ -1406,24 +1410,23 @@ function ReadBlogsSection({
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
                 >
-                  Explore Blogs
+                  Explore Articles
                 </Button>
               </div>
             )}
           </div>
         </div>
       </CardContent>
-      {user.blogs && user.blogs.length > 0 ? (
+
+      {filteredBlogs.length > 0 && (
         <CardFooter className="flex justify-center border-t pt-6">
           <Button
             className="bg-purple-600 hover:bg-purple-700"
             onClick={() => router.push("/blogs")}
           >
-            Read a New Blog
+            Read More Articles
           </Button>
         </CardFooter>
-      ) : (
-        <></>
       )}
     </Card>
   );
@@ -1498,7 +1501,7 @@ function TakeAssessmentSection({ router }: { router: any }) {
         <CardTitle
           className="text-2xl text-purple-800"
           onClick={() => {
-            router;
+            router.push("/self-assessment");
           }}
         >
           Take a Emotional Well-being Checkin
@@ -1636,59 +1639,70 @@ function AssessmentReportsSection({
                   (a: Assessment, b: Assessment) =>
                     new Date(b.date).getTime() - new Date(a.date).getTime()
                 )
-                .map((assessment: Assessment) => (
-                  <Card key={assessment._id} className="overflow-hidden">
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <Badge className="mb-2 bg-purple-100 text-purple-700">
-                            Assessment
-                          </Badge>
-                          <CardTitle>Mental Health Assessment</CardTitle>
-                          <CardDescription className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4" />
-                            {new Date(assessment.date).toLocaleDateString()}
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg">
-                          <div className="text-sm text-muted-foreground mb-1">
-                            Assessment Completed
-                          </div>
-                          <div className="text-3xl font-bold text-purple-600">
-                            {new Date(assessment.date).toLocaleDateString()}
+                .map((assessment: Assessment) => {
+                  console.log(assessment);
+
+                  return (
+                    <Card key={assessment._id} className="overflow-hidden">
+                      <CardHeader className="pb-2">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <Badge className="mb-2 bg-purple-100 text-purple-700">
+                              Assessment
+                            </Badge>
+                            <CardTitle>
+                              {" "}
+                              {assessment.assessmentType?.title ||
+                                assessment.type}{" "}
+                            </CardTitle>
+                            <CardDescription className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4" />
+                              {new Date(assessment.date).toLocaleDateString()}
+                            </CardDescription>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between border-t pt-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-purple-200 text-purple-700 hover:bg-purple-50"
-                        onClick={() =>
-                          router.push(
-                            `/assessment-result?outcomeId=${assessment._id}`
-                          )
-                        }
-                      >
-                        View Detailed Report
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg">
+                            <div className="text-sm text-muted-foreground mb-1">
+                              Assessment Completed
+                            </div>
+                            <div className="text-3xl font-bold text-purple-600">
+                              {new Date(assessment.date).toLocaleDateString()}
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="flex justify-between border-t pt-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-purple-200 text-purple-700 hover:bg-purple-50"
+                          onClick={() =>
+                            window.open(
+                              `/assessment-result?outcomeId=${assessment._id}`,
+                              "_blank"
+                            )
+                          }
+                        >
+                          View Detailed Report
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  );
+                })}
             </div>
           ) : (
             <div className="text-center py-10">
               <p className="text-muted-foreground mb-4">
-                You haven't taken any assessments yet
+                You haven&apos;t taken any assessments yet
               </p>
               <Button
                 className="bg-purple-600 hover:bg-purple-700"
-                onClick={() => setActiveTab("take-assessment")}
+                onClick={() => {
+                  router.push("/self-assessment");
+                }}
               >
                 Take a Emotional Well-being Checkin
               </Button>
