@@ -1,64 +1,69 @@
 import axios from "axios"
 import { URL } from "@/api/URL"
+import Cookies from "js-cookie"
 
-// Create axios instance with base URL
 const baseAxiosInstance = axios.create({
-  baseURL: `${URL}/assessment/assessment/`,
+  baseURL: `${URL}`,
 })
 
-/**
- * Fetch warmup questions (phase 0)
- */
-export const getWarmupQuestions = async () => {
-  try {
-    const response = await baseAxiosInstance.get("warmup")
-    return response
-  } catch (error) {
-    console.error("Error fetching warmup questions:", error)
-    throw error
+export const getWarmupQuestions = async (params?: {
+  assessmentId?: string | null
+  orgUserId?: string | null
+  organizationId?: string | null
+}) => {
+  return await baseAxiosInstance.get("/assessment/assessment/warmup", {
+    params: {
+      assessmentId: params?.assessmentId || undefined,
+      orgUserId: params?.orgUserId || undefined,
+      organizationId: params?.organizationId || undefined,
+    },
+  });
+};
+
+
+export const submitWarmup = async (data: {
+  warmupAnswers: { questionId: string; answer: string }[]
+  orgUserId?: string | null
+  organizationId?: string | null
+  assessmentId?: string | null
+}) => {
+  const token = Cookies.get("token")
+
+  const headers: Record<string, string> = {};
+
+  // Add JWT auth only for regular users (not org users)
+  if (token && !data.orgUserId) {
+    headers.Authorization = `Bearer ${token}`;
   }
+  return await baseAxiosInstance.post("/assessment/assessment/submit-warmup", data, {
+    headers
+  })
 }
 
-/**
- * Submit warmup answers and get screening questions
- */
-export const submitWarmup = async () => {
-  try {
-    const response = await baseAxiosInstance.post("submit-warmup")
-    return response
-  } catch (error) {
-    console.error("Error submitting warmup answers:", error)
-    throw error
-  }
+export const submitScreening = async (data: {
+  answers: { questionId: string; answer: string }[]
+  outcomeId: string
+}) => {
+  return await baseAxiosInstance.post("/assessment/assessment/submit-screening", {
+    screeningAnswers: data.answers,
+    outcomeId: data.outcomeId,
+  })
 }
 
-/**
- * Submit screening answers and get severity questions
- * @param {Object} data - The answers data
- * @param {Array} data.answers - Array of {questionId, answer} objects
- */
-export const submitScreening = async (data: { answers: { questionId: string; answer: string }[] }) => {
-  try {
-    const response = await baseAxiosInstance.post("submit-screening", data)
-    return response
-  } catch (error) {
-    console.error("Error submitting screening answers:", error)
-    throw error
-  }
+export const submitSeverity = async (data: {
+  answers: { questionId: string; answer: string }[]
+  outcomeId: string
+}) => {
+  return await baseAxiosInstance.post("/assessment/assessment/submit-severity", {
+    severityAnswers: data.answers,
+    outcomeId: data.outcomeId,
+  })
 }
 
-/**
- * Submit severity answers and get final diagnosis
- * @param {Object} data - The answers data
- * @param {Array} data.answers - Array of {questionId, answer} objects
- */
-export const submitSeverity = async (data: { answers: { questionId: string; answer: string }[] }) => {
-  try {
-    const response = await baseAxiosInstance.post("submit-severity", data)
-    return response
-  } catch (error) {
-    console.error("Error submitting severity answers:", error)
-    throw error
-  }
+export const fetchOutcome=async(outcomeId:string | null)=>{
+  return await baseAxiosInstance.get(`/assessment/assessment/outcome/${outcomeId}`)
 }
 
+export const fetchOrgUser=async(id:String )=>{
+  return await baseAxiosInstance.get(`/admin/org-users/${id}`)
+}
