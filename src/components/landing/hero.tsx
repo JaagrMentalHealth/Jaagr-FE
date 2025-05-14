@@ -41,9 +41,10 @@ export function Hero() {
             className="space-y-6"
           >
             <div className="text-sm text-gray-600">Enhancement and Support for Mental Health</div>
-            <h1 className="text-7xl font-bold leading-tight">
-              BE MORE <br />
-              AWARE{" "}
+            <h1 className="text-6xl font-bold leading-tight">
+              BE MORE AWARE
+              <br/>
+              {" "}
               <span className="inline-block relative">
                 <Image
                   src="/logoHero.svg"
@@ -54,9 +55,7 @@ export function Hero() {
                   priority
                 />
               </span>{" "}
-              <br />
-              ABOUT YOUR <br />
-              THOUGHTS
+              ABOUT YOUR THOUGHTS
             </h1>
             <p className="text-xl text-gray-600 max-w-lg">
               Bringing mental health experts to your palm. Discover a supportive community and valuable resources for
