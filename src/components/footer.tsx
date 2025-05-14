@@ -30,7 +30,9 @@ export function Footer() {
           <ul className="space-y-2 text-sm text-white-400">
             <li><Link href="/about" className="hover:text-white">About Us</Link></li>
             <li><Link href="/coming-soon" className="hover:text-white">Career</Link></li>
+
             <li><Link href="/terms" className="hover:text-white">Terms of use </Link></li>
+
           </ul>
         </div>
 
@@ -41,6 +43,7 @@ export function Footer() {
             <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
             <li><Link href="/privacy" className="hover:text-white">User Policy</Link></li>
             <li><Link href="/contact" className="hover:text-white">Support</Link></li>
+            <li><Link href="/terms" className="hover:text-white">Terms of use </Link></li>
           </ul>
         </div>
 
