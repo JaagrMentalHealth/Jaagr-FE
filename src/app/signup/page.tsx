@@ -105,27 +105,7 @@ export default function SignUpPage() {
       setIsLoading(false);
     }
   };
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-      try {
-        if (!credentialResponse.credential) {
-          throw new Error("No credential received from Google");
-        }
   
-        const res: any = await googleLogin(credentialResponse.credential);
-        console.log(res);
-        if (res.status === "success" && res.token) {
-          Cookies.set("token", res.token, { expires: 7 });
-          setUser(res.data.user);
-          toast.success("Google login successful!");
-          router.push("/");
-        } else {
-          throw new Error(res.message || "Google login failed");
-        }
-      } catch (error: any) {
-        console.error("Google login error:", error);
-        toast.error(`Google login failed: ${error.message}`);
-      }
-    };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
