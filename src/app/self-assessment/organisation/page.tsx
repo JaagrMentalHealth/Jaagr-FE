@@ -34,7 +34,7 @@ export default function UserPage() {
           {userName ? `Welcome, ${userName}!` : "Loading..."}
         </h1>
         <p className="text-gray-500 mt-2 text-lg">
-          We're excited to have you here. Explore and enjoy your experience!
+          We&apos;re excited to have you here. Explore and enjoy your experience!
         </p>
       </motion.div>
     </div>

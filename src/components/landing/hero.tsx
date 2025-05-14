@@ -49,8 +49,8 @@ export function Hero() {
                 <Image
                   src="/logoHero.svg"
                   alt="Jaagr Logo"
-                  width={180}
-                  height={67.5}
+                  width={130}
+                  height={48.75}
                   className="object-contain mt-2 animate-float"
                   priority
                 />
@@ -64,7 +64,7 @@ export function Hero() {
             <div className="flex flex-wrap gap-4">
               <Link href="/self-assessment">
                 <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">
-                  Start Test <ArrowRight className="ml-2 h-4 w-4" />
+                  Start Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/blogs">
