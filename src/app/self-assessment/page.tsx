@@ -94,8 +94,7 @@ export default function SelfAssessmentPage() {
   }
 
   const handleStartAssessment = () => {
-    // Show the unavailable assessment modal instead of checking login
-    setIsUnavailableModalOpen(true)
+    router.push("/test")
   }
 
   const checkUserLoggedIn = () => {
