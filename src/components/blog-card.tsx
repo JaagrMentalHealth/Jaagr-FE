@@ -7,16 +7,13 @@ import Image from "next/image"
 import Link from "next/link"
 import toast from "react-hot-toast"
 import { useUser } from "@/contexts/userContext"
-import { findById } from "@/api/authAPI"
+// import { findById } from "@/api/authAPI"
 
 interface BlogCardProps {
   heading: string
   excerpt: string
-  author: any
-  date: string
   coverPhoto: string
   slug: string
-  user?: any
 }
 
 function SkeletonBlogCard() {
@@ -39,33 +36,32 @@ function SkeletonBlogCard() {
   )
 }
 
-export function BlogCard({ heading, excerpt, author, date, coverPhoto, slug, user }: BlogCardProps) {
-  const [writer, setWriter] = useState<string>("")
-  const deleteStatus = user === author
+export function BlogCard({ heading, excerpt, coverPhoto, slug }: BlogCardProps) {
+  // const [writer, setWriter] = useState<string>("")
   const { fetchUser } = useUser()
   const [isHovered, setIsHovered] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchFullName = async () => {
-      try {
-        const res: any = await findById(author)
-        if (res.status === 200) {
-          setWriter(res.data.fullName)
-        } else {
-          setWriter(user || author)
-        }
-      } catch (error) {
-        console.error("Error fetching author name:", error)
-        setWriter(user || author)
-      } finally {
-        setIsLoading(false)
-      }
-    }
+  // useEffect(() => {
+  //   const fetchFullName = async () => {
+  //     try {
+  //       const res: any = await findById(author)
+  //       if (res.status === 200) {
+  //         setWriter(res.data.fullName)
+  //       } else {
+  //         setWriter(user || author)
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching author name:", error)
+  //       setWriter(user || author)
+  //     } finally {
+  //       setIsLoading(false)
+  //     }
+  //   }
 
-    fetchFullName()
-  }, [author, user])
+  //   fetchFullName()
+  // }, [author, user])
 
   const handleDelete = async () => {
     try {
