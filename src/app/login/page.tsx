@@ -1,104 +1,98 @@
-"use client";
+"use client"
 
-import { googleLogin, login } from "@/api/authAPI";
-import { useState, Suspense } from "react";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import Link from "next/link";
-import { useUser } from "@/contexts/userContext";
-import { useRouter, useSearchParams } from "next/navigation";
-import Cookies from "js-cookie";
-import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import Loader from "@/components/Loader";
+import type React from "react"
+
+import { googleLogin, login } from "@/api/authAPI"
+import { useState, Suspense, useEffect } from "react"
+import { Navbar } from "@/components/navbar"
+import { Footer } from "@/components/footer"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
+import Link from "next/link"
+import { useUser } from "@/contexts/userContext"
+import { useRouter, useSearchParams } from "next/navigation"
+import Cookies from "js-cookie"
+import toast from "react-hot-toast"
+import { Loader2 } from "lucide-react"
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
+import Loader from "@/components/Loader"
 
 function LoginForm({ setIsLoading }: { setIsLoading: (val: boolean) => void }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { fetchUser, user, setUser } = useUser();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/";
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const { fetchUser, user, setUser } = useUser()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get("redirect") || "/"
+
+  // Check if user is already logged in
+  useEffect(() => {
+    if (user) {
+      router.push("/profile")
+    }
+  }, [user, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const loginData = { email, password };
+    e.preventDefault()
+    setIsLoading(true)
+    const loginData = { email, password }
     try {
-      const res: any = await login(loginData);
+      const res: any = await login(loginData)
       if (res.status === "success" && res.token) {
-        Cookies.set("token", res.token, { expires: 7 });
-        await fetchUser();
-        toast.success("Login successful!");
-        router.back();
+        Cookies.set("token", res.token, { expires: 7 })
+        await fetchUser()
+        toast.success("Login successful!")
+        router.back()
       } else {
-        throw new Error("Login failed");
+        throw new Error("Login failed")
       }
     } catch (error) {
-      console.log("Login failed:", error);
-      toast.error("Login failed. Please try again.");
+      console.log("Login failed:", error)
+      toast.error("Login failed. Please try again.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleGoogleSuccess = async (credentialResponse: any) => {
     try {
       if (!credentialResponse.credential) {
-        throw new Error("No credential received from Google");
+        throw new Error("No credential received from Google")
       }
 
-      setIsLoading(true);
-      const res: any = await googleLogin(credentialResponse.credential);
-      console.log(res);
+      setIsLoading(true)
+      const res: any = await googleLogin(credentialResponse.credential)
+      console.log(res)
       if (res.status === "success" && res.token) {
-        Cookies.set("token", res.token, { expires: 7 });
-        setUser(res.data.user);
-        toast.success("Google login successful!");
-        router.back();
+        Cookies.set("token", res.token, { expires: 7 })
+        setUser(res.data.user)
+        toast.success("Google login successful!")
+        router.back()
       } else {
-        throw new Error(res.message || "Google login failed");
+        throw new Error(res.message || "Google login failed")
       }
     } catch (error: any) {
-      console.error("Google login error:", error);
-      toast.error(`Google login failed: ${error.message}`);
+      console.error("Google login error:", error)
+      toast.error(`Google login failed: ${error.message}`)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Log In</CardTitle>
-          <CardDescription>
-            Welcome back! Please log in to your account.
-          </CardDescription>
+          <CardDescription>Welcome back! Please log in to your account.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -119,8 +113,8 @@ function LoginForm({ setIsLoading }: { setIsLoading: (val: boolean) => void }) {
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={() => {
-                console.log("Login Failed");
-                toast.error("Google sign-in failed. Please try again.");
+                console.log("Login Failed")
+                toast.error("Google sign-in failed. Please try again.")
               }}
             />
             <p className="text-sm text-center">
@@ -133,11 +127,20 @@ function LoginForm({ setIsLoading }: { setIsLoading: (val: boolean) => void }) {
         </form>
       </Card>
     </GoogleOAuthProvider>
-  );
+  )
 }
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const { user } = useUser()
+  const router = useRouter()
+
+  // Check if user is already logged in at the page level
+  useEffect(() => {
+    if (user) {
+      router.push("/profile")
+    }
+  }, [user, router])
 
   return (
     <div className="flex min-h-screen flex-col relative">
@@ -150,5 +153,5 @@ export default function LoginPage() {
       </main>
       <Footer />
     </div>
-  );
+  )
 }
