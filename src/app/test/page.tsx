@@ -192,11 +192,11 @@ function SelfAssessmentFlow() {
                 </Label>
                 <p className="text-xs text-purple-600">
                   By checking this box, you agree to our{" "}
-                  <a href="#" className="underline hover:text-purple-800">
+                  <a href="/src/app/terms" className="underline hover:text-purple-800">
                     Terms of Service
                   </a>{" "}
                   and{" "}
-                  <a href="#" className="underline hover:text-purple-800">
+                  <a href="/src/app/privacy" className="underline hover:text-purple-800">
                     Privacy Policy
                   </a>
                   .
