@@ -186,7 +186,7 @@ export default function DiagnoseForm({
 
   {!isLoading && !diagnosisResult && (
     <div className="bg-yellow-100 text-yellow-800 text-sm px-4 py-2 rounded mb-4 shadow-sm">
-      ⚠️ Please don’t refresh or close this tab during the assessment. If you do, your test will be auto-submitted.
+      ⚠️ Please don&apos;t refresh or close this tab during the assessment. If you do, your test will be auto-submitted.
     </div>
   )}
 
@@ -229,7 +229,7 @@ export default function DiagnoseForm({
           <CardContent className="p-0">
             {/* Header with phase indicator */}
             <div className="bg-primary/10 dark:bg-primary/20 p-6 border-b">
-              <h1 className="text-2xl font-bold text-center text-primary">Health Assessment</h1>
+              <h1 className="text-2xl font-bold text-center text-primary">Emotional Well-being Assessment</h1>
 
               {!isLoading && !error && !diagnosisResult && (
                 <div className="mt-6">
