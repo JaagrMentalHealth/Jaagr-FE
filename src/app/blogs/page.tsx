@@ -114,7 +114,7 @@ export default function BlogsPage() {
             </Select>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {currentPosts.map((post) => (
+            {currentPosts.map((post:any) => (
               <BlogCard
                 key={post._id}
                 heading={post.heading}
