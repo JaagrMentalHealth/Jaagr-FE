@@ -38,37 +38,36 @@ export function Hero() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="space-y-6"
+            className="space-y-4 sm:space-y-6"
           >
-            <div className="text-sm text-gray-600">Enhancement and Support for Mental Health</div>
-            <h1 className="text-6xl font-bold leading-tight">
+            <div className="text-xs sm:text-sm text-gray-600">Enhancement and Support for Mental Health</div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
               BE MORE AWARE
-              <br/>
-              {" "}
+              <br />{" "}
               <span className="inline-block relative">
                 <Image
                   src="/logoHero.svg"
                   alt="Jaagr Logo"
                   width={130}
                   height={48.75}
-                  className="object-contain mt-2 animate-float"
+                  className="object-contain mt-2 animate-float w-[90px] h-[33.75px] sm:w-[110px] sm:h-[41.25px] md:w-[130px] md:h-[48.75px]"
                   priority
                 />
               </span>{" "}
               ABOUT YOUR THOUGHTS
             </h1>
-            <p className="text-xl text-gray-600 max-w-lg">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-lg">
               Bringing mental health experts to your palm. Discover a supportive community and valuable resources for
               your well-being journey.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href="/self-assessment">
-                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">
-                  Start Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full text-sm sm:text-base">
+                  Start Assessment <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </Link>
               <Link href="/blogs">
-                <Button className="bg-white-600 text-black hover:bg-purple-100 border rounded-full">
+                <Button className="bg-white-600 text-black hover:bg-purple-100 border rounded-full text-sm sm:text-base">
                   Explore more
                 </Button>
               </Link>
@@ -91,15 +90,15 @@ export function Hero() {
                   className="absolute inset-0"
                 >
                   <Image
-                    src={slide.image}
+                    src={slide.image || "/placeholder.svg"}
                     alt={slide.title}
                     fill
                     className="object-cover"
                     priority={index === 0}
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 text-white">
-                    <h3 className="text-xl font-semibold">{slide.title}</h3>
-                    <p className="text-sm">{slide.subtitle}</p>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 sm:p-6 text-white">
+                    <h3 className="text-base sm:text-lg md:text-xl font-semibold">{slide.title}</h3>
+                    <p className="text-xs sm:text-sm">{slide.subtitle}</p>
                   </div>
                 </motion.div>
               ))}
