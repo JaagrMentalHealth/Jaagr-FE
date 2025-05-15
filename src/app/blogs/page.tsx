@@ -63,17 +63,11 @@ export default function BlogsPage() {
     }
   }
 
-  const filteredPosts = Array.isArray(blogs)
-    ? blogs.filter((post) => {
-        if (!post || !post.heading) return false
-
-        const matchesSearch = post.heading.toLowerCase().includes(searchQuery.toLowerCase())
-        const matchesCategory =
-          selectedCategory === "All" || (post.tags && Array.isArray(post.tags) && post.tags.includes(selectedCategory))
-
-        return matchesSearch && matchesCategory
-      })
-    : []
+  const filteredPosts = blogs.filter(
+    (post) =>
+      post.heading.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (selectedCategory === "All" || post.tags.includes(selectedCategory)),
+  )
 
   const postsPerPage = 6
   const indexOfLastPost = currentPage * postsPerPage
