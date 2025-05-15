@@ -7,25 +7,25 @@ import { getBlog } from "@/api/blogAPI";
 import Output from "editorjs-react-renderer";
 import React from "react";
 // import Image from "next/image"
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/profile/avatar";
+// import {
+//   Avatar,
+//   AvatarFallback,
+//   AvatarImage,
+// } from "@/components/profile/avatar";
 
-interface Author {
-  _id: string;
-  userName: string;
-  fullName: string;
-  profilePhoto: string;
-}
+// interface Author {
+//   _id: string;
+//   userName: string;
+//   fullName: string;
+//   profilePhoto: string;
+// }
 
 interface BlogPost {
   _id: string;
   heading: string;
   tags: string[];
   coverPhoto: string | null;
-  author: Author;
+  // author: Author;
   content: string;
   likes: number;
   views: number;
@@ -114,7 +114,7 @@ export default function BlogPost({ params }: any) {
             <h1 className="mb-4 text-4xl font-bold tracking-tight">
               {post.heading}
             </h1>
-            <div className="mb-8 flex items-center gap-4">
+            {/* <div className="mb-8 flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <div className="h-10 w-10 rounded-full bg-muted overflow-hidden">
                   <Avatar className="w-16 h-16 mx-auto">
@@ -137,7 +137,7 @@ export default function BlogPost({ params }: any) {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
             {post.coverPhoto && (
               <div className="relative mb-8 aspect-[2/1] w-full overflow-hidden rounded-lg">
                 <img
