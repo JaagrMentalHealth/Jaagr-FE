@@ -1265,8 +1265,8 @@ function WriteBlogSection({
                   key={post._id}
                   heading={post.heading}
                   excerpt={getExcerpt(post.content)}
-                  author={post.author?.fullName || "You"}
-                  date={new Date(post.createdAt).toLocaleDateString()}
+                  // author={post.author?.fullName || "You"}
+                  // date={new Date(post.createdAt).toLocaleDateString()}
                   coverPhoto={
                     post.coverPhoto || "/placeholder.svg?height=200&width=300"
                   }
@@ -1389,8 +1389,8 @@ function ReadBlogsSection({
                   key={post._id}
                   heading={post.heading}
                   excerpt={getExcerpt(post.content)}
-                  author={post.author}
-                  date={new Date(post.createdAt).toLocaleDateString()}
+                  // author={post.author}
+                  // date={new Date(post.createdAt).toLocaleDateString()}
                   coverPhoto={
                     post.coverPhoto || "/placeholder.svg?height=200&width=300"
                   }
