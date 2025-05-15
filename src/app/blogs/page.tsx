@@ -64,7 +64,7 @@ export default function BlogsPage() {
   }
 
   const filteredPosts = blogs.filter(
-    (post) =>
+    (post:any) =>
       post.heading.toLowerCase().includes(searchQuery.toLowerCase()) &&
       (selectedCategory === "All" || post.tags.includes(selectedCategory)),
   )
