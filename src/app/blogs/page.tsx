@@ -30,7 +30,7 @@ export default function BlogsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
-  const [blogs, setBlogs] = useState<BlogPost[]>([])
+  const [blogs, setBlogs] = useState<any>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
