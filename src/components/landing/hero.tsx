@@ -41,31 +41,30 @@ export function Hero() {
             className="space-y-6"
           >
             <div className="text-sm text-gray-600">Enhancement and Support for Mental Health</div>
-            <h1 className="text-5xl font-bold leading-tight">
-              BE MORE <br />
-              AWARE{" "}
+            <h1 className="text-6xl font-bold leading-tight">
+              BE MORE AWARE
+              <br/>
+              {" "}
               <span className="inline-block relative">
                 <Image
                   src="/logoHero.svg"
                   alt="Jaagr Logo"
-                  width={120}
-                  height={45}
+                  width={130}
+                  height={48.75}
                   className="object-contain mt-2 animate-float"
                   priority
                 />
               </span>{" "}
-              <br />
-              ABOUT YOUR <br />
-              THOUGHTS
+              ABOUT YOUR THOUGHTS
             </h1>
-            <p className="text-lg text-gray-600 max-w-lg">
+            <p className="text-xl text-gray-600 max-w-lg">
               Bringing mental health experts to your palm. Discover a supportive community and valuable resources for
               your well-being journey.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href="/self-assessment">
                 <Button className="bg-purple-600 text-white hover:bg-purple-700 rounded-full">
-                  Start Test <ArrowRight className="ml-2 h-4 w-4" />
+                  Start Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/blogs">

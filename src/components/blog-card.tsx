@@ -143,8 +143,8 @@ export function BlogCard({
                   {writer.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{writer}</p>
-                  <p className="text-xs text-muted-foreground">{date}</p>
+                  {/* <p className="text-sm font-medium">{writer}</p> */}
+                  {/* <p className="text-xs text-muted-foreground">{date}</p> */}
                 </div>
               </div>
             </CardContent>

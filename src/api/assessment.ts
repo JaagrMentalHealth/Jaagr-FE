@@ -6,11 +6,20 @@ const baseAxiosInstance = axios.create({
   baseURL: `${URL}`,
 })
 
-export const getWarmupQuestions = async (params?: { assessmentId?: string | null }) => {
+export const getWarmupQuestions = async (params?: {
+  assessmentId?: string | null
+  orgUserId?: string | null
+  organizationId?: string | null
+}) => {
   return await baseAxiosInstance.get("/assessment/assessment/warmup", {
-    params,
+    params: {
+      assessmentId: params?.assessmentId || undefined,
+      orgUserId: params?.orgUserId || undefined,
+      organizationId: params?.organizationId || undefined,
+    },
   });
 };
+
 
 export const submitWarmup = async (data: {
   warmupAnswers: { questionId: string; answer: string }[]
