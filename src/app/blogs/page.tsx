@@ -10,13 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getAllBlogs } from "@/api/blogAPI"
 import { BlogSkeleton } from "@/components/blog-skeleton"
 
-
 interface BlogPost {
   _id: string
   heading: string
   tags: string[]
   coverPhoto: string | null
-  author: any
   content: string
   likes: number
   views: number
@@ -89,7 +87,6 @@ export default function BlogsPage() {
       </div>
     )
   }
-  
 
   if (error) {
     return <div>{error}</div>
@@ -122,8 +119,6 @@ export default function BlogsPage() {
                 key={post._id}
                 heading={post.heading}
                 excerpt={getExcerpt(post.content)}
-                author={post.author.fullName}
-                date={new Date(post.createdAt).toLocaleDateString()}
                 coverPhoto={post.coverPhoto || "/placeholder.svg?height=200&width=300"}
                 slug={post.slug}
               />
@@ -142,4 +137,3 @@ export default function BlogsPage() {
     </div>
   )
 }
-
