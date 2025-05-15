@@ -334,15 +334,19 @@ function WellBeingReport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {outcome.results.map((item: any, index: number) => (
-                      <tr key={index} className={index % 2 === 1 ? "bg-gray-50" : ""}>
-                        <td className="border-b border-gray-200 p-4">{item.assessmentParameter}</td>
-                        <td className="border-b border-gray-200 p-4">{item.reportText.whatItMeans}</td>
-                        <td className="border-b border-gray-200 p-4">{item.severity}</td>
-                        <td className="border-b border-gray-200 p-4">{item.reportText.howItFeels}</td>
-                        <td className="border-b border-gray-200 p-4">{item.reportText.whatCanHelp}</td>
-                      </tr>
-                    ))}
+                    {outcome.results.map((item: any, index: number) => {
+  const referenceText = mildReference?.reportText || item.reportText
+  return (
+    <tr key={index} className={index % 2 === 1 ? "bg-gray-50" : ""}>
+      <td className="border-b border-gray-200 p-4">{item.assessmentParameter}</td>
+      <td className="border-b border-gray-200 p-4">{referenceText.whatItMeans}</td>
+      <td className="border-b border-gray-200 p-4">{item.severity}</td>
+      <td className="border-b border-gray-200 p-4">{referenceText.howItFeels}</td>
+      <td className="border-b border-gray-200 p-4">{referenceText.whatCanHelp}</td>
+    </tr>
+  )
+})}
+
                   </tbody>
                 </table>
               </div>
