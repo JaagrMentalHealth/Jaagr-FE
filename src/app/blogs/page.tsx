@@ -26,7 +26,7 @@ interface BlogPost {
   slug: string
 }
 
-const categories = ["Latest", "Mental Health", "Mindfulness", "Depression", "Self-Care", "Wellness", "Relationships"]
+const categories = ["All", "Mental Health", "Mindfulness", "Depression", "Self-Care", "Wellness", "Relationships"]
 
 export default function BlogsPage() {
   const [currentPage, setCurrentPage] = useState(1)
