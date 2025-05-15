@@ -93,7 +93,7 @@ function SelfAssessmentFlow() {
         <Card className="w-full max-w-2xl mx-auto overflow-hidden shadow-lg border-purple-100">
           <CardHeader className="bg-purple-600 text-white p-6">
             <CardTitle className="text-2xl font-bold">
-              Mental Health Assessment
+              Emotional Well-being Assessment
             </CardTitle>
             <p className="text-purple-100 mt-2">
               Complete this brief assessment to help us understand your mental
