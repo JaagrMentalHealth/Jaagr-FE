@@ -30,7 +30,7 @@ export default function BlogsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
-  const [blogs, setBlogs] = useState<any>([])
+  const [blogs, setBlogs] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -63,11 +63,17 @@ export default function BlogsPage() {
     }
   }
 
-  const filteredPosts = blogs.filter(
-    (post:any) =>
-      post.heading.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (selectedCategory === "All" || post.tags.includes(selectedCategory)),
-  )
+  const filteredPosts = Array.isArray(blogs)
+    ? blogs.filter((post) => {
+        if (!post || !post.heading) return false
+
+        const matchesSearch = post.heading.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesCategory =
+          selectedCategory === "All" || (post.tags && Array.isArray(post.tags) && post.tags.includes(selectedCategory))
+
+        return matchesSearch && matchesCategory
+      })
+    : []
 
   const postsPerPage = 6
   const indexOfLastPost = currentPage * postsPerPage
@@ -114,7 +120,7 @@ export default function BlogsPage() {
             </Select>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {currentPosts.map((post:any) => (
+            {currentPosts.map((post) => (
               <BlogCard
                 key={post._id}
                 heading={post.heading}
