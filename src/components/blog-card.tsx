@@ -97,7 +97,7 @@ export function BlogCard({ heading, excerpt, coverPhoto, slug }: BlogCardProps) 
       onMouseEnter={() => !isMobile && setIsHovered(true)}
       onMouseLeave={() => !isMobile && setIsHovered(false)}
     >
-      <div
+      {/* <div
         className={`transform transition-transform z-20  relative duration-300 ${
           isHovered && deleteStatus ? "-translate-y-12" : ""
         }`}
@@ -120,7 +120,7 @@ export function BlogCard({ heading, excerpt, coverPhoto, slug }: BlogCardProps) 
             </CardContent>
           </Card>
         </Link>
-      </div>
+      </div> */}
       {/* {deleteStatus && (
         <div className="absolute inset-x-0 z-0 -bottom-2 p-2">
           <button
