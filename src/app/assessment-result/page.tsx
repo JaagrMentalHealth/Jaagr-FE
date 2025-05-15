@@ -34,7 +34,17 @@ function WellBeingReport() {
   const outcomeId = searchParams.get("outcomeId")
   const [isOrgUserCheckDone, setIsOrgUserCheckDone] = useState(false)
 
-  if (!outcomeId) return notFound()
+  const [isValidOutcomeId, setIsValidOutcomeId] = useState(!!outcomeId)
+
+  useEffect(() => {
+    if (!outcomeId) {
+      setIsValidOutcomeId(false)
+    } else {
+      setIsValidOutcomeId(true)
+    }
+  }, [outcomeId])
+
+  if (!isValidOutcomeId) return notFound()
 
   useEffect(() => {
     let isMounted = true
@@ -308,7 +318,7 @@ function WellBeingReport() {
                 <h2 className="text-2xl font-bold text-green-700 mb-4">Great News! 🎉</h2>
                 <p className="text-lg text-green-600">
                   Based on your responses, we did not find any significant indicators of mental health concerns. Keep
-                  taking care of yourself and remember that it's always okay to check in again!
+                  taking care of yourself and remember that it&apos;s always okay to check in again!
                 </p>
               </div>
             ) : outcome && outcome.results ? (
@@ -335,18 +345,23 @@ function WellBeingReport() {
                   </thead>
                   <tbody>
                     {outcome.results.map((item: any, index: number) => {
-  const referenceText = mildReference?.reportText || item.reportText
-  return (
-    <tr key={index} className={index % 2 === 1 ? "bg-gray-50" : ""}>
-      <td className="border-b border-gray-200 p-4">{item.assessmentParameter}</td>
-      <td className="border-b border-gray-200 p-4">{referenceText.whatItMeans}</td>
-      <td className="border-b border-gray-200 p-4">{item.severity}</td>
-      <td className="border-b border-gray-200 p-4">{referenceText.howItFeels}</td>
-      <td className="border-b border-gray-200 p-4">{referenceText.whatCanHelp}</td>
-    </tr>
-  )
-})}
+                      // Use the item's reportText directly without referencing mildReference
+                      const reportText = item.reportText || {
+                        whatItMeans: "Information not available",
+                        howItFeels: "Information not available",
+                        whatCanHelp: "Information not available",
+                      }
 
+                      return (
+                        <tr key={index} className={index % 2 === 1 ? "bg-gray-50" : ""}>
+                          <td className="border-b border-gray-200 p-4">{item.assessmentParameter}</td>
+                          <td className="border-b border-gray-200 p-4">{reportText.whatItMeans}</td>
+                          <td className="border-b border-gray-200 p-4">{item.severity}</td>
+                          <td className="border-b border-gray-200 p-4">{reportText.howItFeels}</td>
+                          <td className="border-b border-gray-200 p-4">{reportText.whatCanHelp}</td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -417,4 +432,3 @@ const LoadingScreen = () => {
     </div>
   )
 }
-
