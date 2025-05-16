@@ -101,7 +101,7 @@ export function BlogCard({ heading, excerpt, coverPhoto, slug, user }: BlogCardP
           </Card>
         </Link>
       </div>
-      {deleteStatus && (
+      {/* {deleteStatus && (
         <div className="absolute inset-x-0 z-0 -bottom-2 p-2">
           <button
             onClick={handleDelete}
@@ -110,7 +110,7 @@ export function BlogCard({ heading, excerpt, coverPhoto, slug, user }: BlogCardP
             Delete Blog
           </button>
         </div>
-      )}
+      )} */}
     </div>
   )
 }
