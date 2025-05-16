@@ -18,6 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <meta name="google-site-verification" content="ca4ngS98S2C7doJJAOj3zsVt_xMUxBBTMs9eW10kiIw" />
       <head>
         <title>Jaagr | BE MORE AWARE ABOUT YOUR THOUGHTS</title>
       </head>
