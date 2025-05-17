@@ -20,7 +20,10 @@ import { useUser } from "@/contexts/userContext";
 import axios from "axios";
 import { fetchOrgUser } from "@/api/assessment";
 import ExpiredLink from "@/components/expired-link";
-import { getWarmupQuestions } from "@/api/assessment"; // already used in diagnosis-form
+import {
+  getWarmupQuestions, checkValidity
+
+} from "@/api/assessment"; // already used in diagnosis-form
 
 export default function DiagnosePage() {
   return (
@@ -43,25 +46,34 @@ function SelfAssessmentFlow() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [orgUserData, setOrgUserData] = useState<any>(null);
   const [loadingUserData, setLoadingUserData] = useState(false);
-  const [linkExpired, setLinkExpired] = useState(false);
+  const [linkError, setLinkError] = useState<null | { type: "expired" | "attempted"; outcomeId?: string }>(null);
   const [checkingAssessment, setCheckingAssessment] = useState(true);
 
   const { user } = useUser();
 
   useEffect(() => {
     const checkAssessmentValidity = async () => {
-      if (assessmentId) {
-        try {
-          await getWarmupQuestions({ assessmentId }); // Will throw error if expired
-        } catch (err: any) {
-          if (err?.response?.status === 410) {
-            setLinkExpired(true);
-          } else {
-            console.error("Error validating assessment link", err);
-          }
+      if (!assessmentId) return;
+
+      try {
+        const res = await checkValidity({ assessmentId, orgUserId, organizationId });
+        console.log("Assessment is valid:", res?.data);
+      } catch (err: any) {
+        const status = err?.response?.status;
+
+        if (status === 410) {
+          setLinkError({ type: "expired" });
+        } else if (status === 409) {
+          setLinkError({
+            type: "attempted",
+            outcomeId: err?.response?.data?.outcomeId,
+          });
+        } else {
+          console.error("Error validating assessment link", err);
         }
+      } finally {
+        setCheckingAssessment(false);
       }
-      setCheckingAssessment(false);
     };
 
     if (token || (orgUserId && organizationId)) {
@@ -79,8 +91,27 @@ function SelfAssessmentFlow() {
     }
   }, [token, orgUserId, organizationId, router, assessmentId]);
 
-  if (linkExpired) {
-    return <ExpiredLink />;
+  if (linkError?.type === "expired") return <ExpiredLink />;
+  if (linkError?.type === "attempted") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Card className="w-full max-w-md p-6 text-center">
+          <CardHeader>
+            <CardTitle>Already Attempted</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              You have already submitted this assessment.
+            </p>
+            {linkError.outcomeId && (
+              <p className="text-xs text-gray-400">
+                Outcome ID: <code>{linkError.outcomeId}</code>
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
   if (!allowed || (orgUserId && loadingUserData)) return <LoadingScreen />;
 
@@ -144,7 +175,7 @@ function SelfAssessmentFlow() {
                   name="lastName"
                   value={
                     data?.fullName?.split(" ").slice(-1)[0] ==
-                    data?.fullName?.split(" ")[0]
+                      data?.fullName?.split(" ")[0]
                       ? ""
                       : data?.fullName?.split(" ").slice(-1)[0]
                   }
@@ -209,11 +240,10 @@ function SelfAssessmentFlow() {
             <Button
               onClick={() => setShowInstructions(false)}
               disabled={!acceptedTerms}
-              className={`w-full sm:w-auto rounded-lg ${
-                acceptedTerms
+              className={`w-full sm:w-auto rounded-lg ${acceptedTerms
                   ? "bg-purple-600 hover:bg-purple-700"
                   : "bg-purple-300"
-              }`}
+                }`}
             >
               Begin Assessment
               <ArrowRight className="ml-2 h-4 w-4" />

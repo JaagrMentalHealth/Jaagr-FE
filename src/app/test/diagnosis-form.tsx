@@ -87,7 +87,9 @@ export default function DiagnoseForm({
           orgUserId,
           organizationId,
         });
-        const { phase0, phase1, phase2, phasesAvailable } = response.data;
+        console.log(response)
+        setOutcomeId(response.data.outcomeId)
+        const { phase0, phase1, phase2, phasesAvailable } = response.data.data;
         const allQuestions = {
           0: phase0 || [],
           1: phase1 || [],
@@ -160,7 +162,7 @@ export default function DiagnoseForm({
           organizationId,
           assessmentId,
         });
-        setOutcomeId(response.data.outcomeId);
+        // setOutcomeId(response.data.outcomeId);
         Cookies.set("outcomeId", response.data.outcomeId);
         if (response.data.screeningQuestions?.length > 0) {
           setQuestionsByPhase((prev) => ({
@@ -180,6 +182,7 @@ export default function DiagnoseForm({
           return;
         }
       } else if (currentPhase === 2) {
+        console.log(outcomeId)
         const response = await submitSeverity({ answers: answers, outcomeId });
         router.push(`/assessment-result?outcomeId=${outcomeId}`);
         return;

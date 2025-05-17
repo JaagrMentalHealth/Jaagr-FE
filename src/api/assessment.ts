@@ -67,3 +67,17 @@ export const fetchOutcome=async(outcomeId:string | null)=>{
 export const fetchOrgUser=async(id:String )=>{
   return await baseAxiosInstance.get(`/admin/org-users/${id}`)
 }
+
+export const checkValidity=async(params?: {
+  assessmentId?: string | null
+  orgUserId?: string | null
+  organizationId?: string | null
+})=>{
+  return await baseAxiosInstance.get("/assessment/assessment/validity", {
+    params: {
+      assessmentId: params?.assessmentId || undefined,
+      orgUserId: params?.orgUserId || undefined,
+      organizationId: params?.organizationId || undefined,
+    },
+  });
+}
