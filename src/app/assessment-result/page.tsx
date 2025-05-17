@@ -190,7 +190,7 @@ function WellBeingReport() {
 
       toast({
         title: "Report Downloaded",
-        description: "Your well-being report has been downloaded successfully.",
+        description: "Your report has been downloaded successfully.",
       })
     } catch (error) {
       console.error("Error generating PDF:", error)
@@ -248,7 +248,7 @@ function WellBeingReport() {
       <div className="flex items-center justify-center min-h-screen bg-white">
         <div className="text-center">
           <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
-          <p className="text-lg text-gray-600 font-medium">Preparing your well-being report...</p>
+          <p className="text-lg text-gray-600 font-medium">Preparing your  report...</p>
         </div>
       </div>
     )
@@ -274,7 +274,7 @@ function WellBeingReport() {
       <div ref={reportRef} id="report-content" className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-10 report-header">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">{userName}&apos;s Well-Being Report</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">{userName}&apos;s Report</h1>
           <div className="w-24 h-1 bg-purple-500 mx-auto"></div>
         </div>
 
@@ -408,7 +408,7 @@ const LoadingScreen = () => {
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="text-center">
         <Loader2 className="h-10 w-10 text-purple-600 animate-spin mx-auto mb-4" />
-        <p className="text-lg text-gray-600 font-medium">Preparing your well-being report...</p>
+        <p className="text-lg text-gray-600 font-medium">Preparing your report...</p>
       </div>
     </div>
   )
