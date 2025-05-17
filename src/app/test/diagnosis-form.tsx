@@ -216,7 +216,7 @@ export default function DiagnoseForm({
             {/* Header with phase indicator */}
             <div className="bg-primary/10 dark:bg-primary/20 p-6 border-b">
               <h1 className="text-2xl font-bold text-center text-primary">
-                Emotional Well-being Assessment
+                Jaagr Assessment
               </h1>
 
               {!isLoading && !error && !diagnosisResult && (
